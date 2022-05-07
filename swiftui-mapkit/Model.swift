@@ -48,8 +48,22 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
         didUpdateLocations locations: [CLLocation]
     ) {
         if let coordinates = locations.first?.coordinate {
-            currentPlace = Place(name: "You Are Here", location: coordinates)
-            annotations.append(currentPlace!)
+            let location = CLLocation(
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude
+            )
+            // Guess the address of the current location.
+            CLGeocoder().reverseGeocodeLocation(location) { places, _ in
+                if let place = places?.first {
+                    let placemark = MKPlacemark(placemark: place)
+                    let item = MKMapItem(placemark: placemark)
+                    item.name = "You Are Here"
+                    self.currentPlace = Place(item: item, location: coordinates)
+                } else {
+                    self.currentPlace = Place(name: "You Are Here", location: coordinates)
+                }
+                self.annotations.append(self.currentPlace!)
+            }
         }
     }
     
