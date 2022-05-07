@@ -46,19 +46,24 @@ struct ContentView: View {
             .padding()
             
             if let place = selectedPlace {
-                Text("\(place.showName)").fontWeight(.bold)
                 if let item = place.item {
-                    if let phone = item.phoneNumber {
-                        Text("\(phone)")
-                    }
-                    if let address = place.showAddress {
-                        Text("\(address)")
-                    }
-                    if let url = item.url {
-                        Link("website", destination: url)
-                            .buttonStyle(.borderedProminent)
+                    HStack {
+                        VStack {
+                            Text("\(place.showName)").fontWeight(.bold)
+                            if let phone = item.phoneNumber {
+                                Text("\(phone)")
+                            }
+                            if let address = place.showAddress {
+                                Text("\(address)")
+                            }
+                        }
+                        if let url = item.url {
+                            Link("website", destination: url)
+                                .buttonStyle(.borderedProminent)
+                        }
                     }
                 } else {
+                    Text("\(place.showName)").fontWeight(.bold)
                     let lat = place.location.latitude
                     let lng = place.location.longitude
                     Text("lat: \(lat), lng: \(lng)")

@@ -14,12 +14,14 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
     ]
 
     let manager = CLLocationManager()
-    let size = 4000.0 // of area to search in meters
+    let size = 4000.0 // of area to display in meters
 
     override init() {
         super.init()
         manager.delegate = self
-        manager.desiredAccuracy = 100
+        // Won't find current location without this.
+        manager.desiredAccuracy = 25 // in meters
+        // It fails to find the current location when this is 20 or below!
 
         let center = CLLocationCoordinate2D(
             latitude: 51.501,
