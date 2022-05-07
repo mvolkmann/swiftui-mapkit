@@ -54,6 +54,10 @@ struct ContentView: View {
                 }
             )
         }
+        .onAppear {
+            model.manager.requestWhenInUseAuthorization()
+            model.manager.requestLocation()
+        }
     }
     
     func performSearch() async {
