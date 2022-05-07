@@ -7,28 +7,26 @@ struct Place: Identifiable {
     var item: MKMapItem?
     var location: CLLocationCoordinate2D
     
-    var showAddress: String {
-        guard let place = item?.placemark else { return "unknown" }
+    var showAddress: String? {
+        guard let place = item?.placemark else { return nil }
         
-        let number = place.subThoroughfare ?? ""
-        let street = place.thoroughfare ?? "no street"
+        var address = ""
+        if let street = place.thoroughfare {
+            if let number = place.subThoroughfare {
+                address += number + " "
+            }
+            address += "\(street)\n"
+        }
+        
         let city = place.locality ?? "no city"
         let state = place.administrativeArea ?? ""
         let postalCode = place.postalCode ?? ""
         
-        return "\(number) \(street)\n\(city), \(state)\n\(postalCode)"
+        return "\(address)\(city), \(state)\n\(postalCode)"
     }
     
     var showName: String {
         name ?? item?.name ?? "unknown"
-    }
-    
-    var showPhone: String {
-        item?.phoneNumber ?? "unknown"
-    }
-    
-    var showUrl: String {
-        item?.url?.absoluteString ?? "unknown"
     }
     
     init(name: String, location: CLLocationCoordinate2D) {

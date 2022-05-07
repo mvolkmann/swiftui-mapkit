@@ -4,8 +4,17 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var annotations: [Place] = []
     @Published var region: MKCoordinateRegion = MKCoordinateRegion()
     
+    var currentPlace: Place?
+    
+    let initialPlaces = [
+        "Buckingham Palace",
+        "Kensington Palace",
+        "Tower of London",
+        "Westminster Abbey"
+    ]
+    
     let manager = CLLocationManager()
-    let size = 1000.0
+    let size = 4000.0 // of area to search in meters
     
     override init() {
         super.init()
@@ -23,9 +32,15 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
         )
         
         Task {
-            await search("Buckingham Palace")
-            await search("Westminster Abbey")
+            for place in initialPlaces {
+                await search(place)
+            }
         }
+    }
+    
+    func clearAnnotations() {
+        annotations = []
+        if let place = currentPlace { annotations.append(place) }
     }
     
     func locationManager(
@@ -33,16 +48,8 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
         didUpdateLocations locations: [CLLocation]
     ) {
         if let coordinates = locations.first?.coordinate {
-            annotations.append(
-                Place(name: "Current", location: coordinates)
-            )
-            /*
-            region = MKCoordinateRegion(
-                center: coordinates,
-                latitudinalMeters: size,
-                longitudinalMeters: size
-            )
-            */
+            currentPlace = Place(name: "You Are Here", location: coordinates)
+            annotations.append(currentPlace!)
         }
     }
     
@@ -51,15 +58,16 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
         didFailWithError error: Error
     ) {
         print("failed to get current location - user may not have approved")
-        // After user denies, they can open their Settings app,
-        // go to Privacy ... Location Services, tap the name of this app,
-        // and select Never, Ask Next Time, or While Using the App.
+        // After user denies sharing location, they can
+        // open their Settings app,  go to Privacy ... Location Services,
+        // tap the name of this app, and select
+        // Never, Ask Next Time, or While Using the App.
     }
     
     func search(_ searchText: String) async {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = searchText
-        request.region = region
+        request.region = region // only searches in this region
         let search = MKLocalSearch(request: request)
         
         if let results = try? await search.start() {
@@ -67,17 +75,15 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
             await MainActor.run {
                 for item in items {
                     let placemark = item.placemark
-                    print("===")
-                    print("name = \(item.name ?? "none")")
-                    print("phoneNumber = \(item.phoneNumber ?? "none")")
-                    print("url = \(item.url?.absoluteString ?? "none")")
-                    print("catetgory = \(item.pointOfInterestCategory?.rawValue ?? "none")")
+                    //print("category = \(item.pointOfInterestCategory?.rawValue ?? "none")")
                     if let location = placemark.location?.coordinate {
                         let place = Place(item: item, location: location)
                         annotations.append(place)
                     }
                 }
             }
+        } else {
+            print("no results found")
         }
     }
 }
