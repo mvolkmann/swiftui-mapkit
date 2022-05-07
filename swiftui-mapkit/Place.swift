@@ -10,12 +10,13 @@ struct Place: Identifiable {
     var showAddress: String {
         guard let place = item?.placemark else { return "unknown" }
         
+        let number = place.subThoroughfare ?? ""
         let street = place.thoroughfare ?? "no street"
         let city = place.locality ?? "no city"
-        //let state = place.locality ?? "no city"
+        let state = place.administrativeArea ?? ""
         let postalCode = place.postalCode ?? ""
         
-        return "\(street), \(city), \(postalCode)"
+        return "\(number) \(street)\n\(city), \(state)\n\(postalCode)"
     }
     
     var showName: String {

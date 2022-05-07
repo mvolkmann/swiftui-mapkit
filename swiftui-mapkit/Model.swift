@@ -12,27 +12,20 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
         manager.delegate = self
         manager.desiredAccuracy = 100
         
-        let buckinghamPalace = CLLocationCoordinate2D(
+        let center = CLLocationCoordinate2D(
             latitude: 51.501,
             longitude: -0.1425
-         )
-        let westminsterAbbey = CLLocationCoordinate2D(
-            latitude: 51.4993815,
-            longitude: -0.1286719
         )
-        
         region = MKCoordinateRegion(
-            center: buckinghamPalace,
+            center: center,
             latitudinalMeters: size,
             longitudinalMeters: size
         )
         
-        annotations.append(
-            Place(name: "Queen Shack", location: buckinghamPalace)
-        )
-        annotations.append(
-            Place(name: "Cemetery", location: westminsterAbbey)
-        )
+        Task {
+            await search("Buckingham Palace")
+            await search("Westminster Abbey")
+        }
     }
     
     func locationManager(
@@ -61,5 +54,30 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
         // After user denies, they can open their Settings app,
         // go to Privacy ... Location Services, tap the name of this app,
         // and select Never, Ask Next Time, or While Using the App.
+    }
+    
+    func search(_ searchText: String) async {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = searchText
+        request.region = region
+        let search = MKLocalSearch(request: request)
+        
+        if let results = try? await search.start() {
+            let items = results.mapItems
+            await MainActor.run {
+                for item in items {
+                    let placemark = item.placemark
+                    print("===")
+                    print("name = \(item.name ?? "none")")
+                    print("phoneNumber = \(item.phoneNumber ?? "none")")
+                    print("url = \(item.url?.absoluteString ?? "none")")
+                    print("catetgory = \(item.pointOfInterestCategory?.rawValue ?? "none")")
+                    if let location = placemark.location?.coordinate {
+                        let place = Place(item: item, location: location)
+                        annotations.append(place)
+                    }
+                }
+            }
+        }
     }
 }
