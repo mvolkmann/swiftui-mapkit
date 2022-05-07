@@ -1,7 +1,7 @@
 import MapKit
 
 class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
-    @Published var annotations: [PlaceAnnotation] = []
+    @Published var annotations: [Place] = []
     @Published var region: MKCoordinateRegion = MKCoordinateRegion()
     
     let manager = CLLocationManager()
@@ -28,10 +28,10 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
         )
         
         annotations.append(
-            PlaceAnnotation(name: "Queen Shack", location: buckinghamPalace)
+            Place(name: "Queen Shack", location: buckinghamPalace)
         )
         annotations.append(
-            PlaceAnnotation(name: "Cemetery", location: westminsterAbbey)
+            Place(name: "Cemetery", location: westminsterAbbey)
         )
     }
     
@@ -41,7 +41,7 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
     ) {
         if let coordinates = locations.first?.coordinate {
             annotations.append(
-                PlaceAnnotation(name: "Current", location: coordinates)
+                Place(name: "Current", location: coordinates)
             )
             /*
             region = MKCoordinateRegion(
@@ -57,6 +57,9 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
         _ manager: CLLocationManager,
         didFailWithError error: Error
     ) {
-        print("Error getting current location")
+        print("failed to get current location - user may not have approved")
+        // After user denies, they can open their Settings app,
+        // go to Privacy ... Location Services, tap the name of this app,
+        // and select Never, Ask Next Time, or While Using the App.
     }
 }

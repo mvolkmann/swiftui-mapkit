@@ -20,14 +20,16 @@ struct Marker: View {
 
 struct ContentView: View {
     @EnvironmentObject var model: Model
-    @State var selected = ""
+    @State var selectedPlace: Place?
     @State var searchText = ""
     
     var body: some View {
         VStack {
-            Text("My Map").padding()
-            if !selected.isEmpty {
-                Text("You selected \(selected).")
+            if let place = selectedPlace {
+                Text("\(place.showName)")
+                Text("\(place.showPhone)")
+                Text("\(place.showUrl)")
+                Text("\(place.showAddress)")
             }
             HStack {
                 TextField("Search", text: $searchText)
@@ -46,9 +48,9 @@ struct ContentView: View {
                 annotationContent: { place in
                     //MapMarker(coordinate: place.location, tint: .blue)
                     MapAnnotation(coordinate: place.location) {
-                        Marker(label: place.name)
+                        Marker(label: place.showName)
                             .onTapGesture {
-                                selected = place.name
+                                selectedPlace = place
                             }
                     }
                 }
@@ -65,16 +67,20 @@ struct ContentView: View {
         request.naturalLanguageQuery = searchText
         request.region = model.region
         let search = MKLocalSearch(request: request)
+        
         if let results = try? await search.start() {
             let items = results.mapItems
             await MainActor.run {
                 model.annotations = []
                 for item in items {
-                    if let location = item.placemark.location?.coordinate {
-                        let place = PlaceAnnotation(
-                            name: item.name ?? "unnamed",
-                            location: location
-                        )
+                    let placemark = item.placemark
+                    print("===")
+                    print("name = \(item.name ?? "none")")
+                    print("phoneNumber = \(item.phoneNumber ?? "none")")
+                    print("url = \(item.url?.absoluteString ?? "none")")
+                    print("catetgory = \(item.pointOfInterestCategory?.rawValue ?? "none")")
+                    if let location = placemark.location?.coordinate {
+                        let place = Place(item: item, location: location)
                         model.annotations.append(place)
                     }
                 }

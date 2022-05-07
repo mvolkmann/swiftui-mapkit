@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A33435228268119006730C2 /* PlaceAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A33435128268119006730C2 /* PlaceAnnotation.swift */; };
+		1A33435228268119006730C2 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A33435128268119006730C2 /* Place.swift */; };
 		1AAB0CFE2826436600544A8F /* swiftui_mapkitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0CFD2826436600544A8F /* swiftui_mapkitApp.swift */; };
 		1AAB0D002826436600544A8F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0CFF2826436600544A8F /* ContentView.swift */; };
 		1AAB0D022826436700544A8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAB0D012826436700544A8F /* Assets.xcassets */; };
@@ -16,7 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1A33435128268119006730C2 /* PlaceAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceAnnotation.swift; sourceTree = "<group>"; };
+		1A33435128268119006730C2 /* Place.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
 		1A3343532826824D006730C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1AAB0CFA2826436600544A8F /* swiftui-mapkit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "swiftui-mapkit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AAB0CFD2826436600544A8F /* swiftui_mapkitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swiftui_mapkitApp.swift; sourceTree = "<group>"; };
@@ -60,7 +60,7 @@
 				1AAB0D012826436700544A8F /* Assets.xcassets */,
 				1AAB0CFF2826436600544A8F /* ContentView.swift */,
 				1AAB0D0B2826539000544A8F /* Model.swift */,
-				1A33435128268119006730C2 /* PlaceAnnotation.swift */,
+				1A33435128268119006730C2 /* Place.swift */,
 				1AAB0D032826436700544A8F /* Preview Content */,
 				1AAB0CFD2826436600544A8F /* swiftui_mapkitApp.swift */,
 			);
@@ -146,7 +146,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AAB0D0C2826539000544A8F /* Model.swift in Sources */,
-				1A33435228268119006730C2 /* PlaceAnnotation.swift in Sources */,
+				1A33435228268119006730C2 /* Place.swift in Sources */,
 				1AAB0D002826436600544A8F /* ContentView.swift in Sources */,
 				1AAB0CFE2826436600544A8F /* swiftui_mapkitApp.swift in Sources */,
 			);
