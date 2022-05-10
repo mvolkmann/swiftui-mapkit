@@ -59,10 +59,13 @@ struct ContentView: View {
                                 Text("\(address)")
                             }
                         }
-                        if let url = item.url {
+                        if let itemUrl = item.url {
                             VStack {
-                                Link("Website Outside", destination: url)
-                                Button("Website Inside", action: openInside)
+                                Link("Website Outside", destination: itemUrl)
+                                Button("Website Inside") {
+                                    url = itemUrl
+                                    openWebsite = true
+                                }
                             }
                             .buttonStyle(.borderedProminent)
                         }
@@ -97,14 +100,5 @@ struct ContentView: View {
         .sheet(isPresented: $openWebsite) {
             SafariBrowser(url: $url)
         }
-    }
-    
-    func openInside() {
-        guard let place = selectedPlace else { return }
-        guard let item = place.item else { return }
-        if let newUrl = item.url {
-            url = newUrl
-        }
-        openWebsite = true
     }
 }
