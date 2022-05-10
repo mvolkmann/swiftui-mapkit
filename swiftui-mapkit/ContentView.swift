@@ -25,8 +25,10 @@ enum FocusName: Hashable {
 struct ContentView: View {
     @EnvironmentObject var model: Model
     @FocusState var focusName: FocusName?
+    @State var openWebsite = false
     @State var selectedPlace: Place?
     @State var searchText = ""
+    @State var url: URL = URL(string: "https://mvolkmann.github.io")!
     
     var body: some View {
         VStack {
@@ -58,8 +60,11 @@ struct ContentView: View {
                             }
                         }
                         if let url = item.url {
-                            Link("website", destination: url)
-                                .buttonStyle(.borderedProminent)
+                            VStack {
+                                Link("Website Outside", destination: url)
+                                Button("Website Inside", action: openInside)
+                            }
+                            .buttonStyle(.borderedProminent)
                         }
                     }
                 } else {
@@ -89,11 +94,17 @@ struct ContentView: View {
             model.manager.requestWhenInUseAuthorization()
             model.manager.requestLocation()
         }
+        .sheet(isPresented: $openWebsite) {
+            SafariBrowser(url: $url)
+        }
     }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView().environmentObject(Model())
+    
+    func openInside() {
+        guard let place = selectedPlace else { return }
+        guard let item = place.item else { return }
+        if let newUrl = item.url {
+            url = newUrl
+        }
+        openWebsite = true
     }
 }
