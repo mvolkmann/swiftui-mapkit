@@ -17,7 +17,7 @@ struct Place: Identifiable {
         self.coordinate = coordinate
     }
 
-    var showAddress: String? {
+    var address: String? {
         guard let place = item?.placemark else { return nil }
 
         var address = ""
@@ -35,7 +35,7 @@ struct Place: Identifiable {
         return "\(address)\(city), \(state)\n\(postalCode)"
     }
 
-    var showName: String {
+    var displayName: String {
         name ?? item?.name ?? "unknown"
     }
 }

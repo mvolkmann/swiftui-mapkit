@@ -36,11 +36,11 @@ struct ContentView: View {
                 if let item = place.item {
                     HStack {
                         VStack {
-                            Text("\(place.showName)").fontWeight(.bold)
+                            Text("\(place.displayName)").fontWeight(.bold)
                             if let phone = item.phoneNumber {
                                 Text("\(phone)")
                             }
-                            if let address = place.showAddress {
+                            if let address = place.address {
                                 Text("\(address)")
                             }
                         }
@@ -56,7 +56,7 @@ struct ContentView: View {
                         }
                     }
                 } else {
-                    Text("\(place.showName)").fontWeight(.bold)
+                    Text("\(place.displayName)").fontWeight(.bold)
                     let lat = place.coordinate.latitude
                     let lng = place.coordinate.longitude
                     Text("lat: \(lat), lng: \(lng)")
@@ -78,7 +78,7 @@ struct ContentView: View {
                         // TODO: See https://stackoverflow.com/questions/73892561/how-to-re-render-swiftui-map-with-mapannotation-without-runtime-warnings-for-un
                         // TODO: and https://stackoverflow.com/questions/74028793/mapannotation-producing-publishing-changes-from-within-view-updates-runtime-warn.
                         MapAnnotation(coordinate: place.coordinate) {
-                            Marker(label: place.showName)
+                            Marker(label: place.displayName)
                                 .onTapGesture {
                                     print("place = \(place)")
                                     selectedPlace = place
