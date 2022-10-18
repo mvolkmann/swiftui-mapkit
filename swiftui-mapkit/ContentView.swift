@@ -1,35 +1,20 @@
 import MapKit
 import SwiftUI
 
-struct Marker: View {
-    var label: String
-    var icon: String = "mappin.circle.fill"
-    
-    var body: some View {
-        VStack {
-            Image(systemName: icon)
-                .resizable()
-                .frame(width: 30, height: 30)
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(.white, .red)
-            Text(label).fontWeight(.bold)
-        }
-        .foregroundColor(.blue)
-    }
-}
-
 enum FocusName: Hashable {
     case search
 }
 
 struct ContentView: View {
-    @EnvironmentObject var model: Model
+    @EnvironmentObject var vm: ViewModel
+
     @FocusState var focusName: FocusName?
+
     @State var openWebsite = false
     @State var selectedPlace: Place?
     @State var searchText = ""
-    @State var url: URL = URL(string: "https://mvolkmann.github.io")!
-    
+    @State var url: URL = .init(string: "https://mvolkmann.github.io")!
+
     var body: some View {
         VStack {
             HStack {
@@ -37,16 +22,16 @@ struct ContentView: View {
                     .textFieldStyle(.roundedBorder)
                     .focused($focusName, equals: .search)
                 Button("Search") {
-                    model.clearAnnotations()
+                    vm.clearAnnotations()
                     Task(priority: .background) {
-                        await model.search(searchText)
+                        await vm.search(searchText)
                     }
                     focusName = nil
                 }
                 Spacer()
             }
             .padding()
-            
+
             if let place = selectedPlace {
                 if let item = place.item {
                     HStack {
@@ -77,12 +62,12 @@ struct ContentView: View {
                     Text("lat: \(lat), lng: \(lng)")
                 }
             }
-            
+
             Map(
-                coordinateRegion: $model.region,
-                annotationItems: model.annotations,
+                coordinateRegion: $vm.region,
+                annotationItems: vm.annotations,
                 annotationContent: { place in
-                    //MapMarker(coordinate: place.location, tint: .blue)
+                    // MapMarker(coordinate: place.location, tint: .blue)
                     MapAnnotation(coordinate: place.location) {
                         Marker(label: place.showName)
                             .onTapGesture {
@@ -94,8 +79,8 @@ struct ContentView: View {
             )
         }
         .onAppear {
-            model.manager.requestWhenInUseAuthorization()
-            model.manager.requestLocation()
+            vm.manager.requestWhenInUseAuthorization()
+            vm.manager.requestLocation()
         }
         .sheet(isPresented: $openWebsite) {
             SafariBrowser(url: $url)

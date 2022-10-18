@@ -2,11 +2,11 @@ import SwiftUI
 
 @main
 struct swiftui_mapkitApp: App {
-    @StateObject private var model = Model()
-    
+    @StateObject private var vm = ViewModel()
+
     var body: some Scene {
         WindowGroup {
-            ContentView().environmentObject(model)
+            ContentView().environmentObject(vm)
         }
     }
 }

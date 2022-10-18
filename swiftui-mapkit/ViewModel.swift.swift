@@ -1,6 +1,6 @@
 import MapKit
 
-class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
+class ViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var annotations: [Place] = []
     @Published var region = MKCoordinateRegion()
 
@@ -49,6 +49,7 @@ class Model: NSObject, ObservableObject, CLLocationManagerDelegate {
         _: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
     ) {
+        print("locations.count = \(locations.count)")
         if let coordinates = locations.first?.coordinate {
             let location = CLLocation(
                 latitude: coordinates.latitude,

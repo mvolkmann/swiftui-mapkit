@@ -3,14 +3,14 @@ import SwiftUI
 
 struct SafariBrowser: UIViewControllerRepresentable {
     @Binding var url: URL
-    
-    func makeUIViewController(context: Context) -> some UIViewController {
-        return SFSafariViewController(url: url)
+
+    func makeUIViewController(context _: Context) -> some UIViewController {
+        SFSafariViewController(url: url)
     }
-    
+
     func updateUIViewController(
-        _ uiViewController: UIViewControllerType,
-        context: Context
+        _: UIViewControllerType,
+        context _: Context
     ) {
         // Do nothing.
     }
