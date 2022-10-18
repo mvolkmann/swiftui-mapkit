@@ -6,6 +6,8 @@ enum FocusName: Hashable {
 }
 
 struct ContentView: View {
+    // MARK: - State
+
     @EnvironmentObject var vm: ViewModel
 
     @FocusState var focusName: FocusName?
@@ -15,77 +17,59 @@ struct ContentView: View {
     @State var searchText = ""
     @State var url: URL = .init(string: "https://mvolkmann.github.io")!
 
+    // MARK: - Properties
+
+    private var map: some View {
+        Map(
+            coordinateRegion: $vm.region,
+            annotationItems: vm.places,
+            annotationContent: { place in
+                // MapMarker(coordinate: place.coordinate, tint: .blue)
+
+                // TODO: Why does zooming the map trigger
+                // TODO: multiple warnings that begin with
+                // TODO: "Publishing changes from within view updates"?
+                // TODO: This only happens with MapAnnotation,
+                // TODO: not wth MapMarker.
+                // TODO: See https://stackoverflow.com/questions/73892561/how-to-re-render-swiftui-map-with-mapannotation-without-runtime-warnings-for-un
+                // TODO: and https://stackoverflow.com/questions/74028793/mapannotation-producing-publishing-changes-from-within-view-updates-runtime-warn.
+                MapAnnotation(coordinate: place.coordinate) {
+                    Marker(label: place.displayName)
+                        .onTapGesture {
+                            print("place = \(place)")
+                            selectedPlace = place
+                        }
+                }
+            }
+        )
+    }
+
+    private var searchArea: some View {
+        HStack {
+            TextField("Search", text: $searchText)
+                .textFieldStyle(.roundedBorder)
+                .focused($focusName, equals: .search)
+            Button("Search") {
+                vm.clearAnnotations()
+                Task(priority: .background) {
+                    vm.places = await vm.search(text: searchText)
+                }
+                focusName = nil
+            }
+            Spacer()
+        }
+    }
+
     var body: some View {
         VStack {
-            HStack {
-                TextField("Search", text: $searchText)
-                    .textFieldStyle(.roundedBorder)
-                    .focused($focusName, equals: .search)
-                Button("Search") {
-                    vm.clearAnnotations()
-                    Task(priority: .background) {
-                        vm.places = await vm.search(text: searchText)
-                    }
-                    focusName = nil
-                }
-                Spacer()
-            }
-            .padding()
+            searchArea.padding()
 
             if let place = selectedPlace {
-                if let item = place.item {
-                    HStack {
-                        VStack {
-                            Text("\(place.displayName)").fontWeight(.bold)
-                            if let phone = item.phoneNumber {
-                                Text("\(phone)")
-                            }
-                            if let address = place.address {
-                                Text("\(address)")
-                            }
-                        }
-                        if let itemUrl = item.url {
-                            VStack {
-                                Link("Website Outside", destination: itemUrl)
-                                Button("Website Inside") {
-                                    url = itemUrl
-                                    openWebsite = true
-                                }
-                            }
-                            .buttonStyle(.borderedProminent)
-                        }
-                    }
-                } else {
-                    Text("\(place.displayName)").fontWeight(.bold)
-                    let lat = place.coordinate.latitude
-                    let lng = place.coordinate.longitude
-                    Text("lat: \(lat), lng: \(lng)")
-                }
+                placeDetail(place: place)
             }
 
             if vm.setupComplete {
-                Map(
-                    coordinateRegion: $vm.region,
-                    annotationItems: vm.places,
-                    annotationContent: { place in
-                        // MapMarker(coordinate: place.coordinate, tint: .blue)
-
-                        // TODO: Why does zooming the map trigger
-                        // TODO: multiple warnings that begin with
-                        // TODO: "Publishing changes from within view updates"?
-                        // TODO: This only happens with MapAnnotation,
-                        // TODO: not wth MapMarker.
-                        // TODO: See https://stackoverflow.com/questions/73892561/how-to-re-render-swiftui-map-with-mapannotation-without-runtime-warnings-for-un
-                        // TODO: and https://stackoverflow.com/questions/74028793/mapannotation-producing-publishing-changes-from-within-view-updates-runtime-warn.
-                        MapAnnotation(coordinate: place.coordinate) {
-                            Marker(label: place.displayName)
-                                .onTapGesture {
-                                    print("place = \(place)")
-                                    selectedPlace = place
-                                }
-                        }
-                    }
-                )
+                map
             } else {
                 Text("Loading map ...")
                 ProgressView()
@@ -99,6 +83,42 @@ struct ContentView: View {
         }
         .sheet(isPresented: $openWebsite) {
             SafariBrowser(url: $url)
+        }
+    }
+
+    // MARK: - Methods
+
+    @ViewBuilder
+    private func placeDetail(place: Place) -> some View {
+        if let item = place.item {
+            HStack {
+                VStack {
+                    Text("\(place.displayName)").fontWeight(.bold)
+                    if let phone = item.phoneNumber {
+                        Text("\(phone)")
+                    }
+                    if let address = place.address {
+                        Text("\(address)")
+                    }
+                }
+                if let itemUrl = item.url {
+                    VStack {
+                        Link("Website Outside", destination: itemUrl)
+                        Button("Website Inside") {
+                            url = itemUrl
+                            openWebsite = true
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+        } else {
+            VStack {
+                Text("\(place.displayName)").fontWeight(.bold)
+                let lat = place.coordinate.latitude
+                let lng = place.coordinate.longitude
+                Text("lat: \(lat), lng: \(lng)")
+            }
         }
     }
 }
