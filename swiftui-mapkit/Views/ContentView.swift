@@ -98,7 +98,12 @@ struct ContentView: View {
                 }
                 if let itemUrl = item.url {
                     VStack {
+                        // This opens the website of the selected place
+                        // in Safari.
                         Link("Website Outside", destination: itemUrl)
+
+                        // This opens the website of the selected place
+                        // in a sheet within this app.
                         Button("Website Inside") {
                             url = itemUrl
                             openWebsite = true
