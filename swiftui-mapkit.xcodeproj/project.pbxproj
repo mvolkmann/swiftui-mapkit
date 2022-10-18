@@ -14,7 +14,7 @@
 		1AAB0D002826436600544A8F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0CFF2826436600544A8F /* ContentView.swift */; };
 		1AAB0D022826436700544A8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAB0D012826436700544A8F /* Assets.xcassets */; };
 		1AAB0D052826436700544A8F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAB0D042826436700544A8F /* Preview Assets.xcassets */; };
-		1AAB0D0C2826539000544A8F /* ViewModel.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0D0B2826539000544A8F /* ViewModel.swift.swift */; };
+		1AAB0D0C2826539000544A8F /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0D0B2826539000544A8F /* ViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +27,7 @@
 		1AAB0CFF2826436600544A8F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1AAB0D012826436700544A8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1AAB0D042826436700544A8F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		1AAB0D0B2826539000544A8F /* ViewModel.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift.swift; sourceTree = "<group>"; };
+		1AAB0D0B2826539000544A8F /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +41,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A0D5AB628FF18D4007AA0F7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1AAB0CFF2826436600544A8F /* ContentView.swift */,
+				1A67891B28FF15EF00F3DFD8 /* Marker.swift */,
+				1A82824D282A34D100380E9D /* SafariBrowser.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1A0D5AB728FF18E6007AA0F7 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				1AAB0D0B2826539000544A8F /* ViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		1AAB0CF12826436600544A8F = {
 			isa = PBXGroup;
 			children = (
@@ -63,11 +81,9 @@
 				1AAB0CFD2826436600544A8F /* MapKitDemo.swift */,
 				1A3343532826824D006730C2 /* Info.plist */,
 				1AAB0D012826436700544A8F /* Assets.xcassets */,
-				1AAB0CFF2826436600544A8F /* ContentView.swift */,
-				1AAB0D0B2826539000544A8F /* ViewModel.swift.swift */,
 				1A33435128268119006730C2 /* Place.swift */,
-				1A67891B28FF15EF00F3DFD8 /* Marker.swift */,
-				1A82824D282A34D100380E9D /* SafariBrowser.swift */,
+				1A0D5AB628FF18D4007AA0F7 /* Views */,
+				1A0D5AB728FF18E6007AA0F7 /* ViewModels */,
 				1AAB0D032826436700544A8F /* Preview Content */,
 			);
 			path = "swiftui-mapkit";
@@ -151,7 +167,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AAB0D0C2826539000544A8F /* ViewModel.swift.swift in Sources */,
+				1AAB0D0C2826539000544A8F /* ViewModel.swift in Sources */,
 				1A33435228268119006730C2 /* Place.swift in Sources */,
 				1A82824E282A34D100380E9D /* SafariBrowser.swift in Sources */,
 				1AAB0D002826436600544A8F /* ContentView.swift in Sources */,
