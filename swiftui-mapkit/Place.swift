@@ -7,6 +7,16 @@ struct Place: Identifiable {
     var item: MKMapItem?
     var location: CLLocationCoordinate2D
 
+    init(name: String, location: CLLocationCoordinate2D) {
+        self.name = name
+        self.location = location
+    }
+
+    init(item: MKMapItem, location: CLLocationCoordinate2D) {
+        self.item = item
+        self.location = location
+    }
+
     var showAddress: String? {
         guard let place = item?.placemark else { return nil }
 
@@ -27,15 +37,5 @@ struct Place: Identifiable {
 
     var showName: String {
         name ?? item?.name ?? "unknown"
-    }
-
-    init(name: String, location: CLLocationCoordinate2D) {
-        self.name = name
-        self.location = location
-    }
-
-    init(item: MKMapItem, location: CLLocationCoordinate2D) {
-        self.item = item
-        self.location = location
     }
 }

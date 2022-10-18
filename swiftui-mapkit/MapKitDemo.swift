@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct swiftui_mapkitApp: App {
+struct MapKitDemo: App {
     @StateObject private var vm = ViewModel()
 
     var body: some Scene {
