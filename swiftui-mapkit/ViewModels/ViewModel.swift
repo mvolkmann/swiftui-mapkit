@@ -1,5 +1,7 @@
 import MapKit
 
+// Conforming to NSObject is required in order to conform to
+// CLLocationManagerDelegate which is specified in the extension below.
 class ViewModel: NSObject, ObservableObject {
     @Published var places: [Place] = []
     @Published var region = MKCoordinateRegion()

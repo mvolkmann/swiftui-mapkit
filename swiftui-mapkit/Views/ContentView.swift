@@ -64,13 +64,19 @@ struct ContentView: View {
             }
 
             if vm.setupComplete {
-                // TODO: Why does zooming the map trigger multiple warnings
-                // TODO: "Publishing changes from within view updates"?
                 Map(
                     coordinateRegion: $vm.region,
                     annotationItems: vm.places,
                     annotationContent: { place in
-                        // MapMarker(coordinate: place.location, tint: .blue)
+                        // MapMarker(coordinate: place.coordinate, tint: .blue)
+
+                        // TODO: Why does zooming the map trigger
+                        // TODO: multiple warnings that begin with
+                        // TODO: "Publishing changes from within view updates"?
+                        // TODO: This only happens with MapAnnotation,
+                        // TODO: not wth MapMarker.
+                        // TODO: See https://stackoverflow.com/questions/73892561/how-to-re-render-swiftui-map-with-mapannotation-without-runtime-warnings-for-un
+                        // TODO: and https://stackoverflow.com/questions/74028793/mapannotation-producing-publishing-changes-from-within-view-updates-runtime-warn.
                         MapAnnotation(coordinate: place.coordinate) {
                             Marker(label: place.showName)
                                 .onTapGesture {
@@ -81,7 +87,7 @@ struct ContentView: View {
                     }
                 )
             } else {
-                Text("Loading initial map ...")
+                Text("Loading map ...")
                 ProgressView()
             }
 
