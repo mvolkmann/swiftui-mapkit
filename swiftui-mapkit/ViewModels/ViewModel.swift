@@ -1,8 +1,9 @@
 import MapKit
 
 class ViewModel: NSObject, ObservableObject {
-    @Published var annotations: [Place] = []
+    @Published var places: [Place] = []
     @Published var region = MKCoordinateRegion()
+    @Published var setupComplete = false
 
     static let initialPlaces = [
         "Buckingham Palace",
@@ -21,6 +22,8 @@ class ViewModel: NSObject, ObservableObject {
     override init() {
         super.init()
 
+        // TODO: Why does setting manager properties trigger the warning
+        // TODO: "Publishing changes from within view updates"?
         manager.delegate = self
         // Won't find current location without this.
         // It fails to find the current location when this is 20 or below!
@@ -31,34 +34,34 @@ class ViewModel: NSObject, ObservableObject {
 
     @MainActor
     func clearAnnotations() {
-        annotations = []
-        if let place = selectedPlace { annotations.append(place) }
+        places = []
+        if let place = selectedPlace {
+            places.append(place)
+        }
     }
 
-    func search(_ searchText: String) async {
+    func search(text: String, exact: Bool = false) async -> [Place] {
+        var newPlaces: [Place] = []
+
         let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = searchText
+        request.naturalLanguageQuery = text
         request.region = region // only searches in this region
         let search = MKLocalSearch(request: request)
 
         if let results = try? await search.start() {
-            let items = results.mapItems
-            await MainActor.run {
-                for item in items {
-                    let placemark = item.placemark
-                    // print("category = \(item.pointOfInterestCategory?.rawValue ?? "none")")
-                    if let location = placemark.location?.coordinate {
-                        let place = Place(item: item, location: location)
-                        // Why does Xcode think I am publishing changes
-                        // from within a view update here?
-                        // I am inside MainActor.run!
-                        annotations.append(place)
+            for item in results.mapItems {
+                let placemark = item.placemark
+                // print("category = \(item.pointOfInterestCategory?.rawValue ?? "none")")
+                if !exact || placemark.name == text {
+                    if let coordinate = placemark.location?.coordinate {
+                        let place = Place(item: item, coordinate: coordinate)
+                        newPlaces.append(place)
                     }
                 }
             }
-        } else {
-            print("no results found")
         }
+
+        return newPlaces
     }
 
     @MainActor
@@ -73,9 +76,19 @@ class ViewModel: NSObject, ObservableObject {
             longitudinalMeters: size
         )
 
+        var initialPlaces: [Place] = []
+        // TODO: Run these searches in parallel?
         for place in Self.initialPlaces {
-            await search(place)
+            let newPlaces = await search(text: place, exact: true)
+            initialPlaces += newPlaces
         }
+
+        // The map is not rendered until this assignment is made.
+        // This prevents multiple warnings that begin with
+        // "Publishing changes from within view updates".
+        places = initialPlaces
+
+        setupComplete = true
     }
 }
 
@@ -84,10 +97,10 @@ extension ViewModel: CLLocationManagerDelegate {
         _: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
     ) {
-        if let coordinates = locations.first?.coordinate {
+        if let coordinate = locations.first?.coordinate {
             let location = CLLocation(
-                latitude: coordinates.latitude,
-                longitude: coordinates.longitude
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude
             )
             // Guess the address of the current location.
             CLGeocoder().reverseGeocodeLocation(location) { places, _ in
@@ -97,18 +110,18 @@ extension ViewModel: CLLocationManagerDelegate {
                     item.name = "You Are Here"
                     self.selectedPlace = Place(
                         item: item,
-                        location: coordinates
+                        coordinate: coordinate
                     )
                 } else {
                     self.selectedPlace = Place(
                         name: "You Are Here",
-                        location: coordinates
+                        coordinate: coordinate
                     )
                 }
 
                 Task {
                     await MainActor.run {
-                        self.annotations.append(self.selectedPlace!)
+                        self.places.append(self.selectedPlace!)
                     }
                 }
             }

@@ -5,16 +5,16 @@ struct Place: Identifiable {
     var selected = false
     var name: String?
     var item: MKMapItem?
-    var location: CLLocationCoordinate2D
+    var coordinate: CLLocationCoordinate2D
 
-    init(name: String, location: CLLocationCoordinate2D) {
+    init(name: String, coordinate: CLLocationCoordinate2D) {
         self.name = name
-        self.location = location
+        self.coordinate = coordinate
     }
 
-    init(item: MKMapItem, location: CLLocationCoordinate2D) {
+    init(item: MKMapItem, coordinate: CLLocationCoordinate2D) {
         self.item = item
-        self.location = location
+        self.coordinate = coordinate
     }
 
     var showAddress: String? {

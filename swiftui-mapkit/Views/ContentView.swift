@@ -24,7 +24,7 @@ struct ContentView: View {
                 Button("Search") {
                     vm.clearAnnotations()
                     Task(priority: .background) {
-                        await vm.search(searchText)
+                        vm.places = await vm.search(text: searchText)
                     }
                     focusName = nil
                 }
@@ -57,26 +57,35 @@ struct ContentView: View {
                     }
                 } else {
                     Text("\(place.showName)").fontWeight(.bold)
-                    let lat = place.location.latitude
-                    let lng = place.location.longitude
+                    let lat = place.coordinate.latitude
+                    let lng = place.coordinate.longitude
                     Text("lat: \(lat), lng: \(lng)")
                 }
             }
 
-            Map(
-                coordinateRegion: $vm.region,
-                annotationItems: vm.annotations,
-                annotationContent: { place in
-                    // MapMarker(coordinate: place.location, tint: .blue)
-                    MapAnnotation(coordinate: place.location) {
-                        Marker(label: place.showName)
-                            .onTapGesture {
-                                print("place = \(place)")
-                                selectedPlace = place
-                            }
+            if vm.setupComplete {
+                // TODO: Why does zooming the map trigger multiple warnings
+                // TODO: "Publishing changes from within view updates"?
+                Map(
+                    coordinateRegion: $vm.region,
+                    annotationItems: vm.places,
+                    annotationContent: { place in
+                        // MapMarker(coordinate: place.location, tint: .blue)
+                        MapAnnotation(coordinate: place.coordinate) {
+                            Marker(label: place.showName)
+                                .onTapGesture {
+                                    print("place = \(place)")
+                                    selectedPlace = place
+                                }
+                        }
                     }
-                }
-            )
+                )
+            } else {
+                Text("Loading initial map ...")
+                ProgressView()
+            }
+
+            Spacer()
         }
         .onAppear {
             vm.manager.requestWhenInUseAuthorization()
