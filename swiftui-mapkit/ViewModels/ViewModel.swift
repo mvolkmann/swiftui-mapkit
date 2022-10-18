@@ -4,31 +4,29 @@ class ViewModel: NSObject, ObservableObject {
     @Published var annotations: [Place] = []
     @Published var region = MKCoordinateRegion()
 
-    var selectedPlace: Place?
-
-    let initialPlaces = [
+    static let initialPlaces = [
         "Buckingham Palace",
         "Kensington Palace",
         "Tower of London",
-        "Westminster Abbey",
+        "Westminster Abbey"
     ]
 
     let manager = CLLocationManager()
+
     let size = 4000.0 // of area to display in meters
 
+    var selectedPlace: Place?
+
+    @MainActor
     override init() {
         super.init()
 
         manager.delegate = self
-
         // Won't find current location without this.
+        // It fails to find the current location when this is 20 or below!
         manager.desiredAccuracy = 25 // in meters
 
-        // It fails to find the current location when this is 20 or below!
-
-        Task {
-            await setup()
-        }
+        Task { await setup() }
     }
 
     @MainActor
@@ -51,6 +49,9 @@ class ViewModel: NSObject, ObservableObject {
                     // print("category = \(item.pointOfInterestCategory?.rawValue ?? "none")")
                     if let location = placemark.location?.coordinate {
                         let place = Place(item: item, location: location)
+                        // Why does Xcode think I am publishing changes
+                        // from within a view update here?
+                        // I am inside MainActor.run!
                         annotations.append(place)
                     }
                 }
@@ -72,7 +73,7 @@ class ViewModel: NSObject, ObservableObject {
             longitudinalMeters: size
         )
 
-        for place in initialPlaces {
+        for place in Self.initialPlaces {
             await search(place)
         }
     }
