@@ -35,10 +35,7 @@ struct ContentView: View {
                 // TODO: and https://stackoverflow.com/questions/74028793/mapannotation-producing-publishing-changes-from-within-view-updates-runtime-warn.
                 MapAnnotation(coordinate: place.coordinate) {
                     Marker(label: place.displayName)
-                        .onTapGesture {
-                            print("place = \(place)")
-                            selectedPlace = place
-                        }
+                        .onTapGesture { selectedPlace = place }
                 }
             }
         )
@@ -56,28 +53,26 @@ struct ContentView: View {
                 }
                 focusName = nil
             }
-            Spacer()
         }
     }
 
     var body: some View {
         VStack {
             searchArea.padding()
-
             if let place = selectedPlace {
                 placeDetail(place: place)
             }
-
             if vm.setupComplete {
                 map
             } else {
                 Text("Loading map ...")
                 ProgressView()
             }
-
             Spacer()
         }
         .onAppear {
+            // Requesting access is done here instead of inside the
+            // ViewModel initializer because the UI needs to be started.
             vm.manager.requestWhenInUseAuthorization()
             vm.manager.requestLocation()
         }
