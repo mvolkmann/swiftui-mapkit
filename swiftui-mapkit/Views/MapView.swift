@@ -8,7 +8,20 @@ struct MapView: UIViewRepresentable {
     var longitude: Double
     var zoom: Double
 
+    typealias ElevationStyle = MKMapConfiguration.ElevationStyle
+    typealias EmphasisStyle = MKStandardMapConfiguration.EmphasisStyle
+
     @EnvironmentObject private var mapSettings: MapSettings
+
+    private func elevationStyle() -> ElevationStyle {
+        mapSettings.elevation == "realistic" ?
+            ElevationStyle.realistic : ElevationStyle.flat
+    }
+
+    private func emphasisStyle() -> EmphasisStyle {
+        mapSettings.emphasis == "muted" ?
+            EmphasisStyle.muted : EmphasisStyle.default
+    }
 
     func makeUIView(context _: Context) -> MKMapView {
         let center = CLLocationCoordinate2D(
@@ -27,34 +40,38 @@ struct MapView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: MKMapView, context _: Context) {
+        var config: MKMapConfiguration!
+
         switch mapSettings.type {
         case "standard":
-            uiView.preferredConfiguration = MKStandardMapConfiguration(
+            let temp = MKStandardMapConfiguration(
                 elevationStyle: elevationStyle(),
                 emphasisStyle: emphasisStyle()
             )
+            // showsTraffic is a property of MKStandardMapConfiguration,
+            // but not a property of MKMapConfiguration.
+            // This adds colored lines (yellow, red, and maroon)
+            // to roads only in the standard view.
+            temp.showsTraffic = true
+
+            // Likewise for pointOfInterestFilter.
+            temp.pointOfInterestFilter = MKPointOfInterestFilter(
+                including: [.bakery]
+            )
+
+            config = temp
         case "image":
-            uiView.preferredConfiguration = MKImageryMapConfiguration(
+            config = MKImageryMapConfiguration(
                 elevationStyle: elevationStyle()
             )
         case "hybrid":
-            uiView.preferredConfiguration = MKHybridMapConfiguration(
+            config = MKHybridMapConfiguration(
                 elevationStyle: elevationStyle()
             )
         default:
             break
         }
-    }
 
-    private func elevationStyle() -> MKMapConfiguration.ElevationStyle {
-        mapSettings.elevation == "realistic" ?
-            MKMapConfiguration.ElevationStyle.realistic :
-            MKMapConfiguration.ElevationStyle.flat
-    }
-
-    private func emphasisStyle() -> MKStandardMapConfiguration.EmphasisStyle {
-        mapSettings.emphasis == "muted" ?
-            MKStandardMapConfiguration.EmphasisStyle.muted :
-            MKStandardMapConfiguration.EmphasisStyle.default
+        uiView.preferredConfiguration = config
     }
 }
