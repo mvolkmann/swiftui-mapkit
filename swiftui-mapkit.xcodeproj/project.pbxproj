@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A0D5ABD29006DDB007AA0F7 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0D5ABC29006DDB007AA0F7 /* MapView.swift */; };
+		1A0D5ABF29006E34007AA0F7 /* MapSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0D5ABE29006E34007AA0F7 /* MapSettings.swift */; };
 		1A33435228268119006730C2 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A33435128268119006730C2 /* Place.swift */; };
 		1A67891C28FF15EF00F3DFD8 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A67891B28FF15EF00F3DFD8 /* Marker.swift */; };
 		1A82824E282A34D100380E9D /* SafariBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A82824D282A34D100380E9D /* SafariBrowser.swift */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A0D5ABC29006DDB007AA0F7 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		1A0D5ABE29006E34007AA0F7 /* MapSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettings.swift; sourceTree = "<group>"; };
 		1A33435128268119006730C2 /* Place.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
 		1A3343532826824D006730C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1A67891B28FF15EF00F3DFD8 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
@@ -45,6 +49,7 @@
 			isa = PBXGroup;
 			children = (
 				1AAB0CFF2826436600544A8F /* ContentView.swift */,
+				1A0D5ABC29006DDB007AA0F7 /* MapView.swift */,
 				1A67891B28FF15EF00F3DFD8 /* Marker.swift */,
 				1A82824D282A34D100380E9D /* SafariBrowser.swift */,
 			);
@@ -55,6 +60,7 @@
 			isa = PBXGroup;
 			children = (
 				1AAB0D0B2826539000544A8F /* ViewModel.swift */,
+				1A0D5ABE29006E34007AA0F7 /* MapSettings.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -167,8 +173,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A0D5ABD29006DDB007AA0F7 /* MapView.swift in Sources */,
 				1AAB0D0C2826539000544A8F /* ViewModel.swift in Sources */,
 				1A33435228268119006730C2 /* Place.swift in Sources */,
+				1A0D5ABF29006E34007AA0F7 /* MapSettings.swift in Sources */,
 				1A82824E282A34D100380E9D /* SafariBrowser.swift in Sources */,
 				1AAB0D002826436600544A8F /* ContentView.swift in Sources */,
 				1AAB0CFE2826436600544A8F /* MapKitDemoApp.swift in Sources */,
@@ -229,7 +237,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -283,7 +291,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
