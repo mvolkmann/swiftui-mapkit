@@ -23,10 +23,6 @@ struct MapView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: MKMapView, context _: Context) {
-        updateMapType(uiView)
-    }
-
-    private func updateMapType(_ uiView: MKMapView) {
         switch mapSettings.mapType {
         case 0:
             uiView.preferredConfiguration = MKStandardMapConfiguration(
@@ -34,31 +30,27 @@ struct MapView: UIViewRepresentable {
                 emphasisStyle: emphasisStyle()
             )
         case 1:
-            uiView
-                .preferredConfiguration =
-                MKHybridMapConfiguration(elevationStyle: elevationStyle())
+            uiView.preferredConfiguration = MKImageryMapConfiguration(
+                elevationStyle: elevationStyle()
+            )
         case 2:
-            uiView
-                .preferredConfiguration =
-                MKImageryMapConfiguration(elevationStyle: elevationStyle())
+            uiView.preferredConfiguration = MKHybridMapConfiguration(
+                elevationStyle: elevationStyle()
+            )
         default:
             break
         }
     }
 
     private func elevationStyle() -> MKMapConfiguration.ElevationStyle {
-        if mapSettings.showElevation == 0 {
-            return MKMapConfiguration.ElevationStyle.realistic
-        } else {
-            return MKMapConfiguration.ElevationStyle.flat
-        }
+        mapSettings.showElevation == 0 ?
+            MKMapConfiguration.ElevationStyle.realistic :
+            MKMapConfiguration.ElevationStyle.flat
     }
 
     private func emphasisStyle() -> MKStandardMapConfiguration.EmphasisStyle {
-        if mapSettings.showEmphasisStyle == 0 {
-            return MKStandardMapConfiguration.EmphasisStyle.default
-        } else {
-            return MKStandardMapConfiguration.EmphasisStyle.muted
-        }
+        mapSettings.showEmphasisStyle == 0 ?
+            MKStandardMapConfiguration.EmphasisStyle.default :
+            MKStandardMapConfiguration.EmphasisStyle.muted
     }
 }

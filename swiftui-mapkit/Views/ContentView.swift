@@ -57,8 +57,8 @@ struct ContentView: View {
                 // hold two fingers on the map and drag up or down.
                 Picker("Map Type", selection: $mapType) {
                     Text("Standard").tag(0)
-                    Text("Image").tag(2)
-                    Text("Hybrid").tag(1) // mix of Standard and Image
+                    Text("Image").tag(1)
+                    Text("Hybrid").tag(2) // mix of Standard and Image
                 }
                 .pickerStyle(.segmented)
                 .onChange(of: mapType) { newValue in
