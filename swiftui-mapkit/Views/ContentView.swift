@@ -14,6 +14,8 @@ struct ContentView: View {
 
     @ObservedObject var mapSettings = MapSettings()
 
+    @State var latitude = 38.7095566
+    @State var longitude = -90.5950477
     @State var openWebsite = false
     @State var selectedPlace: Place?
     @State var searchText = ""
@@ -49,7 +51,11 @@ struct ContentView: View {
          )
          */
         ZStack {
-            MapView().environmentObject(mapSettings)
+            MapView(
+                latitude: latitude,
+                longitude: longitude,
+                zoom: 0.01
+            ).environmentObject(mapSettings)
         }
         .overlay(alignment: .bottom) {
             VStack {

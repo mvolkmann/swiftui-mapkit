@@ -2,21 +2,30 @@ import Combine
 import MapKit
 import SwiftUI
 
+// For now we have to wrap an MKMapView in a UIViewRepresenatable
+// in order to use the iOS 16 MapKit features in SwiftUI.
 struct MapView: UIViewRepresentable {
-    private var counter = 0
-
     static let londonLatitude = 51.501
     static let londonLongitude = -0.1425
-    private var mapRegion = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(
-            latitude: Self.londonLatitude,
-            longitude: Self.londonLongitude
-        ),
-        span: MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03)
-    )
+
+    var latitude = Self.londonLatitude
+    var longitude = Self.londonLongitude
+    var zoom: Double = 0.03
+
     @EnvironmentObject private var mapSettings: MapSettings
 
     func makeUIView(context _: Context) -> MKMapView {
+        let mapRegion = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(
+                latitude: latitude,
+                longitude: longitude
+            ),
+            span: MKCoordinateSpan(
+                latitudeDelta: zoom,
+                longitudeDelta: zoom
+            )
+        )
+
         let mapView = MKMapView(frame: .zero)
         mapView.region = mapRegion
         return mapView
