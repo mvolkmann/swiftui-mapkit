@@ -54,9 +54,22 @@ struct MapView: UIViewRepresentable {
             // to roads only in the standard view.
             temp.showsTraffic = true
 
-            // Likewise for pointOfInterestFilter.
+            // pointOfInterestFilter is a property of MKStandardMapConfiguration,
+            // but not a property of MKMapConfiguration.
+            // By default many points of interest are displayed
+            // in the standard map view (not in image or hybrid).
+            // Setting this limits the types that are shown which can include:
+            // airport, amusementPark, aquarium, atm,
+            // bakery, bank, beach, brewery,
+            // cafe, campground, carRental, evCharger,
+            // fireStation, fitnessCenter, foodMarket,
+            // gasStation, hospital, hotel, laundry, library,
+            // marina, movieTheater, museum, nationalPark, nightlife,
+            // park, parking, pharmacy, police, postOffice, publicTransport,
+            // restaurant, restroom, school, stadium, store, theater,
+            // university, winery, and zoo.
             temp.pointOfInterestFilter = MKPointOfInterestFilter(
-                including: [.bakery]
+                including: [.park, .theater]
             )
 
             config = temp
