@@ -18,24 +18,37 @@ struct Place: Identifiable {
     }
 
     var address: String? {
-        guard let place = item?.placemark else { return nil }
+        return "\(street)\(city), \(state)\n\(postalCode)"
+    }
 
-        var address = ""
-        if let street = place.thoroughfare {
-            if let number = place.subThoroughfare {
-                address += number + " "
-            }
-            address += "\(street)\n"
-        }
+    var city: String {
+        item?.placemark.locality ?? ""
+    }
 
-        let city = place.locality ?? "no city"
-        let state = place.administrativeArea ?? ""
-        let postalCode = place.postalCode ?? ""
-
-        return "\(address)\(city), \(state)\n\(postalCode)"
+    var country: String {
+        item?.placemark.country ?? ""
     }
 
     var displayName: String {
         name ?? item?.name ?? "unknown"
+    }
+
+    var postalCode: String {
+        item?.placemark.postalCode ?? ""
+    }
+
+    var state: String {
+        item?.placemark.administrativeArea ?? ""
+    }
+
+    var street: String {
+        guard let place = item?.placemark else { return "" }
+        guard let street = place.thoroughfare else { return "" }
+
+        if let number = place.subThoroughfare {
+            return street + " " + number
+        } else {
+            return street
+        }
     }
 }

@@ -12,6 +12,9 @@ struct MapView: UIViewRepresentable {
     typealias EmphasisStyle = MKStandardMapConfiguration.EmphasisStyle
 
     @EnvironmentObject private var mapSettings: MapSettings
+    @EnvironmentObject private var vm: ViewModel
+
+    @State private var annotations: [MKPointAnnotation] = []
 
     private func elevationStyle() -> ElevationStyle {
         mapSettings.elevation == "realistic" ?
@@ -24,6 +27,7 @@ struct MapView: UIViewRepresentable {
     }
 
     func makeUIView(context _: Context) -> MKMapView {
+        print("MapView.makeUIView entered")
         let center = CLLocationCoordinate2D(
             latitude: latitude,
             longitude: longitude
@@ -36,10 +40,12 @@ struct MapView: UIViewRepresentable {
 
         let mapView = MKMapView(frame: .zero)
         mapView.region = mapRegion
+
         return mapView
     }
 
-    func updateUIView(_ uiView: MKMapView, context _: Context) {
+    func updateUIView(_ mapView: MKMapView, context _: Context) {
+        print("UPDATE UI VIEW ENTERED")
         var config: MKMapConfiguration!
 
         switch mapSettings.type {
@@ -85,6 +91,24 @@ struct MapView: UIViewRepresentable {
             break
         }
 
-        uiView.preferredConfiguration = config
+        mapView.preferredConfiguration = config
+
+        updateAnnotations(mapView)
+    }
+
+    private func updateAnnotations(_ mapView: MKMapView) {
+        Task {
+            await MainActor.run {
+                let newAnnotations = vm.places.map { place in
+                    var annotation = MKPointAnnotation()
+                    annotation.coordinate = place.coordinate
+                    annotation.title = place.displayName
+                    return annotation
+                }
+                mapView.removeAnnotations(annotations)
+                mapView.addAnnotations(newAnnotations)
+                annotations = newAnnotations
+            }
+        }
     }
 }
