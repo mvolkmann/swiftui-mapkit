@@ -8,9 +8,9 @@ struct MapView: UIViewRepresentable {
     static let londonLatitude = 51.501
     static let londonLongitude = -0.1425
 
-    var latitude = Self.londonLatitude
-    var longitude = Self.londonLongitude
-    var zoom: Double = 0.03
+    var latitude: Double
+    var longitude: Double
+    var zoom: Double
 
     @EnvironmentObject private var mapSettings: MapSettings
 
@@ -32,17 +32,17 @@ struct MapView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: MKMapView, context _: Context) {
-        switch mapSettings.mapType {
-        case 0:
+        switch mapSettings.type {
+        case "standard":
             uiView.preferredConfiguration = MKStandardMapConfiguration(
                 elevationStyle: elevationStyle(),
                 emphasisStyle: emphasisStyle()
             )
-        case 1:
+        case "image":
             uiView.preferredConfiguration = MKImageryMapConfiguration(
                 elevationStyle: elevationStyle()
             )
-        case 2:
+        case "hybrid":
             uiView.preferredConfiguration = MKHybridMapConfiguration(
                 elevationStyle: elevationStyle()
             )
@@ -52,14 +52,14 @@ struct MapView: UIViewRepresentable {
     }
 
     private func elevationStyle() -> MKMapConfiguration.ElevationStyle {
-        mapSettings.showElevation == 0 ?
+        mapSettings.elevation == "realistic" ?
             MKMapConfiguration.ElevationStyle.realistic :
             MKMapConfiguration.ElevationStyle.flat
     }
 
     private func emphasisStyle() -> MKStandardMapConfiguration.EmphasisStyle {
-        mapSettings.showEmphasisStyle == 0 ?
-            MKStandardMapConfiguration.EmphasisStyle.default :
-            MKStandardMapConfiguration.EmphasisStyle.muted
+        mapSettings.emphasis == "muted" ?
+            MKStandardMapConfiguration.EmphasisStyle.muted :
+            MKStandardMapConfiguration.EmphasisStyle.default
     }
 }

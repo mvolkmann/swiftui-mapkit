@@ -5,6 +5,11 @@ enum FocusName: Hashable {
     case search
 }
 
+private let homeLatitude = 38.7095566
+private let homeLongitude = -90.5950477
+private let londonLatitude = 51.501
+private let londonLongitude = -0.1425
+
 struct ContentView: View {
     // MARK: - State
 
@@ -14,16 +19,12 @@ struct ContentView: View {
 
     @ObservedObject var mapSettings = MapSettings()
 
-    @State var latitude = 38.7095566
-    @State var longitude = -90.5950477
+    @State var latitude = londonLatitude
+    @State var longitude = londonLongitude
     @State var openWebsite = false
     @State var selectedPlace: Place?
     @State var searchText = ""
     @State var url: URL = .init(string: "https://mvolkmann.github.io")!
-
-    @State var mapType = 0
-    @State var showElevation = 0
-    @State var showEmphasis = 0
 
     // MARK: - Properties
 
@@ -61,35 +62,26 @@ struct ContentView: View {
             VStack {
                 // To tilt the map, changing the view angle,
                 // hold two fingers on the map and drag up or down.
-                Picker("Map Type", selection: $mapType) {
-                    Text("Standard").tag(0)
-                    Text("Image").tag(1)
-                    Text("Hybrid").tag(2) // mix of Standard and Image
+                Picker("Map Type", selection: $mapSettings.type) {
+                    Text("Standard").tag("standard")
+                    Text("Image").tag("image")
+                    Text("Hybrid").tag("hybrid") // mix of Standard and Image
                 }
                 .pickerStyle(.segmented)
-                .onChange(of: mapType) { newValue in
-                    mapSettings.mapType = newValue
-                }
 
                 // This doesn't change the map when mapType is Standard,
                 // but does for Hybrid and Image.
-                Picker("Map Elevation", selection: $showElevation) {
-                    Text("Realistic").tag(0)
-                    Text("Flat").tag(1)
+                Picker("Elevation", selection: $mapSettings.elevation) {
+                    Text("Realistic").tag("realistic")
+                    Text("Flat").tag("flat")
                 }
                 .pickerStyle(.segmented)
-                .onChange(of: showElevation) { newValue in
-                    mapSettings.showElevation = newValue
-                }
 
-                Picker("Map Elevation", selection: $showEmphasis) {
-                    Text("Default").tag(0)
-                    Text("Muted").tag(1)
+                Picker("Emphasis", selection: $mapSettings.emphasis) {
+                    Text("Default").tag("default")
+                    Text("Muted").tag("muted")
                 }
                 .pickerStyle(.segmented)
-                .onChange(of: showEmphasis) { newValue in
-                    mapSettings.showEmphasisStyle = newValue
-                }
             }
             .padding()
             .background(.white.opacity(0.6))
