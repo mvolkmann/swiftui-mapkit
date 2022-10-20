@@ -2,7 +2,8 @@ import MapKit
 import SwiftUI
 
 enum FocusName: Hashable {
-    case search
+    case attractionSearch
+    case citySearch
 }
 
 // TODO: Check for 3D support for other cities including
@@ -22,10 +23,11 @@ struct ContentView: View {
 
     @ObservedObject var mapSettings = MapSettings()
 
+    @State var attractionText = ""
+    @State var cityText = ""
     @State var latitude = londonLatitude
     @State var longitude = londonLongitude
     @State var openWebsite = false
-    @State var searchText = ""
     @State var url: URL = .init(string: "https://mvolkmann.github.io")!
 
     // MARK: - Properties
@@ -96,17 +98,31 @@ struct ContentView: View {
     }
 
     private var searchArea: some View {
-        HStack {
-            TextField("Search", text: $searchText)
-                .textFieldStyle(.roundedBorder)
-                .focused($focusName, equals: .search)
-            Button("Search") {
-                focusName = nil
-                Task(priority: .background) {
-                    vm.places = await vm.search(text: searchText)
+        VStack {
+            HStack {
+                TextField("City", text: $cityText)
+                    .textFieldStyle(.roundedBorder)
+                    .focused($focusName, equals: .citySearch)
+                Button("Search") {
+                    focusName = nil
+                    Task(priority: .background) {
+                        vm.places = await vm.search(text: cityText)
+                    }
                 }
+                .disabled(cityText.isEmpty)
             }
-            .disabled(searchText.isEmpty)
+            HStack {
+                TextField("Attraction", text: $attractionText)
+                    .textFieldStyle(.roundedBorder)
+                    .focused($focusName, equals: .attractionSearch)
+                Button("Search") {
+                    focusName = nil
+                    Task(priority: .background) {
+                        vm.places = await vm.search(text: attractionText)
+                    }
+                }
+                .disabled(attractionText.isEmpty)
+            }
         }
     }
 
