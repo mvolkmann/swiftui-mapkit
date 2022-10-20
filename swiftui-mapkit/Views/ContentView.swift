@@ -19,15 +19,9 @@ struct ContentView: View {
 
     @EnvironmentObject var vm: ViewModel
 
-    @FocusState var focusName: FocusName?
+    @ObservedObject var locationVM = LocationViewModel.shared
 
-    @ObservedObject var mapSettings = MapSettings()
-
-    @State var attractionText = ""
-    @State var cityText = ""
     @State var isBrowsing = false
-    @State var isConfiguring = false
-    @State var isSearching = false
     @State var latitude = londonLatitude
     @State var longitude = londonLongitude
     @State var url: URL = .init(string: "https://mvolkmann.github.io")!
@@ -67,85 +61,7 @@ struct ContentView: View {
             longitude: longitude,
             zoom: 0.01
         )
-        .environmentObject(mapSettings)
         .edgesIgnoringSafeArea(.bottom)
-    }
-
-    private var searchForm: some View {
-        VStack {
-            Text("Search").font(.title)
-
-            HStack {
-                TextField("City", text: $cityText)
-                    .textFieldStyle(.roundedBorder)
-                    .focused($focusName, equals: .citySearch)
-                Button("Search") {
-                    focusName = nil
-                    Task(priority: .background) {
-                        vm.places = await vm.search(text: cityText)
-                    }
-                }
-                .disabled(cityText.isEmpty)
-            }
-
-            HStack {
-                TextField("Attraction", text: $attractionText)
-                    .textFieldStyle(.roundedBorder)
-                    .focused($focusName, equals: .attractionSearch)
-                Button("Search") {
-                    focusName = nil
-                    Task(priority: .background) {
-                        vm.places = await vm.search(text: attractionText)
-                    }
-                }
-                .disabled(attractionText.isEmpty)
-            }
-
-            Spacer()
-        }
-        .padding()
-        .overlay(alignment: .topTrailing) {
-            Button(action: { isSearching = false }) {
-                Image(systemName: "x.circle")
-            }
-        }
-    }
-
-    private var settingsForm: some View {
-        VStack {
-            Text("Settings").font(.title)
-
-            // To tilt the map, changing the view angle,
-            // hold two fingers on the map and drag up or down.
-            Picker("Map Type", selection: $mapSettings.type) {
-                Text("Standard").tag("standard")
-                Text("Image").tag("image")
-                Text("Hybrid").tag("hybrid") // mix of Standard and Image
-            }
-            .pickerStyle(.segmented)
-
-            // This doesn't change the map when mapType is Standard,
-            // but does for Hybrid and Image.
-            Picker("Elevation", selection: $mapSettings.elevation) {
-                Text("Realistic").tag("realistic")
-                Text("Flat").tag("flat")
-            }
-            .pickerStyle(.segmented)
-
-            Picker("Emphasis", selection: $mapSettings.emphasis) {
-                Text("Default").tag("default")
-                Text("Muted").tag("muted")
-            }
-            .pickerStyle(.segmented)
-
-            Spacer()
-        }
-        .padding()
-        .overlay(alignment: .topTrailing) {
-            Button(action: { isConfiguring = false }) {
-                Image(systemName: "x.circle")
-            }
-        }
     }
 
     var body: some View {
@@ -167,11 +83,11 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: Button(
-                    action: { isSearching = true },
+                    action: { vm.isSearching = true },
                     label: { Image(systemName: "magnifyingglass") }
                 ),
                 trailing: Button(
-                    action: { isConfiguring = true },
+                    action: { vm.isConfiguring = true },
                     label: { Image(systemName: "gearshape") }
                 )
             )
@@ -184,12 +100,11 @@ struct ContentView: View {
             .sheet(isPresented: $isBrowsing) {
                 SafariBrowser(url: $url)
             }
-            .sheet(isPresented: $isConfiguring) {
-                settingsForm
-                    .presentationDetents([.height(200)])
+            .sheet(isPresented: $vm.isConfiguring) {
+                SettingsForm()
             }
-            .sheet(isPresented: $isSearching) {
-                searchForm
+            .sheet(isPresented: $vm.isSearching) {
+                SearchForm()
                     .presentationDetents([.height(200)])
             }
         }
