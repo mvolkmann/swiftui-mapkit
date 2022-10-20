@@ -15,6 +15,7 @@ struct MapView: UIViewRepresentable {
     @EnvironmentObject private var vm: ViewModel
 
     @State private var annotations: [MKPointAnnotation] = []
+    @State private var titleToPlaceMap: [String: Place] = [:]
 
     private func elevationStyle() -> ElevationStyle {
         mapSettings.elevation == "realistic" ?
@@ -26,8 +27,14 @@ struct MapView: UIViewRepresentable {
             EmphasisStyle.muted : EmphasisStyle.default
     }
 
-    func makeUIView(context _: Context) -> MKMapView {
-        print("MapView.makeUIView entered")
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    func makeUIView(context: Context) -> MKMapView {
+        let mapView = MKMapView()
+        mapView.delegate = context.coordinator
+
         let center = CLLocationCoordinate2D(
             latitude: latitude,
             longitude: longitude
@@ -36,16 +43,12 @@ struct MapView: UIViewRepresentable {
             latitudeDelta: zoom,
             longitudeDelta: zoom
         )
-        let mapRegion = MKCoordinateRegion(center: center, span: span)
-
-        let mapView = MKMapView(frame: .zero)
-        mapView.region = mapRegion
+        mapView.region = MKCoordinateRegion(center: center, span: span)
 
         return mapView
     }
 
     func updateUIView(_ mapView: MKMapView, context _: Context) {
-        print("UPDATE UI VIEW ENTERED")
         var config: MKMapConfiguration!
 
         switch mapSettings.type {
@@ -100,14 +103,38 @@ struct MapView: UIViewRepresentable {
         Task {
             await MainActor.run {
                 let newAnnotations = vm.places.map { place in
-                    var annotation = MKPointAnnotation()
+                    let annotation = MKPointAnnotation()
                     annotation.coordinate = place.coordinate
                     annotation.title = place.displayName
+                    // annotation.title = place.displayName + "\n" + place.address
+                    // annotation.subtitle = place.address // not displayed
+
+                    titleToPlaceMap[annotation.title!] = place
+
                     return annotation
                 }
+
                 mapView.removeAnnotations(annotations)
                 mapView.addAnnotations(newAnnotations)
                 annotations = newAnnotations
+            }
+        }
+    }
+
+    class Coordinator: NSObject, MKMapViewDelegate {
+        var parent: MapView
+
+        init(_ parent: MapView) {
+            self.parent = parent
+        }
+
+        @MainActor
+        func mapView(_: MKMapView, didSelect annotation: MKAnnotation) {
+            if let title = annotation.title,
+               // TODO: Why is force unwrap needed here?
+               let place = parent.titleToPlaceMap[title!] {
+                print("setting selectedPlace to", place)
+                parent.vm.selectedPlace = place
             }
         }
     }

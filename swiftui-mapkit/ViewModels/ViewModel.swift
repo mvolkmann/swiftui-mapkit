@@ -5,6 +5,7 @@ import MapKit
 class ViewModel: NSObject, ObservableObject {
     @Published var places: [Place] = []
     @Published var region = MKCoordinateRegion()
+    @Published var selectedPlace: Place?
     @Published var setupComplete = false
 
     static let initialPlaces = [
@@ -17,8 +18,6 @@ class ViewModel: NSObject, ObservableObject {
     let manager = CLLocationManager()
 
     let size = 4000.0 // of area to display in meters
-
-    var selectedPlace: Place?
 
     @MainActor
     override init() {
@@ -35,14 +34,9 @@ class ViewModel: NSObject, ObservableObject {
     }
 
     @MainActor
-    func clearAnnotations() {
-        places = []
-        if let place = selectedPlace {
-            places.append(place)
-        }
-    }
-
     func search(text: String, exact: Bool = false) async -> [Place] {
+        selectedPlace = nil
+
         var newPlaces: [Place] = []
 
         let request = MKLocalSearch.Request()
@@ -79,6 +73,7 @@ class ViewModel: NSObject, ObservableObject {
         )
 
         var initialPlaces: [Place] = []
+
         // TODO: Run these searches in parallel?
         for place in Self.initialPlaces {
             let newPlaces = await search(text: place, exact: true)
@@ -97,38 +92,8 @@ class ViewModel: NSObject, ObservableObject {
 extension ViewModel: CLLocationManagerDelegate {
     func locationManager(
         _: CLLocationManager,
-        didUpdateLocations locations: [CLLocation]
-    ) {
-        if let coordinate = locations.first?.coordinate {
-            let location = CLLocation(
-                latitude: coordinate.latitude,
-                longitude: coordinate.longitude
-            )
-            // Guess the address of the current location.
-            CLGeocoder().reverseGeocodeLocation(location) { places, _ in
-                if let place = places?.first {
-                    let placemark = MKPlacemark(placemark: place)
-                    let item = MKMapItem(placemark: placemark)
-                    item.name = "You Are Here"
-                    self.selectedPlace = Place(
-                        item: item,
-                        coordinate: coordinate
-                    )
-                } else {
-                    self.selectedPlace = Place(
-                        name: "You Are Here",
-                        coordinate: coordinate
-                    )
-                }
-
-                Task {
-                    await MainActor.run {
-                        self.places.append(self.selectedPlace!)
-                    }
-                }
-            }
-        }
-    }
+        didUpdateLocations _: [CLLocation]
+    ) {}
 
     func locationManager(
         _: CLLocationManager,

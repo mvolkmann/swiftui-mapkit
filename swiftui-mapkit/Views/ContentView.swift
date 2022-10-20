@@ -5,6 +5,9 @@ enum FocusName: Hashable {
     case search
 }
 
+// TODO: Check for 3D support for other cities including
+// TODO: Los Angeles, New York, San Franciso, Philadelphia, San Diego,
+// TODO: Washington D.C., Montreal, Toronto, Vancouver, and more.
 private let homeLatitude = 38.7095566
 private let homeLongitude = -90.5950477
 private let londonLatitude = 51.501
@@ -22,7 +25,6 @@ struct ContentView: View {
     @State var latitude = londonLatitude
     @State var longitude = londonLongitude
     @State var openWebsite = false
-    @State var selectedPlace: Place?
     @State var searchText = ""
     @State var url: URL = .init(string: "https://mvolkmann.github.io")!
 
@@ -30,6 +32,8 @@ struct ContentView: View {
 
     private var map: some View {
         /*
+         // This is the SwiftUI approach that does not yet support
+         // some cool MapKit features.
          Map(
              coordinateRegion: $vm.region,
              showsUserLocation: true,
@@ -51,13 +55,16 @@ struct ContentView: View {
              }
          )
          */
-        ZStack {
-            MapView(
-                latitude: latitude,
-                longitude: longitude,
-                zoom: 0.01
-            ).environmentObject(mapSettings)
-        }
+
+        // This approach uses UIKit in order to
+        // utilize some cool MapKit features.
+        MapView(
+            latitude: latitude,
+            longitude: longitude,
+            zoom: 0.01
+        )
+        .environmentObject(mapSettings)
+        .edgesIgnoringSafeArea(.bottom)
         .overlay(alignment: .bottom) {
             VStack {
                 // To tilt the map, changing the view angle,
@@ -94,19 +101,19 @@ struct ContentView: View {
                 .textFieldStyle(.roundedBorder)
                 .focused($focusName, equals: .search)
             Button("Search") {
-                vm.clearAnnotations()
+                focusName = nil
                 Task(priority: .background) {
                     vm.places = await vm.search(text: searchText)
                 }
-                focusName = nil
             }
+            .disabled(searchText.isEmpty)
         }
     }
 
     var body: some View {
         VStack {
             searchArea.padding()
-            if let place = selectedPlace {
+            if let place = vm.selectedPlace {
                 placeDetail(place: place)
             }
             if vm.setupComplete {
@@ -117,6 +124,7 @@ struct ContentView: View {
             }
             Spacer()
         }
+        .edgesIgnoringSafeArea(.bottom)
         .onAppear {
             // Requesting access is done here instead of inside the
             // ViewModel initializer because the UI needs to be started.

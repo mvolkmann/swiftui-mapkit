@@ -17,8 +17,11 @@ struct Place: Identifiable {
         self.coordinate = coordinate
     }
 
-    var address: String? {
-        return "\(street)\(city), \(state)\n\(postalCode)"
+    var address: String {
+        var result = ""
+        if !street.isEmpty { result += street + "\n" }
+        result += "\(city), \(state)\n\(postalCode)"
+        return result
     }
 
     var city: String {
