@@ -25,9 +25,11 @@ struct ContentView: View {
 
     @State var attractionText = ""
     @State var cityText = ""
+    @State var isBrowsing = false
+    @State var isConfiguring = false
+    @State var isSearching = false
     @State var latitude = londonLatitude
     @State var longitude = londonLongitude
-    @State var openWebsite = false
     @State var url: URL = .init(string: "https://mvolkmann.github.io")!
 
     // MARK: - Properties
@@ -67,38 +69,12 @@ struct ContentView: View {
         )
         .environmentObject(mapSettings)
         .edgesIgnoringSafeArea(.bottom)
-        .overlay(alignment: .bottom) {
-            VStack {
-                // To tilt the map, changing the view angle,
-                // hold two fingers on the map and drag up or down.
-                Picker("Map Type", selection: $mapSettings.type) {
-                    Text("Standard").tag("standard")
-                    Text("Image").tag("image")
-                    Text("Hybrid").tag("hybrid") // mix of Standard and Image
-                }
-                .pickerStyle(.segmented)
-
-                // This doesn't change the map when mapType is Standard,
-                // but does for Hybrid and Image.
-                Picker("Elevation", selection: $mapSettings.elevation) {
-                    Text("Realistic").tag("realistic")
-                    Text("Flat").tag("flat")
-                }
-                .pickerStyle(.segmented)
-
-                Picker("Emphasis", selection: $mapSettings.emphasis) {
-                    Text("Default").tag("default")
-                    Text("Muted").tag("muted")
-                }
-                .pickerStyle(.segmented)
-            }
-            .padding()
-            .background(.white.opacity(0.6))
-        }
     }
 
-    private var searchArea: some View {
+    private var searchForm: some View {
         VStack {
+            Text("Search").font(.title)
+
             HStack {
                 TextField("City", text: $cityText)
                     .textFieldStyle(.roundedBorder)
@@ -111,6 +87,7 @@ struct ContentView: View {
                 }
                 .disabled(cityText.isEmpty)
             }
+
             HStack {
                 TextField("Attraction", text: $attractionText)
                     .textFieldStyle(.roundedBorder)
@@ -123,32 +100,98 @@ struct ContentView: View {
                 }
                 .disabled(attractionText.isEmpty)
             }
+
+            Spacer()
+        }
+        .padding()
+        .overlay(alignment: .topTrailing) {
+            Button(action: { isSearching = false }) {
+                Image(systemName: "x.circle")
+            }
+        }
+    }
+
+    private var settingsForm: some View {
+        VStack {
+            Text("Settings").font(.title)
+
+            // To tilt the map, changing the view angle,
+            // hold two fingers on the map and drag up or down.
+            Picker("Map Type", selection: $mapSettings.type) {
+                Text("Standard").tag("standard")
+                Text("Image").tag("image")
+                Text("Hybrid").tag("hybrid") // mix of Standard and Image
+            }
+            .pickerStyle(.segmented)
+
+            // This doesn't change the map when mapType is Standard,
+            // but does for Hybrid and Image.
+            Picker("Elevation", selection: $mapSettings.elevation) {
+                Text("Realistic").tag("realistic")
+                Text("Flat").tag("flat")
+            }
+            .pickerStyle(.segmented)
+
+            Picker("Emphasis", selection: $mapSettings.emphasis) {
+                Text("Default").tag("default")
+                Text("Muted").tag("muted")
+            }
+            .pickerStyle(.segmented)
+
+            Spacer()
+        }
+        .padding()
+        .overlay(alignment: .topTrailing) {
+            Button(action: { isConfiguring = false }) {
+                Image(systemName: "x.circle")
+            }
         }
     }
 
     var body: some View {
-        VStack {
-            searchArea.padding()
-            if let place = vm.selectedPlace {
-                placeDetail(place: place)
+        NavigationStack {
+            VStack {
+                if let place = vm.selectedPlace {
+                    placeDetail(place: place)
+                }
+                if vm.setupComplete {
+                    map
+                } else {
+                    Text("Loading map ...")
+                    ProgressView()
+                }
+                Spacer()
             }
-            if vm.setupComplete {
-                map
-            } else {
-                Text("Loading map ...")
-                ProgressView()
+            .edgesIgnoringSafeArea(.bottom)
+            .navigationTitle("Map Explorer")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(
+                leading: Button(
+                    action: { isSearching = true },
+                    label: { Image(systemName: "magnifyingglass") }
+                ),
+                trailing: Button(
+                    action: { isConfiguring = true },
+                    label: { Image(systemName: "gearshape") }
+                )
+            )
+            .onAppear {
+                // Requesting access is done here instead of inside the
+                // ViewModel initializer because the UI needs to be started.
+                vm.manager.requestWhenInUseAuthorization()
+                vm.manager.requestLocation()
             }
-            Spacer()
-        }
-        .edgesIgnoringSafeArea(.bottom)
-        .onAppear {
-            // Requesting access is done here instead of inside the
-            // ViewModel initializer because the UI needs to be started.
-            vm.manager.requestWhenInUseAuthorization()
-            vm.manager.requestLocation()
-        }
-        .sheet(isPresented: $openWebsite) {
-            SafariBrowser(url: $url)
+            .sheet(isPresented: $isBrowsing) {
+                SafariBrowser(url: $url)
+            }
+            .sheet(isPresented: $isConfiguring) {
+                settingsForm
+                    .presentationDetents([.height(200)])
+            }
+            .sheet(isPresented: $isSearching) {
+                searchForm
+                    .presentationDetents([.height(200)])
+            }
         }
     }
 
@@ -177,7 +220,7 @@ struct ContentView: View {
                         // in a sheet within this app.
                         Button("Website Inside") {
                             url = itemUrl
-                            openWebsite = true
+                            isBrowsing = true
                         }
                     }
                     .buttonStyle(.borderedProminent)
