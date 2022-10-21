@@ -77,6 +77,10 @@ class MapKitViewModel: NSObject, ObservableObject {
         selectedPlacemark = placemark
         searchQuery = ""
         searchLocations = []
+
+        if let mapView, let location = placemark.location {
+            mapView.centerCoordinate = location.coordinate
+        }
     }
 
     func unlikeLocation(_ location: String) {

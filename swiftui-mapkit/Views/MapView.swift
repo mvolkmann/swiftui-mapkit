@@ -4,7 +4,7 @@ import SwiftUI
 // For now we have to wrap an MKMapView in a UIViewRepresenatable
 // in order to use the iOS 16 MapKit features in SwiftUI.
 struct MapView: UIViewRepresentable {
-    var center: CLLocationCoordinate2D
+    var center: CLLocationCoordinate2D // initial, not current
     var zoom: Double
 
     typealias ElevationStyle = MKMapConfiguration.ElevationStyle
@@ -43,7 +43,7 @@ struct MapView: UIViewRepresentable {
         mapView.region = MKCoordinateRegion(center: center, span: span)
 
         // Save a reference to the MKMapView so
-        // ContentView can obtain the center coordinate.
+        // ContentView can obtain the current center coordinate.
         Task {
             await MainActor.run {
                 mapKitVM.mapView = mapView
@@ -100,9 +100,6 @@ struct MapView: UIViewRepresentable {
         }
 
         mapView.preferredConfiguration = config
-
-        mapView.centerCoordinate = center
-        coreLocationVM.region.center = center
 
         updateAnnotations(mapView)
     }

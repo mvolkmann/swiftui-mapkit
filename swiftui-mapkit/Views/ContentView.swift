@@ -111,8 +111,9 @@ struct ContentView: View {
     // MARK: - Methods
 
     private func likeCenter() {
-        let center = mapKitVM.mapView?.centerCoordinate
-        print("center is", center)
+        guard let mapView = mapKitVM.mapView else { return }
+        print("mapView =", mapView)
+        print("center is", mapView.centerCoordinate)
     }
 
     @ViewBuilder
