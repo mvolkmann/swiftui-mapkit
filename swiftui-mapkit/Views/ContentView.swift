@@ -15,7 +15,7 @@ struct ContentView: View {
     @State var isBrowsing = false
     @State var url: URL = .init(string: "https://mvolkmann.github.io")!
 
-    let londonCoordinate = CLLocationCoordinate2D(
+    static let defaultCoordinate = CLLocationCoordinate2D(
         latitude: 51.501,
         longitude: -0.1425
     )
@@ -51,8 +51,8 @@ struct ContentView: View {
         // This approach uses UIKit in order to
         // utilize some cool MapKit features.
         let location = mapKitVM.selectedPlacemark?.location
-        let coordinate = location?.coordinate ?? londonCoordinate
-        return MapView(coordinate: coordinate, zoom: 0.01)
+        let center = location?.coordinate ?? Self.defaultCoordinate
+        return MapView(center: center, zoom: 0.01)
             .edgesIgnoringSafeArea(.bottom)
     }
 
