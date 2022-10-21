@@ -19,8 +19,11 @@ struct SettingsForm: View {
             // This doesn't change the map when mapType is Standard,
             // but does for Hybrid and Image.
             Picker("Elevation", selection: $appVM.mapElevation) {
-                Text("Realistic").tag("realistic")
                 Text("Flat").tag("flat")
+                // If map type is Image or Standard,
+                // the elevation must be set to Realistic to
+                // enable changing pitch by dragging two fingers!
+                Text("Realistic").tag("realistic")
             }
             .pickerStyle(.segmented)
 

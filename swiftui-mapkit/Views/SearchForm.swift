@@ -7,14 +7,6 @@ struct SearchForm: View {
     @EnvironmentObject var coreLocationVM: CoreLocationViewModel
     @StateObject var mapKitVM = MapKitViewModel.shared
 
-    let favoriteLocations = [
-        "Las Vegas, Nevada",
-        "London, England",
-        "Manhattan, New York",
-        "Paris, France",
-        "San Francisco, California"
-    ]
-
     enum FocusName: Hashable {
         case attractionTextField
         case cityTextField
@@ -25,7 +17,8 @@ struct SearchForm: View {
     @State var attractionText = ""
 
     private var attractionForm: some View {
-        Form {
+        // Form { // This adds too much top padding, so using List.
+        List {
             Picker("City", selection: $appVM.selectedCity) {
                 Text("None").tag(nil as City?)
                 ForEach(cities) { city in
@@ -50,6 +43,8 @@ struct SearchForm: View {
                 }
             }
         }
+        .listStyle(.plain)
+        .frame(height: 100)
     }
 
     private var matchedLocationList: some View {
@@ -69,10 +64,8 @@ struct SearchForm: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text("Search").font(.title)
-
             VStack(alignment: .leading) {
-                Text("City Search").font(.headline)
+                Text("Search by City Name").font(.headline)
                 HStack {
                     TextField("City", text: $mapKitVM.searchQuery)
                         .textFieldStyle(.roundedBorder)
@@ -84,16 +77,16 @@ struct SearchForm: View {
             }
 
             VStack(alignment: .leading) {
-                Text("Attraction").font(.headline)
+                Text("Select Attraction").font(.headline)
                 attractionForm
             }
 
             if let mapView = mapKitVM.mapView {
                 VStack(alignment: .leading) {
-                    Text("Place Type in Current City").font(.headline)
+                    Text("Find Nearby").font(.headline)
                     HStack {
                         TextField(
-                            "Place Type (ex. bakery or pizza)",
+                            "place type like bakery or pizza",
                             text: $attractionText
                         )
                         .textFieldStyle(.roundedBorder)
