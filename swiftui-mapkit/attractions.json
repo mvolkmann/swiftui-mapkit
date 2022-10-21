@@ -71,5 +71,19 @@
                 "pitch": 72.0
             }
         ]
+    },
+    {
+        "name": "Yellowstone National Park",
+        "attractions": [
+            {
+                "name": "Grand Prismatic Spring",
+                "address": "Grand Prismatic Spring, Wyoming 82190",
+                "latitude": 44.52516692327538,
+                "longitude": -110.83817120923885,
+                "distance": 300.0,
+                "heading": 0.0,
+                "pitch": 0.0
+            }
+        ]
     }
 ]

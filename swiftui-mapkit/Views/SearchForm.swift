@@ -43,7 +43,7 @@ struct SearchForm: View {
             }
         }
         .listStyle(.plain)
-        .frame(height: 100)
+        .frame(height: 150)
     }
 
     private var matchedLocationList: some View {

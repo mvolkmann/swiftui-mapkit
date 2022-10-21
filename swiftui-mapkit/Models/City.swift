@@ -8,7 +8,6 @@ struct City: Codable, Hashable, Identifiable {
 }
 
 private func setup() -> [City] {
-    // TODO: Verify that these steps are necessary.
     // The file "attractions.json" must be added to the project bundle.
     // - Select top entry in the file navigator.
     // - Select the app target.
