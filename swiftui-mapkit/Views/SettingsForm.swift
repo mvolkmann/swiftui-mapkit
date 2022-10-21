@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SettingsForm: View {
-    @EnvironmentObject var mapSettings: MapSettings
+    @EnvironmentObject var appVM: AppViewModel
 
     var body: some View {
         VStack {
@@ -9,7 +9,7 @@ struct SettingsForm: View {
 
             // To tilt the map, changing the view angle,
             // hold two fingers on the map and drag up or down.
-            Picker("Map Type", selection: $mapSettings.type) {
+            Picker("Map Type", selection: $appVM.mapType) {
                 Text("Standard").tag("standard")
                 Text("Image").tag("image")
                 Text("Hybrid").tag("hybrid") // mix of Standard and Image
@@ -18,13 +18,13 @@ struct SettingsForm: View {
 
             // This doesn't change the map when mapType is Standard,
             // but does for Hybrid and Image.
-            Picker("Elevation", selection: $mapSettings.elevation) {
+            Picker("Elevation", selection: $appVM.mapElevation) {
                 Text("Realistic").tag("realistic")
                 Text("Flat").tag("flat")
             }
             .pickerStyle(.segmented)
 
-            Picker("Emphasis", selection: $mapSettings.emphasis) {
+            Picker("Emphasis", selection: $appVM.mapEmphasis) {
                 Text("Default").tag("default")
                 Text("Muted").tag("muted")
             }

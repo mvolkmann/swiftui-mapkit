@@ -4,26 +4,26 @@ import SwiftUI
 // For now we have to wrap an MKMapView in a UIViewRepresenatable
 // in order to use the iOS 16 MapKit features in SwiftUI.
 struct MapView: UIViewRepresentable {
-    var latitude: Double
-    var longitude: Double
+    var coordinate: CLLocationCoordinate2D
     var zoom: Double
 
     typealias ElevationStyle = MKMapConfiguration.ElevationStyle
     typealias EmphasisStyle = MKStandardMapConfiguration.EmphasisStyle
 
-    @EnvironmentObject private var mapSettings: MapSettings
-    @EnvironmentObject private var vm: ViewModel
+    @EnvironmentObject private var appVM: AppViewModel
+    @EnvironmentObject private var coreLocationVM: CoreLocationViewModel
+    @EnvironmentObject private var mapKitVM: MapKitViewModel
 
     @State private var annotations: [MKPointAnnotation] = []
     @State private var titleToPlaceMap: [String: Place] = [:]
 
     private func elevationStyle() -> ElevationStyle {
-        mapSettings.elevation == "realistic" ?
+        appVM.mapElevation == "realistic" ?
             ElevationStyle.realistic : ElevationStyle.flat
     }
 
     private func emphasisStyle() -> EmphasisStyle {
-        mapSettings.emphasis == "muted" ?
+        appVM.mapEmphasis == "muted" ?
             EmphasisStyle.muted : EmphasisStyle.default
     }
 
@@ -34,16 +34,17 @@ struct MapView: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
+        mapView.showsUserLocation = true
 
-        let center = CLLocationCoordinate2D(
-            latitude: latitude,
-            longitude: longitude
-        )
         let span = MKCoordinateSpan(
             latitudeDelta: zoom,
             longitudeDelta: zoom
         )
-        mapView.region = MKCoordinateRegion(center: center, span: span)
+        mapView.region = MKCoordinateRegion(center: coordinate, span: span)
+
+        // Save a reference to the MKMapView so
+        // ContentView can obtain the center coordinate.
+        mapKitVM.mapView = mapView
 
         return mapView
     }
@@ -51,7 +52,7 @@ struct MapView: UIViewRepresentable {
     func updateUIView(_ mapView: MKMapView, context _: Context) {
         var config: MKMapConfiguration!
 
-        switch mapSettings.type {
+        switch appVM.mapType {
         case "standard":
             let temp = MKStandardMapConfiguration(
                 elevationStyle: elevationStyle(),
@@ -96,13 +97,16 @@ struct MapView: UIViewRepresentable {
 
         mapView.preferredConfiguration = config
 
+        mapView.centerCoordinate = coordinate
+        coreLocationVM.region.center = coordinate
+
         updateAnnotations(mapView)
     }
 
     private func updateAnnotations(_ mapView: MKMapView) {
         Task {
             await MainActor.run {
-                let newAnnotations = vm.places.map { place in
+                let newAnnotations = coreLocationVM.places.map { place in
                     let annotation = MKPointAnnotation()
                     annotation.coordinate = place.coordinate
                     annotation.title = place.displayName
@@ -133,8 +137,7 @@ struct MapView: UIViewRepresentable {
             if let title = annotation.title,
                // TODO: Why is force unwrap needed here?
                let place = parent.titleToPlaceMap[title!] {
-                print("setting selectedPlace to", place)
-                parent.vm.selectedPlace = place
+                parent.coreLocationVM.selectedPlace = place
             }
         }
     }

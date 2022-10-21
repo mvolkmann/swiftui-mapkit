@@ -1,18 +1,17 @@
-
 import Combine // for AnyCancellable
-import CoreLocation
-import MapKit
+import MapKit // This imports CoreLocation.
 import SwiftUI
 
 // Add these keys in Info of each target that queries current location:
 // Privacy - Location When In Use Usage Description
 // Privacy - Location Always and When In Use Usage Description
-class LocationViewModel: NSObject, ObservableObject {
+class MapKitViewModel: NSObject, ObservableObject {
     // MARK: - State
 
     @Published var searchLocations: [String] = []
     @Published var currentPlacemark: CLPlacemark?
     @Published var likedLocations: [String] = []
+    @Published var mapView: MKMapView?
     @Published var searchQuery = ""
     @Published var selectedPlacemark: CLPlacemark?
 
@@ -33,28 +32,30 @@ class LocationViewModel: NSObject, ObservableObject {
 
         cancellable = $searchQuery.assign(to: \.queryFragment, on: completer)
         completer.delegate = self
-        // Does this prevent getting points of interest like restaurants?
+        // This prevent getting points of interest like "Buckingham Palace".
         completer.resultTypes = .address
     }
 
     // MARK: - Properites
-
-    static let shared = LocationViewModel()
 
     private var cancellable: AnyCancellable?
     private var completer: MKLocalSearchCompleter
     private let locationManager = CLLocationManager()
 
     var city: String {
-        LocationService.city(from: selectedPlacemark)
+        CoreLocationService.city(from: selectedPlacemark)
     }
 
     var country: String {
-        LocationService.country(from: selectedPlacemark)
+        CoreLocationService.country(from: selectedPlacemark)
+    }
+
+    var haveMatches: Bool {
+        !searchQuery.isEmpty && !searchLocations.isEmpty
     }
 
     var state: String {
-        LocationService.state(from: selectedPlacemark)
+        CoreLocationService.state(from: selectedPlacemark)
     }
 
     var usingCurrent: Bool {
@@ -83,7 +84,7 @@ class LocationViewModel: NSObject, ObservableObject {
     }
 }
 
-extension LocationViewModel: CLLocationManagerDelegate {
+extension MapKitViewModel: CLLocationManagerDelegate {
     func locationManager(
         _: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
@@ -108,71 +109,12 @@ extension LocationViewModel: CLLocationManagerDelegate {
     }
 }
 
-extension LocationViewModel: MKLocalSearchCompleterDelegate {
+extension MapKitViewModel: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        /* SAVE THIS FOR AN EXAMPLE OF USING A TaskGroup!
-         // Don't search for placemarks unless
-         // at least three characters have been entered.
-         guard searchQuery.count >= 3 else { return }
-
-         Task {
-         do {
-         let placemarks = try await getPlacemarks(for: completer.results)
-         await MainActor.run { searchPlacemarks = placemarks }
-         } catch {
-         print("LocationViewModel error:", error)
-         }
-         }
-         */
-
         var locations = completer.results.map { result in
             result.title + ", " + result.subtitle
         }
         locations.sort()
         searchLocations = locations
     }
-
-    /* SAVE THIS FOR AN EXAMPLE OF USING A TaskGroup!
-     private func getPlacemarks(
-     for completions: [MKLocalSearchCompletion]
-     ) async throws -> [CLPlacemark] {
-     try await withThrowingTaskGroup(of: CLPlacemark?.self) { group in
-     // Create an array to hold the results.
-     var placemarks: [CLPlacemark] = []
-     placemarks.reserveCapacity(completions.count)
-
-     // Create a task for each search completion
-     // that gets the corresponding placemark.
-     for completion in completions {
-     group.addTask {
-     do {
-     // Cannot make more than 50 requests per second!
-     return try await LocationService.getPlacemark(
-     from: completion.title
-     )
-     } catch {
-     print("LocationViewModel.getPlacemarks error:", error)
-     return nil
-     }
-     }
-     }
-
-     // As each task completes, gather the placemarks.
-     for try await placemark in group {
-     if let placemark {
-     placemarks.append(placemark)
-     }
-     }
-
-     // After all the tasks have completed, sort the placemarks.
-     placemarks.sort(by: {
-     let description0 = LocationService.description(from: $0)
-     let description1 = LocationService.description(from: $1)
-     return description0 < description1
-     })
-
-     return placemarks
-     }
-     }
-     */
 }

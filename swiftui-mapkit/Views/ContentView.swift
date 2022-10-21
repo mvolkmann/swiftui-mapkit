@@ -1,30 +1,24 @@
 import MapKit
 import SwiftUI
 
-enum FocusName: Hashable {
-    case attractionSearch
-    case citySearch
-}
-
 // TODO: Check for 3D support for other cities including
 // TODO: Los Angeles, New York, San Franciso, Philadelphia, San Diego,
 // TODO: Washington D.C., Montreal, Toronto, Vancouver, and more.
-private let homeLatitude = 38.7095566
-private let homeLongitude = -90.5950477
-private let londonLatitude = 51.501
-private let londonLongitude = -0.1425
 
 struct ContentView: View {
     // MARK: - State
 
-    @EnvironmentObject var vm: ViewModel
-
-    @ObservedObject var locationVM = LocationViewModel.shared
+    @EnvironmentObject var appVM: AppViewModel
+    @EnvironmentObject var coreLocationVM: CoreLocationViewModel
+    @EnvironmentObject var mapKitVM: MapKitViewModel
 
     @State var isBrowsing = false
-    @State var latitude = londonLatitude
-    @State var longitude = londonLongitude
     @State var url: URL = .init(string: "https://mvolkmann.github.io")!
+
+    let londonCoordinate = CLLocationCoordinate2D(
+        latitude: 51.501,
+        longitude: -0.1425
+    )
 
     // MARK: - Properties
 
@@ -56,21 +50,19 @@ struct ContentView: View {
 
         // This approach uses UIKit in order to
         // utilize some cool MapKit features.
-        MapView(
-            latitude: latitude,
-            longitude: longitude,
-            zoom: 0.01
-        )
-        .edgesIgnoringSafeArea(.bottom)
+        let location = mapKitVM.selectedPlacemark?.location
+        let coordinate = location?.coordinate ?? londonCoordinate
+        return MapView(coordinate: coordinate, zoom: 0.01)
+            .edgesIgnoringSafeArea(.bottom)
     }
 
     var body: some View {
         NavigationStack {
             VStack {
-                if let place = vm.selectedPlace {
+                if let place = coreLocationVM.selectedPlace {
                     placeDetail(place: place)
                 }
-                if vm.setupComplete {
+                if coreLocationVM.setupComplete {
                     map
                 } else {
                     Text("Loading map ...")
@@ -83,34 +75,45 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: Button(
-                    action: { vm.isSearching = true },
+                    action: { appVM.isSearching = true },
                     label: { Image(systemName: "magnifyingglass") }
                 ),
-                trailing: Button(
-                    action: { vm.isConfiguring = true },
-                    label: { Image(systemName: "gearshape") }
-                )
+                trailing: HStack {
+                    Button(
+                        action: { likeCenter() },
+                        label: { Image(systemName: "heart") }
+                    )
+                    Button(
+                        action: { appVM.isSetting = true },
+                        label: { Image(systemName: "gearshape") }
+                    )
+                }
             )
             .onAppear {
-                // Requesting access is done here instead of inside the
-                // ViewModel initializer because the UI needs to be started.
-                vm.manager.requestWhenInUseAuthorization()
-                vm.manager.requestLocation()
+                // This work is done here instead of inside the
+                // CoreLocationViewModel initializer
+                // because the UI needs to be started.
+                coreLocationVM.start()
             }
             .sheet(isPresented: $isBrowsing) {
                 SafariBrowser(url: $url)
             }
-            .sheet(isPresented: $vm.isConfiguring) {
+            .sheet(isPresented: $appVM.isSetting) {
                 SettingsForm()
             }
-            .sheet(isPresented: $vm.isSearching) {
+            .sheet(isPresented: $appVM.isSearching) {
                 SearchForm()
-                    .presentationDetents([.height(200)])
+                // .presentationDetents([.height(200)])
             }
         }
     }
 
     // MARK: - Methods
+
+    private func likeCenter() {
+        let center = mapKitVM.mapView?.centerCoordinate
+        print("center is", center)
+    }
 
     @ViewBuilder
     private func placeDetail(place: Place) -> some View {

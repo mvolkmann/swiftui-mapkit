@@ -1,7 +1,7 @@
 import CoreLocation
 import SwiftUI
 
-struct LocationService {
+struct CoreLocationService {
     static func city(from placemark: CLPlacemark?) -> String {
         placemark?.locality ?? ""
     }

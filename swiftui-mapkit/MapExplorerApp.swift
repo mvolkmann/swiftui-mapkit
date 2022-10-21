@@ -2,14 +2,16 @@ import SwiftUI
 
 @main
 struct MapExplorerApp: App {
-    @StateObject private var mapSettings = MapSettings()
-    @StateObject private var vm = ViewModel()
+    @StateObject private var appVM = AppViewModel()
+    @StateObject private var coreLocationVM = CoreLocationViewModel()
+    @StateObject private var mapKitVM = MapKitViewModel()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(mapSettings)
-                .environmentObject(vm)
+                .environmentObject(appVM)
+                .environmentObject(coreLocationVM)
+                .environmentObject(mapKitVM)
         }
     }
 }

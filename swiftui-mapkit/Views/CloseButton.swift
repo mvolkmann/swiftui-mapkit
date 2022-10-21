@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct CloseButton: View {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var appVM: AppViewModel
 
     var body: some View {
         Button(action: {
-            vm.isConfiguring = false
-            vm.isSearching = false
+            appVM.isSetting = false
+            appVM.isSearching = false
         }) {
             Image(systemName: "x.circle")
                 .tint(.gray)

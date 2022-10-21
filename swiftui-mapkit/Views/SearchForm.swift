@@ -1,70 +1,96 @@
 import SwiftUI
 
 struct SearchForm: View {
-    @EnvironmentObject var mapSettings: MapSettings
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var appVM: AppViewModel
+    @EnvironmentObject var coreLocationVM: CoreLocationViewModel
+    @EnvironmentObject var mapKitVM: MapKitViewModel
+
+    let favoriteLocations = [
+        "Las Vegas, Nevada",
+        "London, England",
+        "Manhattan, New York",
+        "Paris, France",
+        "San Francisco, California"
+    ]
+
+    enum FocusName: Hashable {
+        case attractionTextField
+        case cityTextField
+    }
 
     @FocusState var focusName: FocusName?
 
-    @ObservedObject var locationVM = LocationViewModel.shared
-
     @State var attractionText = ""
-    @State var cityText = ""
 
-    private var matchedLocations: some View {
-        List {
-            ForEach(
-                locationVM.searchLocations,
-                id: \.self
-            ) { location in
-                Button(location) {
-                    selectLocation(location)
-                }
+    private var favoritesList: some View {
+        List(favoriteLocations, id: \.self) { location in
+            Button(location) {
+                selectLocation(location)
             }
         }
         .listStyle(.plain)
     }
 
-    var body: some View {
+    private var matchedLocationList: some View {
         VStack {
+            Text("Matched Locations").font(.headline)
+            List {
+                ForEach(mapKitVM.searchLocations, id: \.self) { location in
+                    Button(location) {
+                        selectLocation(location)
+                    }
+                }
+            }
+            .listStyle(.plain)
+            .frame(maxHeight: .infinity)
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
             Text("Search").font(.title)
 
-            HStack {
-                TextField("City", text: $cityText)
-                    .textFieldStyle(.roundedBorder)
-                    .focused($focusName, equals: .citySearch)
-                Button("Search") {
-                    focusName = nil
-                    Task(priority: .background) {
-                        vm.places = await vm.search(text: cityText)
-                    }
+            VStack(alignment: .leading) {
+                Text("City Search").font(.headline)
+                HStack {
+                    TextField("City", text: $mapKitVM.searchQuery)
+                        .textFieldStyle(.roundedBorder)
+                        .focused($focusName, equals: .cityTextField)
                 }
-                .disabled(cityText.isEmpty)
+                if mapKitVM.haveMatches {
+                    matchedLocationList
+                }
             }
 
-            HStack {
-                TextField("Attraction", text: $attractionText)
-                    .textFieldStyle(.roundedBorder)
-                    .focused($focusName, equals: .attractionSearch)
-                Button("Search") {
-                    focusName = nil
-                    Task(priority: .background) {
-                        vm.places = await vm.search(text: attractionText)
+            VStack(alignment: .leading) {
+                Text("Attraction Search in Current City").font(.headline)
+                HStack {
+                    TextField("Attraction", text: $attractionText)
+                        .textFieldStyle(.roundedBorder)
+                        .focused($focusName, equals: .attractionTextField)
+                    Button("Search") {
+                        focusName = nil
+                        Task(priority: .background) {
+                            coreLocationVM.places = await coreLocationVM
+                                .search(text: attractionText)
+                            print("places =", coreLocationVM.places)
+                            appVM.isSearching = false
+                        }
                     }
+                    .disabled(attractionText.isEmpty)
                 }
-                .disabled(attractionText.isEmpty)
             }
 
-            if !locationVM.searchQuery.isEmpty,
-               !locationVM.searchLocations.isEmpty {
-                VStack {
-                    Text("Matched Locations").font(.headline)
-                    matchedLocations
-                }
+            VStack(alignment: .leading) {
+                Text("Favorite Cities").font(.headline)
+                // TODO: Why does this only show one line?
+                // TODO: Maybe you shouldn't use Sections in a List!
+                favoritesList
             }
 
             Spacer()
         }
+        .headerProminence(.increased)
         .padding()
         .overlay(alignment: .topTrailing) {
             CloseButton()
@@ -74,10 +100,12 @@ struct SearchForm: View {
     private func selectLocation(_ location: String) {
         Task {
             do {
-                let placemark = try await LocationService
-                    .getPlacemark(from: location)
-                locationVM.select(placemark: placemark)
                 dismissKeyboard()
+                let placemark = try await CoreLocationService
+                    .getPlacemark(from: location)
+                mapKitVM.select(placemark: placemark)
+                appVM.isSearching = false
+                coreLocationVM.selectedPlace = nil
             } catch {
                 print("CurrentScreen.selectLocation error:", error)
             }

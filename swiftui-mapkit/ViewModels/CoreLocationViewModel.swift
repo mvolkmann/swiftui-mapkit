@@ -1,12 +1,11 @@
-import MapKit
+import MapKit // This imports CoreLocation.
 
 // Conforming to NSObject is required in order to conform to
 // CLLocationManagerDelegate which is specified in the extension below.
-class ViewModel: NSObject, ObservableObject {
-    @Published var isConfiguring: Bool = false
-    @Published var isSearching: Bool = false
+class CoreLocationViewModel: NSObject, ObservableObject {
     @Published var places: [Place] = []
-    @Published var region = MKCoordinateRegion()
+    // @Published var region = MKCoordinateRegion()
+    var region = MKCoordinateRegion()
     @Published var selectedPlace: Place?
     @Published var setupComplete = false
 
@@ -35,6 +34,7 @@ class ViewModel: NSObject, ObservableObject {
         Task { await setup() }
     }
 
+    // This searches for attractions near the current location.
     @MainActor
     func search(text: String, exact: Bool = false) async -> [Place] {
         selectedPlace = nil
@@ -89,9 +89,14 @@ class ViewModel: NSObject, ObservableObject {
 
         setupComplete = true
     }
+
+    func start() {
+        manager.requestWhenInUseAuthorization()
+        manager.requestLocation()
+    }
 }
 
-extension ViewModel: CLLocationManagerDelegate {
+extension CoreLocationViewModel: CLLocationManagerDelegate {
     func locationManager(
         _: CLLocationManager,
         didUpdateLocations _: [CLLocation]
@@ -103,9 +108,12 @@ extension ViewModel: CLLocationManagerDelegate {
     ) {
         print("failed to get current location - user may not have approved")
         // The Simulator cannot get the current location.
-        // After the user denies sharing location, they can
-        // open their Settings app,  go to Privacy ... Location Services,
-        // tap the name of this app, and select
-        // Never, Ask Next Time, or While Using the App.
+
+        // If the user denies sharing location, to approve it then must:
+        // 1. Opening their Settings app.
+        // 2. Go to Privacy ... Location Services.
+        // 3. Tap the name of this app.
+        // 4. Change the option from "Never" to
+        //    "Ask Next Time" or "While Using the App".
     }
 }
