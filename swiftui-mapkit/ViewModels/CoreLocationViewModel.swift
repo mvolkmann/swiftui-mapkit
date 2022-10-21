@@ -4,10 +4,7 @@ import MapKit // This imports CoreLocation.
 // CLLocationManagerDelegate which is specified in the extension below.
 class CoreLocationViewModel: NSObject, ObservableObject {
     @Published var places: [Place] = []
-    // @Published var region = MKCoordinateRegion()
-    var region = MKCoordinateRegion()
     @Published var selectedPlace: Place?
-    @Published var setupComplete = false
 
     static let initialPlaces = [
         "Buckingham Palace",
@@ -31,19 +28,25 @@ class CoreLocationViewModel: NSObject, ObservableObject {
         // It fails to find the current location when this is 20 or below!
         manager.desiredAccuracy = 25 // in meters
 
-        Task { await setup() }
+        // TODO: This is only needed to create initial markers in London.
+        // Task { await setup() }
     }
 
-    // This searches for attractions near the current location.
+    // This searches for points of interest near the current location.
+    // Examples include "bakery" and "pizza".
     @MainActor
-    func search(text: String, exact: Bool = false) async -> [Place] {
+    func search(
+        mapView: MKMapView,
+        text: String,
+        exact: Bool = false
+    ) async -> [Place] {
         selectedPlace = nil
 
         var newPlaces: [Place] = []
 
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = text
-        request.region = region // only searches in this region
+        request.region = mapView.region // only searches in this region
         let search = MKLocalSearch(request: request)
 
         if let results = try? await search.start() {
@@ -62,33 +65,33 @@ class CoreLocationViewModel: NSObject, ObservableObject {
         return newPlaces
     }
 
-    @MainActor
-    private func setup() async {
-        let center = CLLocationCoordinate2D(
-            latitude: 51.501,
-            longitude: -0.1425
-        )
-        region = MKCoordinateRegion(
-            center: center,
-            latitudinalMeters: size,
-            longitudinalMeters: size
-        )
+    /*
+      @MainActor
+      private func setup() async {
+          let center = CLLocationCoordinate2D(
+              latitude: 51.501, // London
+              longitude: -0.1425 // London
+          )
+          let region = MKCoordinateRegion(
+              center: center,
+              latitudinalMeters: size,
+              longitudinalMeters: size
+          )
 
-        var initialPlaces: [Place] = []
+           var initialPlaces: [Place] = []
 
-        // TODO: Run these searches in parallel?
-        for place in Self.initialPlaces {
-            let newPlaces = await search(text: place, exact: true)
-            initialPlaces += newPlaces
-        }
+           // TODO: Run these searches in parallel?
+           for place in Self.initialPlaces {
+               let newPlaces = await search(text: place, exact: true)
+               initialPlaces += newPlaces
+           }
 
-        // The map is not rendered until this assignment is made.
-        // This prevents multiple warnings that begin with
-        // "Publishing changes from within view updates".
-        places = initialPlaces
-
-        setupComplete = true
-    }
+           // The map is not rendered until this assignment is made.
+           // This prevents multiple warnings that begin with
+           // "Publishing changes from within view updates".
+           places = initialPlaces
+      }
+     */
 
     func start() {
         manager.requestWhenInUseAuthorization()
@@ -99,8 +102,11 @@ class CoreLocationViewModel: NSObject, ObservableObject {
 extension CoreLocationViewModel: CLLocationManagerDelegate {
     func locationManager(
         _: CLLocationManager,
-        didUpdateLocations _: [CLLocation]
-    ) {}
+        didUpdateLocations locations: [CLLocation]
+    ) {
+        guard let location = locations.first else { return }
+        MapKitViewModel.shared.center = location.coordinate
+    }
 
     func locationManager(
         _: CLLocationManager,

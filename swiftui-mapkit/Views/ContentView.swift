@@ -10,7 +10,7 @@ struct ContentView: View {
 
     @EnvironmentObject var appVM: AppViewModel
     @EnvironmentObject var coreLocationVM: CoreLocationViewModel
-    @EnvironmentObject var mapKitVM: MapKitViewModel
+    @StateObject var mapKitVM = MapKitViewModel.shared
 
     @State var isBrowsing = false
     @State var url: URL = .init(string: "https://mvolkmann.github.io")!
@@ -22,50 +22,17 @@ struct ContentView: View {
 
     // MARK: - Properties
 
-    private var map: some View {
-        /*
-         // This is the SwiftUI approach that does not yet support
-         // some cool MapKit features.
-         Map(
-             coordinateRegion: $vm.region,
-             showsUserLocation: true,
-             annotationItems: vm.places,
-             annotationContent: { place in
-                 // MapMarker(coordinate: place.coordinate, tint: .blue)
-
-                 // TODO: Why does zooming the map trigger
-                 // TODO: multiple warnings that begin with
-                 // TODO: "Publishing changes from within view updates"?
-                 // TODO: This only happens with MapAnnotation,
-                 // TODO: not wth MapMarker.
-                 // TODO: See https://stackoverflow.com/questions/73892561/how-to-re-render-swiftui-map-with-mapannotation-without-runtime-warnings-for-un
-                 // TODO: and https://stackoverflow.com/questions/74028793/mapannotation-producing-publishing-changes-from-within-view-updates-runtime-warn.
-                 MapAnnotation(coordinate: place.coordinate) {
-                     Marker(label: place.displayName)
-                         .onTapGesture { selectedPlace = place }
-                 }
-             }
-         )
-         */
-
-        // This approach uses UIKit in order to
-        // utilize some cool MapKit features.
-        let location = mapKitVM.selectedPlacemark?.location
-        let center = location?.coordinate ?? Self.defaultCoordinate
-        return MapView(center: center, zoom: 0.01)
-            .edgesIgnoringSafeArea(.bottom)
-    }
-
     var body: some View {
         NavigationStack {
             VStack {
                 if let place = coreLocationVM.selectedPlace {
                     placeDetail(place: place)
                 }
-                if coreLocationVM.setupComplete {
-                    map
+                if let center = mapKitVM.center {
+                    map(center: center)
                 } else {
-                    Text("Loading map ...")
+                    Spacer()
+                    Text("... loading map ...").font(.largeTitle)
                     ProgressView()
                 }
                 Spacer()
@@ -112,8 +79,21 @@ struct ContentView: View {
 
     private func likeCenter() {
         guard let mapView = mapKitVM.mapView else { return }
-        print("mapView =", mapView)
-        print("center is", mapView.centerCoordinate)
+        print("center =", mapView.centerCoordinate)
+        let pitch = mapView.camera.pitch
+        let heading = mapView.camera.heading
+        print("pitch =", pitch)
+        print("heading =", heading)
+        print("region =", mapView.region) // for zoom
+    }
+
+    private func map(center: CLLocationCoordinate2D) -> some View {
+        // This approach uses UIKit in order to
+        // utilize some cool MapKit features.
+        // let location = mapKitVM.selectedPlacemark?.location
+        // let center = location?.coordinate ?? Self.defaultCoordinate
+        return MapView(center: center, zoom: 0.01)
+            .edgesIgnoringSafeArea(.bottom)
     }
 
     @ViewBuilder

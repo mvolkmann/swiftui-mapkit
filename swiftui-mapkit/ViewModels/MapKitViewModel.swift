@@ -8,12 +8,15 @@ import SwiftUI
 class MapKitViewModel: NSObject, ObservableObject {
     // MARK: - State
 
+    @Published var center: CLLocationCoordinate2D?
     @Published var currentPlacemark: CLPlacemark?
     @Published var likedLocations: [String] = []
     @Published var mapView: MKMapView?
     @Published var searchLocations: [String] = []
     @Published var searchQuery = ""
     @Published var selectedPlacemark: CLPlacemark?
+
+    static var shared = MapKitViewModel()
 
     // MARK: - Initializer
 

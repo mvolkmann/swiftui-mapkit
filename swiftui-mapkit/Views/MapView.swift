@@ -12,7 +12,7 @@ struct MapView: UIViewRepresentable {
 
     @EnvironmentObject private var appVM: AppViewModel
     @EnvironmentObject private var coreLocationVM: CoreLocationViewModel
-    @EnvironmentObject private var mapKitVM: MapKitViewModel
+    @StateObject var mapKitVM = MapKitViewModel.shared
 
     @State private var annotations: [MKPointAnnotation] = []
     @State private var titleToPlaceMap: [String: Place] = [:]

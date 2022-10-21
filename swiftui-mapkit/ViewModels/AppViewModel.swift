@@ -6,4 +6,6 @@ final class AppViewModel: ObservableObject {
     @Published var mapElevation = "realistic" // other is "flat"
     @Published var mapEmphasis = "default" // other is "muted"
     @Published var mapType = "hybrid" // other are "standard" and "image"
+    @Published var selectedAttraction: Attraction?
+    @Published var selectedCity: City?
 }

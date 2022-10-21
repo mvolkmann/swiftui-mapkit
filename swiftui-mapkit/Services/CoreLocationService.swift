@@ -40,18 +40,13 @@ struct CoreLocationService {
 
     static func getPlacemark(from addressString: String) async throws
         -> CLPlacemark {
-        try await withCheckedThrowingContinuation { continuation in
-            let geocoder = CLGeocoder()
-            // Cannot call more than 50 times per second!
-            geocoder.geocodeAddressString(addressString) { placemarks, error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else if let placemark = placemarks?.first {
-                    continuation.resume(returning: placemark)
-                } else {
-                    continuation.resume(throwing: "no placemarks found")
-                }
-            }
+        // Cannot call this more than 50 times per second.
+        let placemarks = try await CLGeocoder()
+            .geocodeAddressString(addressString)
+        if let placemark = placemarks.first {
+            return placemark
+        } else {
+            throw "no placemarks found"
         }
     }
 
