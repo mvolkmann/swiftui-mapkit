@@ -44,7 +44,11 @@ struct MapView: UIViewRepresentable {
 
         // Save a reference to the MKMapView so
         // ContentView can obtain the center coordinate.
-        mapKitVM.mapView = mapView
+        Task {
+            await MainActor.run {
+                mapKitVM.mapView = mapView
+            }
+        }
 
         return mapView
     }
