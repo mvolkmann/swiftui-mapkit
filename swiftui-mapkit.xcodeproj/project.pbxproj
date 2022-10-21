@@ -18,7 +18,7 @@
 		1AAB0D052826436700544A8F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAB0D042826436700544A8F /* Preview Assets.xcassets */; };
 		1AAB0D0C2826539000544A8F /* CoreLocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0D0B2826539000544A8F /* CoreLocationViewModel.swift */; };
 		1AB9F3BD29034168002DF760 /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3BC29034168002DF760 /* BundleExtension.swift */; };
-		1AB9F3BE29034549002DF760 /* attractions.json in Resources */ = {isa = PBXBuildFile; fileRef = 1AB9F3BB29033DA4002DF760 /* attractions.json */; };
+		1AB9F3BF29034AAC002DF760 /* attractions.json in Resources */ = {isa = PBXBuildFile; fileRef = 1AB9F3BB29033DA4002DF760 /* attractions.json */; };
 		1AE3A1712901876E00FB6501 /* MapKitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1702901876E00FB6501 /* MapKitViewModel.swift */; };
 		1AE3A1742901884200FB6501 /* CoreLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1732901884200FB6501 /* CoreLocationService.swift */; };
 		1AE3A1772901887200FB6501 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1762901887200FB6501 /* StringExtension.swift */; };
@@ -218,7 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AB9F3BE29034549002DF760 /* attractions.json in Resources */,
+				1AB9F3BF29034AAC002DF760 /* attractions.json in Resources */,
 				1AAB0D052826436700544A8F /* Preview Assets.xcassets in Resources */,
 				1AAB0D022826436700544A8F /* Assets.xcassets in Resources */,
 			);
