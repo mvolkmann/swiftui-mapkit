@@ -37,7 +37,6 @@ struct SearchForm: View {
                 }
                 .onChange(of: appVM.selectedAttraction) { attraction in
                     if let attraction {
-                        print("showing attraction \(attraction.name)")
                         showAttraction(attraction)
                     }
                 }
@@ -99,7 +98,6 @@ struct SearchForm: View {
                                         mapView: mapView,
                                         text: attractionText
                                     )
-                                print("places =", coreLocationVM.places)
                                 appVM.isSearching = false
                             }
                         }
@@ -121,8 +119,12 @@ struct SearchForm: View {
         guard let mapView = mapKitVM.mapView else { return }
 
         // This works, but seems to limit the minimum distance.
+        let center = CLLocationCoordinate2D(
+            latitude: attraction.latitude,
+            longitude: attraction.longitude
+        )
         let region = MKCoordinateRegion(
-            center: attraction.coordinate,
+            center: center,
             latitudinalMeters: attraction.distance,
             longitudinalMeters: attraction.distance
         )

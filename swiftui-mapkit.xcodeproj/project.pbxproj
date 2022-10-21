@@ -17,6 +17,8 @@
 		1AAB0D022826436700544A8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAB0D012826436700544A8F /* Assets.xcassets */; };
 		1AAB0D052826436700544A8F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAB0D042826436700544A8F /* Preview Assets.xcassets */; };
 		1AAB0D0C2826539000544A8F /* CoreLocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0D0B2826539000544A8F /* CoreLocationViewModel.swift */; };
+		1AB9F3BD29034168002DF760 /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3BC29034168002DF760 /* BundleExtension.swift */; };
+		1AB9F3BE29034549002DF760 /* attractions.json in Resources */ = {isa = PBXBuildFile; fileRef = 1AB9F3BB29033DA4002DF760 /* attractions.json */; };
 		1AE3A1712901876E00FB6501 /* MapKitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1702901876E00FB6501 /* MapKitViewModel.swift */; };
 		1AE3A1742901884200FB6501 /* CoreLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1732901884200FB6501 /* CoreLocationService.swift */; };
 		1AE3A1772901887200FB6501 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1762901887200FB6501 /* StringExtension.swift */; };
@@ -41,6 +43,8 @@
 		1AAB0D012826436700544A8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1AAB0D042826436700544A8F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1AAB0D0B2826539000544A8F /* CoreLocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocationViewModel.swift; sourceTree = "<group>"; };
+		1AB9F3BB29033DA4002DF760 /* attractions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = attractions.json; path = "swiftui-mapkit/attractions.json"; sourceTree = SOURCE_ROOT; };
+		1AB9F3BC29034168002DF760 /* BundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtension.swift; sourceTree = "<group>"; };
 		1AE3A1702901876E00FB6501 /* MapKitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapKitViewModel.swift; sourceTree = "<group>"; };
 		1AE3A1732901884200FB6501 /* CoreLocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocationService.swift; sourceTree = "<group>"; };
 		1AE3A1762901887200FB6501 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
@@ -109,6 +113,7 @@
 				1AAB0CFD2826436600544A8F /* MapExplorerApp.swift */,
 				1A3343532826824D006730C2 /* Info.plist */,
 				1AAB0D012826436700544A8F /* Assets.xcassets */,
+				1AB9F3BB29033DA4002DF760 /* attractions.json */,
 				1AE3A1752901886600FB6501 /* Extensions */,
 				1AE3A1822902DE9A00FB6501 /* Models */,
 				1AE3A1722901883700FB6501 /* Services */,
@@ -140,6 +145,7 @@
 			children = (
 				1AE3A1762901887200FB6501 /* StringExtension.swift */,
 				1AE3A1782901897700FB6501 /* ViewExtension.swift */,
+				1AB9F3BC29034168002DF760 /* BundleExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -147,8 +153,8 @@
 		1AE3A1822902DE9A00FB6501 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				1AE3A1832902DEBC00FB6501 /* City.swift */,
 				1AE3A1852902DF0A00FB6501 /* Attraction.swift */,
+				1AE3A1832902DEBC00FB6501 /* City.swift */,
 				1A33435128268119006730C2 /* Place.swift */,
 			);
 			path = Models;
@@ -212,6 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AB9F3BE29034549002DF760 /* attractions.json in Resources */,
 				1AAB0D052826436700544A8F /* Preview Assets.xcassets in Resources */,
 				1AAB0D022826436700544A8F /* Assets.xcassets in Resources */,
 			);
@@ -235,6 +242,7 @@
 				1AE3A1742901884200FB6501 /* CoreLocationService.swift in Sources */,
 				1AE3A1842902DEBC00FB6501 /* City.swift in Sources */,
 				1AE3A1792901897700FB6501 /* ViewExtension.swift in Sources */,
+				1AB9F3BD29034168002DF760 /* BundleExtension.swift in Sources */,
 				1AE3A17D290189A800FB6501 /* SettingsForm.swift in Sources */,
 				1AAB0D002826436600544A8F /* ContentView.swift in Sources */,
 				1AAB0CFE2826436600544A8F /* MapExplorerApp.swift in Sources */,

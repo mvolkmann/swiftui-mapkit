@@ -1,10 +1,10 @@
 import CoreLocation
 
-struct Attraction: Hashable, Identifiable {
-    let city: City
+struct Attraction: Codable, Hashable, Identifiable {
     let name: String
-    let address: String?
-    let coordinate: CLLocationCoordinate2D
+    let address: String
+    let latitude: Double
+    let longitude: Double
     let distance: Double
     let heading: Double
     let pitch: Double
@@ -17,9 +17,5 @@ struct Attraction: Hashable, Identifiable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(name)
-    }
-
-    var lookupAddress: String {
-        address ?? "\(name), \(city.name)"
     }
 }
