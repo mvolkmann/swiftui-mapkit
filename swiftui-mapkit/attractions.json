@@ -105,10 +105,10 @@
             {
                 "name": "Norris Geyser Basin",
                 "address": "Norris Geyser Basin, Wyoming 82190",
-                "latitude": 44.72659498048682,
-                "longitude": -110.70402452340494,
-                "distance": 300.0,
-                "heading": 0.0,
+                "latitude": 44.72749800232406,
+                "longitude": -110.70451563327354,
+                "distance": 200.0,
+                "heading": 334.0,
                 "pitch": 0.0
             },
             {

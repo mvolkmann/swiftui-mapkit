@@ -19,25 +19,32 @@ struct SearchForm: View {
     private var attractionForm: some View {
         // Form { // This adds too much top padding, so using List.
         List {
-            Picker("City", selection: $appVM.selectedCity) {
-                Text("None").tag(nil as City?)
-                ForEach(cities) { city in
-                    // Optional() is required for the tag
-                    // because the type of selectedCity is optional.
-                    Text(city.name).tag(Optional(city))
+            Picker("City/Area", selection: $appVM.selectedCityIndex) {
+                Text("None").tag(-1)
+                let enumeration = Array(cities.enumerated())
+                ForEach(enumeration, id: \.element) { index, city in
+                    Text(city.name).tag(index)
                 }
             }
+            .onChange(of: appVM.selectedCityIndex) { _ in
+                appVM.selectedAttractionIndex = -1
+            }
 
-            if let selectedCity = appVM.selectedCity {
-                Picker("Attraction", selection: $appVM.selectedAttraction) {
-                    Text("None").tag(nil as Attraction?)
-                    ForEach(selectedCity.attractions) { attraction in
-                        Text(attraction.name).tag(Optional(attraction))
+            if let selectedCity {
+                Picker(
+                    "Attraction",
+                    selection: $appVM.selectedAttractionIndex
+                ) {
+                    Text("None").tag(-1)
+                    let enumeration =
+                        Array(selectedCity.attractions.enumerated())
+                    ForEach(enumeration, id: \.element) { index, attraction in
+                        Text(attraction.name).tag(index)
                     }
                 }
-                .onChange(of: appVM.selectedAttraction) { attraction in
-                    if let attraction {
-                        showAttraction(attraction)
+                .onChange(of: appVM.selectedAttractionIndex) { _ in
+                    if let selectedAttraction {
+                        showAttraction(selectedAttraction)
                     }
                 }
             }
@@ -59,6 +66,16 @@ struct SearchForm: View {
             .listStyle(.plain)
             .frame(height: 300)
         }
+    }
+
+    private var selectedAttraction: Attraction? {
+        let index = appVM.selectedAttractionIndex
+        return index == -1 ? nil : selectedCity?.attractions[index]
+    }
+
+    private var selectedCity: City? {
+        let index = appVM.selectedCityIndex
+        return index == -1 ? nil : cities[index]
     }
 
     var body: some View {
