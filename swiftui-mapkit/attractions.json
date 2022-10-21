@@ -76,10 +76,46 @@
         "name": "Yellowstone National Park",
         "attractions": [
             {
+                "name": "Artist Point",
+                "address": "Artist Point, Wyoming 82190",
+                "latitude": 44.71791409407925,
+                "longitude": -110.49597099480617,
+                "distance": 200.0,
+                "heading": 245.0,
+                "pitch": 25.0
+            },
+            {
                 "name": "Grand Prismatic Spring",
                 "address": "Grand Prismatic Spring, Wyoming 82190",
                 "latitude": 44.52516692327538,
                 "longitude": -110.83817120923885,
+                "distance": 300.0,
+                "heading": 0.0,
+                "pitch": 0.0
+            },
+            {
+                "name": "Mammoth Hot Springs",
+                "address": "Mammoth Hot Springs, Wyoming 82190",
+                "latitude": 44.96798492303653,
+                "longitude": -110.70441674388451,
+                "distance": 300.0,
+                "heading": 0.0,
+                "pitch": 0.0
+            },
+            {
+                "name": "Norris Geyser Basin",
+                "address": "Norris Geyser Basin, Wyoming 82190",
+                "latitude": 44.72659498048682,
+                "longitude": -110.70402452340494,
+                "distance": 300.0,
+                "heading": 0.0,
+                "pitch": 0.0
+            },
+            {
+                "name": "Old Faithful Geyser",
+                "address": "Old Faithful Geyser, Wyoming 82190",
+                "latitude": 44.460808444476434,
+                "longitude": -110.82830248568511,
                 "distance": 300.0,
                 "heading": 0.0,
                 "pitch": 0.0
