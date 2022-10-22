@@ -3,6 +3,8 @@ import MapKit // for MKCoordinateRegionMakeWithDistance
 import SwiftUI
 
 struct SearchForm: View {
+    // MARK: - State
+
     @EnvironmentObject var appVM: AppViewModel
     @EnvironmentObject var coreLocationVM: CoreLocationViewModel
     @StateObject var mapKitVM = MapKitViewModel.shared
@@ -15,6 +17,8 @@ struct SearchForm: View {
     @FocusState var focusName: FocusName?
 
     @State var attractionText = ""
+
+    // MARK: - Properties
 
     private var attractionForm: some View {
         // Form { // This adds too much top padding, so using List.
@@ -131,6 +135,8 @@ struct SearchForm: View {
             CloseButton()
         }
     }
+
+    // MARK: - Methods
 
     private func showAttraction(_ attraction: Attraction) {
         guard let mapView = mapKitVM.mapView else { return }
