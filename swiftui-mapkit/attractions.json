@@ -73,6 +73,38 @@
         ]
     },
     {
+        "name": "Smokey Mountains",
+        "attractions": [
+            {
+                "name": "Buckhorn Inn",
+                "address": "2140 Tudor Mountain Rd, Gatlinburg, TN 37738",
+                "latitude": 35.744118559860155,
+                "longitude": -83.42853790375658,
+                "distance": 120.0,
+                "heading": 205.6,
+                "pitch": 0.0
+            },
+            {
+                "name": "Clingmans Dome",
+                "address": "HG72+5J Bryson City, North Carolina",
+                "latitude": 35.55993767340856,
+                "longitude": -83.49635468637699,
+                "distance": 500.0,
+                "heading": 334.4,
+                "pitch": 0.0
+            },
+            {
+                "name": "Dollywood",
+                "address": "2700 Dollywood Parks Blvd, Pigeon Forge, TN 37863",
+                "latitude": 35.795111282377015,
+                "longitude": -83.53118620177459,
+                "distance": 300.0,
+                "heading": 0.0,
+                "pitch": 0.0
+            }
+        ]
+    },
+    {
         "name": "Yellowstone National Park",
         "attractions": [
             {
