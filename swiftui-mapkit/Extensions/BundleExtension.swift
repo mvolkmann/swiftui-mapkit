@@ -1,5 +1,7 @@
 import Foundation
 
+// This was derived from Paul Hudson's post at
+// https://www.hackingwithswift.com/example-code/system/how-to-decode-json-from-your-app-bundle-the-easy-way
 extension Bundle {
     func decode<T: Decodable>(_ type: T.Type, from path: String) -> T {
         guard let url = url(forResource: path, withExtension: nil) else {
