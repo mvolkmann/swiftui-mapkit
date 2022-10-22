@@ -4,7 +4,6 @@
         "attractions": [
             {
                 "name": "Buckingham Palace",
-                "address": "Buckingham Palace, London SW1A 1AA",
                 "latitude": 51.5014,
                 "longitude": -0.1415,
                 "distance": 100.0,
@@ -13,7 +12,6 @@
             },
             {
                 "name": "Kensington Palace",
-                "address": "Kensington Gardens, London W8 4PX",
                 "latitude": 51.50528021513012,
                 "longitude": -0.18738961435642476,
                 "distance": 100.0,
@@ -22,7 +20,6 @@
             },
             {
                 "name": "Tower Bridge",
-                "address": "Tower Bridge Rd, London SE1 2UP",
                 "latitude": 51.50684891859436,
                 "longitude": -0.07531986216218536,
                 "distance": 100.0,
@@ -31,7 +28,6 @@
             },
             {
                 "name": "Westminster Abbey",
-                "address": "20 Deans Yd, London SW1P 3PA",
                 "latitude": 51.499707295670575,
                 "longitude": -0.12807285506380467,
                 "distance": 100.0,
@@ -45,7 +41,6 @@
         "attractions": [
             {
                 "name": "Alcatraz",
-                "address": "Alcatraz Island, San Francisco",
                 "latitude": 37.825205932677065,
                 "longitude": -122.42278138827253,
                 "distance": 100.0,
@@ -54,7 +49,6 @@
             },
             {
                 "name": "Fishermans Wharf",
-                "address": "Fishermans Wharf, San Francisco",
                 "latitude": 37.80782748030779,
                 "longitude": -122.41612457985897,
                 "distance": 200.0,
@@ -63,7 +57,6 @@
             },
             {
                 "name": "Golden Gate Bridge",
-                "address": "Golden Gate Bridge, San Francisco",
                 "latitude": 37.82205184534118,
                 "longitude": -122.48647786835613,
                 "distance": 800.0,
@@ -77,7 +70,6 @@
         "attractions": [
             {
                 "name": "Buckhorn Inn",
-                "address": "2140 Tudor Mountain Rd, Gatlinburg, TN 37738",
                 "latitude": 35.744118559860155,
                 "longitude": -83.42853790375658,
                 "distance": 120.0,
@@ -86,7 +78,6 @@
             },
             {
                 "name": "Clingmans Dome",
-                "address": "HG72+5J Bryson City, North Carolina",
                 "latitude": 35.55993767340856,
                 "longitude": -83.49635468637699,
                 "distance": 500.0,
@@ -95,7 +86,6 @@
             },
             {
                 "name": "Dollywood",
-                "address": "2700 Dollywood Parks Blvd, Pigeon Forge, TN 37863",
                 "latitude": 35.795111282377015,
                 "longitude": -83.53118620177459,
                 "distance": 300.0,
@@ -109,7 +99,6 @@
         "attractions": [
             {
                 "name": "Artist Point",
-                "address": "Artist Point, Wyoming 82190",
                 "latitude": 44.71791409407925,
                 "longitude": -110.49597099480617,
                 "distance": 200.0,
@@ -118,7 +107,6 @@
             },
             {
                 "name": "Grand Prismatic Spring",
-                "address": "Grand Prismatic Spring, Wyoming 82190",
                 "latitude": 44.52516692327538,
                 "longitude": -110.83817120923885,
                 "distance": 300.0,
@@ -127,7 +115,6 @@
             },
             {
                 "name": "Mammoth Hot Springs",
-                "address": "Mammoth Hot Springs, Wyoming 82190",
                 "latitude": 44.96798492303653,
                 "longitude": -110.70441674388451,
                 "distance": 300.0,
@@ -136,7 +123,6 @@
             },
             {
                 "name": "Norris Geyser Basin",
-                "address": "Norris Geyser Basin, Wyoming 82190",
                 "latitude": 44.72749800232406,
                 "longitude": -110.70451563327354,
                 "distance": 200.0,
@@ -145,7 +131,6 @@
             },
             {
                 "name": "Old Faithful Geyser",
-                "address": "Old Faithful Geyser, Wyoming 82190",
                 "latitude": 44.460808444476434,
                 "longitude": -110.82830248568511,
                 "distance": 300.0,
