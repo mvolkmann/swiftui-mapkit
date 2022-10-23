@@ -79,12 +79,15 @@ struct ContentView: View {
 
     private func likeCenter() {
         guard let mapView = mapKitVM.mapView else { return }
-        print("center =", mapView.centerCoordinate)
-        let pitch = mapView.camera.pitch
-        let heading = mapView.camera.heading
-        print("pitch =", pitch)
-        print("heading =", heading)
-        print("region =", mapView.region) // for zoom
+        let center = mapView.centerCoordinate
+        print("\nlatitude =", center.latitude)
+        print("longitude =", center.longitude)
+        let region = mapView.region
+        let span = region.span
+        print("latitudeDelta =", span.latitudeDelta)
+        print("longitudeDelta =", span.longitudeDelta)
+        print("heading =", mapView.camera.heading)
+        print("pitch =", mapView.camera.pitch)
     }
 
     private func map(center: CLLocationCoordinate2D) -> some View {

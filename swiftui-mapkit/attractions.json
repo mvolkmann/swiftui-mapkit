@@ -4,34 +4,38 @@
         "attractions": [
             {
                 "name": "Buckingham Palace",
-                "latitude": 51.5014,
-                "longitude": -0.1415,
-                "distance": 100.0,
+                "latitude": 51.501,
+                "longitude": -0.142,
+                "latitudeDelta": 0.013,
+                "longitudeDelta": 0.028,
                 "heading": 237.0,
                 "pitch": 72.0
             },
             {
                 "name": "Kensington Palace",
-                "latitude": 51.50528021513012,
-                "longitude": -0.18738961435642476,
-                "distance": 100.0,
-                "heading": 256.0,
+                "latitude": 51.505,
+                "longitude": -0.188,
+                "latitudeDelta": 0.0067,
+                "longitudeDelta": 0.028,
+                "heading": 257.0,
                 "pitch": 72.0
             },
             {
                 "name": "Tower Bridge",
-                "latitude": 51.50684891859436,
-                "longitude": -0.07531986216218536,
-                "distance": 100.0,
-                "heading": 146.0,
+                "latitude": 51.506,
+                "longitude": -0.074,
+                "latitudeDelta": 0.064,
+                "longitudeDelta": 0.093,
+                "heading": 139.0,
                 "pitch": 72.0
             },
             {
                 "name": "Westminster Abbey",
-                "latitude": 51.499707295670575,
-                "longitude": -0.12807285506380467,
-                "distance": 100.0,
-                "heading": 145.0,
+                "latitude": 51.499,
+                "longitude": -0.128,
+                "latitudeDelta": 0.019,
+                "longitudeDelta": 0.032,
+                "heading": 134.0,
                 "pitch": 72.0
             }
         ]
@@ -41,27 +45,30 @@
         "attractions": [
             {
                 "name": "Alcatraz",
-                "latitude": 37.825205932677065,
-                "longitude": -122.42278138827253,
-                "distance": 100.0,
-                "heading": 359.8,
+                "latitude": 37.825,
+                "longitude": -122.423,
+                "latitudeDelta": 0.046,
+                "longitudeDelta": 0.019,
+                "heading": 0.0,
                 "pitch": 68.0
             },
             {
                 "name": "Fishermans Wharf",
-                "latitude": 37.80782748030779,
-                "longitude": -122.41612457985897,
-                "distance": 200.0,
+                "latitude": 37.808,
+                "longitude": -122.416,
+                "latitudeDelta": 0.012,
+                "longitudeDelta": 0.026,
                 "heading": 335.0,
                 "pitch": 68.0
             },
             {
                 "name": "Golden Gate Bridge",
-                "latitude": 37.82205184534118,
-                "longitude": -122.48647786835613,
-                "distance": 800.0,
-                "heading": 301.0,
-                "pitch": 72.0
+                "latitude": 37.812,
+                "longitude": -122.467,
+                "latitudeDelta": 0.065,
+                "longitudeDelta": 0.095,
+                "heading": 307.0,
+                "pitch": 56.0
             }
         ]
     },
@@ -70,25 +77,28 @@
         "attractions": [
             {
                 "name": "Buckhorn Inn",
-                "latitude": 35.744118559860155,
-                "longitude": -83.42853790375658,
-                "distance": 120.0,
-                "heading": 205.6,
+                "latitude": 35.7442,
+                "longitude": -83.4283,
+                "latitudeDelta": 0.0024,
+                "longitudeDelta": 0.0020,
+                "heading": 194.0,
                 "pitch": 0.0
             },
             {
                 "name": "Clingmans Dome",
-                "latitude": 35.55993767340856,
-                "longitude": -83.49635468637699,
-                "distance": 500.0,
+                "latitude": 35.5602,
+                "longitude": -83.4962,
+                "latitudeDelta": 0.0095,
+                "longitudeDelta": 0.0093,
                 "heading": 334.4,
                 "pitch": 0.0
             },
             {
                 "name": "Dollywood",
-                "latitude": 35.795111282377015,
-                "longitude": -83.53118620177459,
-                "distance": 300.0,
+                "latitude": 35.7958,
+                "longitude": -83.5311,
+                "latitudeDelta": 0.0067,
+                "longitudeDelta": 0.0043,
                 "heading": 0.0,
                 "pitch": 0.0
             }
@@ -99,42 +109,47 @@
         "attractions": [
             {
                 "name": "Artist Point",
-                "latitude": 44.71791409407925,
-                "longitude": -110.49597099480617,
-                "distance": 200.0,
+                "latitude": 44.7193,
+                "longitude": -110.4918,
+                "latitudeDelta": 0.0057,
+                "longitudeDelta": 0.0103,
                 "heading": 245.0,
-                "pitch": 25.0
+                "pitch": 23.0
             },
             {
                 "name": "Grand Prismatic Spring",
-                "latitude": 44.52516692327538,
-                "longitude": -110.83817120923885,
-                "distance": 300.0,
-                "heading": 0.0,
+                "latitude": 44.5256,
+                "longitude": -110.8375,
+                "latitudeDelta": 0.0046,
+                "longitudeDelta": 0.0063,
+                "heading": 223.0,
                 "pitch": 0.0
             },
             {
                 "name": "Mammoth Hot Springs",
-                "latitude": 44.96798492303653,
-                "longitude": -110.70441674388451,
-                "distance": 300.0,
-                "heading": 0.0,
+                "latitude": 44.9721,
+                "longitude": -110.7032,
+                "latitudeDelta": 0.0173,
+                "longitudeDelta": 0.0193,
+                "heading": 25.0,
                 "pitch": 0.0
             },
             {
                 "name": "Norris Geyser Basin",
-                "latitude": 44.72749800232406,
-                "longitude": -110.70451563327354,
-                "distance": 200.0,
-                "heading": 334.0,
+                "latitude": 44.7275,
+                "longitude": -110.7044,
+                "latitudeDelta": 0.0033,
+                "longitudeDelta": 0.0039,
+                "heading": 328.0,
                 "pitch": 0.0
             },
             {
                 "name": "Old Faithful Geyser",
-                "latitude": 44.460808444476434,
-                "longitude": -110.82830248568511,
-                "distance": 300.0,
-                "heading": 0.0,
+                "latitude": 44.4604,
+                "longitude": -110.8289,
+                "latitudeDelta": 0.0067,
+                "longitudeDelta": 0.0089,
+                "heading": 40.2,
                 "pitch": 0.0
             }
         ]

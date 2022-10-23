@@ -141,17 +141,15 @@ struct SearchForm: View {
     private func showAttraction(_ attraction: Attraction) {
         guard let mapView = mapKitVM.mapView else { return }
 
-        // This works, but seems to limit the minimum distance.
         let center = CLLocationCoordinate2D(
             latitude: attraction.latitude,
             longitude: attraction.longitude
         )
         let region = MKCoordinateRegion(
             center: center,
-            latitudinalMeters: attraction.distance,
-            longitudinalMeters: attraction.distance
+            latitudinalMeters: attraction.latitudeDelta,
+            longitudinalMeters: attraction.longitudeDelta
         )
-
         mapView.setRegion(region, animated: true)
 
         mapView.camera.heading = attraction.heading
