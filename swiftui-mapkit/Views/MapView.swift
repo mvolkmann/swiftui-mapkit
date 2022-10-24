@@ -101,6 +101,18 @@ struct MapView: UIViewRepresentable {
 
         mapView.preferredConfiguration = config
 
+        if let center = mapKitVM.center {
+            print("MapView.updateUIView: radius =", mapKitVM.radius)
+            mapView.region = MKCoordinateRegion(
+                center: center,
+                latitudinalMeters: mapKitVM.radius,
+                longitudinalMeters: mapKitVM.radius
+            )
+
+            mapView.camera.heading = mapKitVM.heading
+            mapView.camera.pitch = mapKitVM.pitch
+        }
+
         updateAnnotations(mapView)
     }
 

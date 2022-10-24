@@ -68,16 +68,6 @@ class CoreLocationViewModel: NSObject, ObservableObject {
     /*
       @MainActor
       private func setup() async {
-          let center = CLLocationCoordinate2D(
-              latitude: 51.501, // London
-              longitude: -0.1425 // London
-          )
-          let region = MKCoordinateRegion(
-              center: center,
-              latitudinalMeters: size,
-              longitudinalMeters: size
-          )
-
            var initialPlaces: [Place] = []
 
            // TODO: Run these searches in parallel?

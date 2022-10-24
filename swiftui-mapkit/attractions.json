@@ -6,7 +6,7 @@
                 "name": "Buckingham Palace",
                 "latitude": 51.5017,
                 "longitude": -0.1408,
-                "radius": 245.0,
+                "radius": 50.0,
                 "heading": 236.8,
                 "pitch": 62.6
             },
@@ -14,7 +14,7 @@
                 "name": "Kensington Palace",
                 "latitude": 51.5053,
                 "longitude": -0.1872,
-                "radius": 1.0,
+                "radius": 20.0,
                 "heading": 257.3,
                 "pitch": 71.7
             },

@@ -150,20 +150,13 @@ struct SearchForm: View {
     // MARK: - Methods
 
     private func showAttraction(_ attraction: Attraction) {
-        guard let mapView = mapKitVM.mapView else { return }
-
-        let center = CLLocationCoordinate2D(
+        mapKitVM.center = CLLocationCoordinate2D(
             latitude: attraction.latitude,
             longitude: attraction.longitude
         )
-        mapView.region = MKCoordinateRegion(
-            center: center,
-            latitudinalMeters: attraction.radius,
-            longitudinalMeters: attraction.radius
-        )
-
-        mapView.camera.heading = attraction.heading
-        mapView.camera.pitch = attraction.pitch
+        mapKitVM.radius = attraction.radius
+        mapKitVM.heading = attraction.heading
+        mapKitVM.pitch = attraction.pitch
 
         appVM.isSearching = false
         coreLocationVM.selectedPlace = nil

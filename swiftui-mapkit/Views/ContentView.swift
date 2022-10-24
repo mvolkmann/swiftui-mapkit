@@ -13,12 +13,9 @@ struct ContentView: View {
     @StateObject var mapKitVM = MapKitViewModel.shared
 
     @State var isBrowsing = false
-    @State var url: URL = .init(string: "https://mvolkmann.github.io")!
 
-    static let defaultCoordinate = CLLocationCoordinate2D(
-        latitude: 51.501,
-        longitude: -0.1425
-    )
+    // This is changed later to the URL of a placemark.
+    @State var url: URL = .init(string: "https://mvolkmann.github.io")!
 
     // MARK: - Properties
 

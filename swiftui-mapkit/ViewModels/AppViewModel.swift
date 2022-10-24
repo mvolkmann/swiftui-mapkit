@@ -21,5 +21,6 @@ final class AppViewModel: ObservableObject {
     // These are here instead of being @State properties in SearchForm.swift
     // because we want to persist the last values between uses of that view.
     @Published var selectedAttractionIndex = -1
-    @Published var selectedCityIndex = -1
+    // @Published var selectedCityIndex = -1
+    @Published var selectedCityIndex = 0 // London
 }

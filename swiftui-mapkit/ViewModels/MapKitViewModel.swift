@@ -10,8 +10,10 @@ class MapKitViewModel: NSObject, ObservableObject {
 
     @Published var center: CLLocationCoordinate2D?
     @Published var currentPlacemark: CLPlacemark?
+    @Published var heading = 0.0
     @Published var likedLocations: [String] = []
     @Published var mapView: MKMapView?
+    @Published var pitch = 0.0
     @Published var radius = 0.0
     @Published var searchLocations: [String] = []
     @Published var searchQuery = ""
