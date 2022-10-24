@@ -4,8 +4,7 @@ struct Attraction: Codable, Hashable, Identifiable {
     let name: String
     let latitude: Double
     let longitude: Double
-    let latitudeDelta: Double
-    let longitudeDelta: Double
+    let radius: Double
     let heading: Double
     let pitch: Double
 

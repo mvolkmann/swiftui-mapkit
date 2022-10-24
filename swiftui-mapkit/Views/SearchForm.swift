@@ -25,7 +25,7 @@ struct SearchForm: View {
         List {
             Picker("City/Area", selection: $appVM.selectedCityIndex) {
                 Text("None").tag(-1)
-                let enumeration = Array(cities.enumerated())
+                let enumeration = Array(appVM.cities.enumerated())
                 ForEach(enumeration, id: \.element) { index, city in
                     Text(city.name).tag(index)
                 }
@@ -57,6 +57,12 @@ struct SearchForm: View {
         .frame(height: 150)
     }
 
+    private var buckinghamPalace: Attraction {
+        let city = appVM.cities.first(where: { $0.name == "London" })!
+        return city.attractions
+            .first(where: { $0.name == "Buckingham Palace" })!
+    }
+
     private var matchedLocationList: some View {
         VStack {
             Text("Matched Locations").font(.headline)
@@ -79,7 +85,7 @@ struct SearchForm: View {
 
     private var selectedCity: City? {
         let index = appVM.selectedCityIndex
-        return index == -1 ? nil : cities[index]
+        return index == -1 ? nil : appVM.cities[index]
     }
 
     var body: some View {
@@ -100,6 +106,11 @@ struct SearchForm: View {
                 Text("Select Attraction").font(.headline)
                 attractionForm
             }
+
+            Button("Test") {
+                showAttraction(buckinghamPalace)
+            }
+            .buttonStyle(.borderedProminent)
 
             if let mapView = mapKitVM.mapView {
                 VStack(alignment: .leading) {
@@ -139,6 +150,7 @@ struct SearchForm: View {
     // MARK: - Methods
 
     private func showAttraction(_ attraction: Attraction) {
+        print("SearchForm.showAttraction: attraction =", attraction)
         guard let mapView = mapKitVM.mapView else { return }
 
         let center = CLLocationCoordinate2D(
@@ -147,8 +159,8 @@ struct SearchForm: View {
         )
         let region = MKCoordinateRegion(
             center: center,
-            latitudinalMeters: attraction.latitudeDelta,
-            longitudinalMeters: attraction.longitudeDelta
+            latitudinalMeters: attraction.radius,
+            longitudinalMeters: attraction.radius
         )
         mapView.setRegion(region, animated: true)
 

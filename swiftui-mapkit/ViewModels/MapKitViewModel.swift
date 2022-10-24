@@ -12,6 +12,7 @@ class MapKitViewModel: NSObject, ObservableObject {
     @Published var currentPlacemark: CLPlacemark?
     @Published var likedLocations: [String] = []
     @Published var mapView: MKMapView?
+    @Published var radius = 0.0
     @Published var searchLocations: [String] = []
     @Published var searchQuery = ""
     @Published var selectedPlacemark: CLPlacemark?

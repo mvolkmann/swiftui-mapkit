@@ -1,6 +1,17 @@
 import SwiftUI
 
 final class AppViewModel: ObservableObject {
+    // The file "attractions.json" must be added to the project bundle.
+    // - Select top entry in the file navigator.
+    // - Select the app target.
+    // - Select the "Build Phases" tab.
+    // - Expand the "Copy Bundle Resources" section.
+    // - Click the "+" button and select the file.
+    // - Rebuild the app.
+    @Published var cities: [City] =
+        Bundle.main.decode([City].self, from: "attractions.json")
+
+    @Published var isLiking = false
     @Published var isSearching = false
     @Published var isSetting = false
     @Published var mapElevation = "realistic" // other is "flat"

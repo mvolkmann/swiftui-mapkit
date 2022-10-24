@@ -29,7 +29,10 @@ struct ContentView: View {
                     placeDetail(place: place)
                 }
                 if let center = mapKitVM.center {
-                    map(center: center)
+                    // This approach uses UIKit in order to
+                    // utilize some cool MapKit features.
+                    MapView(center: center, radius: mapKitVM.radius)
+                        .edgesIgnoringSafeArea(.bottom)
                 } else {
                     Spacer()
                     Text("... loading map ...").font(.largeTitle)
@@ -47,7 +50,7 @@ struct ContentView: View {
                 ),
                 trailing: HStack {
                     Button(
-                        action: { likeCenter() },
+                        action: { appVM.isLiking = true },
                         label: { Image(systemName: "heart") }
                     )
                     Button(
@@ -65,6 +68,9 @@ struct ContentView: View {
             .sheet(isPresented: $isBrowsing) {
                 SafariBrowser(url: $url)
             }
+            .sheet(isPresented: $appVM.isLiking) {
+                LikeForm()
+            }
             .sheet(isPresented: $appVM.isSetting) {
                 SettingsForm()
             }
@@ -76,28 +82,6 @@ struct ContentView: View {
     }
 
     // MARK: - Methods
-
-    private func likeCenter() {
-        guard let mapView = mapKitVM.mapView else { return }
-        let center = mapView.centerCoordinate
-        print("\nlatitude =", center.latitude)
-        print("longitude =", center.longitude)
-        let region = mapView.region
-        let span = region.span
-        print("latitudeDelta =", span.latitudeDelta)
-        print("longitudeDelta =", span.longitudeDelta)
-        print("heading =", mapView.camera.heading)
-        print("pitch =", mapView.camera.pitch)
-    }
-
-    private func map(center: CLLocationCoordinate2D) -> some View {
-        // This approach uses UIKit in order to
-        // utilize some cool MapKit features.
-        // let location = mapKitVM.selectedPlacemark?.location
-        // let center = location?.coordinate ?? Self.defaultCoordinate
-        return MapView(center: center, zoom: 0.01)
-            .edgesIgnoringSafeArea(.bottom)
-    }
 
     @ViewBuilder
     private func placeDetail(place: Place) -> some View {
