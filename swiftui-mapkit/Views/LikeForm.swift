@@ -11,18 +11,21 @@ struct LikeForm: View {
     private var mapJSON: String {
         guard let mapView = mapKitVM.mapView else { return "" }
 
-        let center = mapView.centerCoordinate
+        // YOU ARE NOT CORRECTLY CAPTURING MAP CHANGES BEFORE THIS IS CALLED!
         let region = mapView.region
+        let center = region.center
         let camera = mapView.camera
         let decimals = 4
 
-        return """
+        let json = """
         "latitude": \(center.latitude.places(decimals)),
         "longitude": \(center.longitude.places(decimals)),
         "radius": \(region.radius.places(decimals)),
         "heading": \(Double(camera.heading).places(1)),
         "pitch": \(Double(camera.pitch).places(1))
         """
+        print("\n" + json)
+        return json
     }
 
     private var selectedAttraction: Attraction? {
@@ -78,6 +81,7 @@ struct LikeForm: View {
                     Button("Add") {
                         guard let mapView = mapKitVM.mapView else { return }
 
+                        // TODO: This does not get the current mapView settings!
                         let center = mapView.centerCoordinate
                         let region = mapView.region
                         let camera = mapView.camera
@@ -89,7 +93,7 @@ struct LikeForm: View {
                             heading: camera.heading,
                             pitch: camera.pitch
                         )
-                        // TODO: Fix this!
+                        // TODO: Fix this to allow users to add attractions.
                         // selectedCity!.addAttraction(attraction)
                     }
                 }

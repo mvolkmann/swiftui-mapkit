@@ -4,18 +4,18 @@
         "attractions": [
             {
                 "name": "Buckingham Palace",
-                "latitude": 51.5017,
-                "longitude": -0.1408,
-                "radius": 50.0,
-                "heading": 236.8,
+                "latitude": 51.5016,
+                "longitude": -0.1412,
+                "radius": 115.0,
+                "heading": 237.4,
                 "pitch": 62.6
             },
             {
                 "name": "Kensington Palace",
                 "latitude": 51.5053,
-                "longitude": -0.1872,
-                "radius": 20.0,
-                "heading": 257.3,
+                "longitude": -0.1874,
+                "radius": 165.0,
+                "heading": 256.1,
                 "pitch": 71.7
             },
             {
@@ -57,10 +57,10 @@
             },
             {
                 "name": "Golden Gate Bridge",
-                "latitude": 37.812,
-                "longitude": -122.467,
-                "radius": 918.8818,
-                "heading": 307.0,
+                "latitude": 37.8088,
+                "longitude": -122.4656,
+                "radius": 2769.7155,
+                "heading": 290.3,
                 "pitch": 56.0
             }
         ]
@@ -90,6 +90,19 @@
                 "longitude": -83.5311,
                 "radius": 918.8818,
                 "heading": 0.0,
+                "pitch": 0.0
+            }
+        ]
+    },
+    {
+        "name": "St. Louis",
+        "attractions": [
+            {
+                "name": "Creve Coeur Lake",
+                "latitude": 38.7172,
+                "longitude": -90.4858,
+                "radius": 1067.7917,
+                "heading": -0.0,
                 "pitch": 0.0
             }
         ]

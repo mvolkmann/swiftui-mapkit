@@ -25,6 +25,8 @@ struct ContentView: View {
                 if let place = coreLocationVM.selectedPlace {
                     placeDetail(place: place)
                 }
+
+                // If we have a location to show on the map ...
                 if let center = mapKitVM.center {
                     // This approach uses UIKit in order to
                     // utilize some cool MapKit features.

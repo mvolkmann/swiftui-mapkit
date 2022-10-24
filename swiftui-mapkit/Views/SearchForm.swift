@@ -57,12 +57,6 @@ struct SearchForm: View {
         .frame(height: 150)
     }
 
-    private var buckinghamPalace: Attraction {
-        let city = appVM.cities.first(where: { $0.name == "London" })!
-        return city.attractions
-            .first(where: { $0.name == "Buckingham Palace" })!
-    }
-
     private var matchedLocationList: some View {
         VStack {
             Text("Matched Locations").font(.headline)
@@ -108,7 +102,14 @@ struct SearchForm: View {
             }
 
             Button("Test") {
-                showAttraction(buckinghamPalace)
+                if let attraction = getAttraction(
+                    city: "San Francisco",
+                    name: "Golden Gate Bridge"
+                ) {
+                    showAttraction(attraction)
+                } else {
+                    print("attraction not found")
+                }
             }
             .buttonStyle(.borderedProminent)
 
@@ -148,6 +149,13 @@ struct SearchForm: View {
     }
 
     // MARK: - Methods
+
+    private func getAttraction(city: String, name: String) -> Attraction? {
+        guard let city = appVM.cities.first(where: { $0.name == city })
+        else { return nil }
+
+        return city.attractions.first(where: { $0.name == name })
+    }
 
     private func showAttraction(_ attraction: Attraction) {
         mapKitVM.center = CLLocationCoordinate2D(

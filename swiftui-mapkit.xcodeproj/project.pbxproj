@@ -22,6 +22,7 @@
 		1AB9F3CB2906C927002DF760 /* LikeForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3CA2906C927002DF760 /* LikeForm.swift */; };
 		1AB9F3CD2906C947002DF760 /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3CC2906C947002DF760 /* DoubleExtension.swift */; };
 		1AB9F3CF2906C962002DF760 /* MKCoordinateRegionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3CE2906C962002DF760 /* MKCoordinateRegionExtension.swift */; };
+		1AB9F3D12906FD96002DF760 /* CLLocationCoordinate2DExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3D02906FD96002DF760 /* CLLocationCoordinate2DExtension.swift */; };
 		1AE3A1712901876E00FB6501 /* MapKitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1702901876E00FB6501 /* MapKitViewModel.swift */; };
 		1AE3A1742901884200FB6501 /* CoreLocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1732901884200FB6501 /* CoreLocationService.swift */; };
 		1AE3A1772901887200FB6501 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1762901887200FB6501 /* StringExtension.swift */; };
@@ -51,6 +52,7 @@
 		1AB9F3CA2906C927002DF760 /* LikeForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeForm.swift; sourceTree = "<group>"; };
 		1AB9F3CC2906C947002DF760 /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		1AB9F3CE2906C962002DF760 /* MKCoordinateRegionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKCoordinateRegionExtension.swift; sourceTree = "<group>"; };
+		1AB9F3D02906FD96002DF760 /* CLLocationCoordinate2DExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtension.swift; sourceTree = "<group>"; };
 		1AE3A1702901876E00FB6501 /* MapKitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapKitViewModel.swift; sourceTree = "<group>"; };
 		1AE3A1732901884200FB6501 /* CoreLocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocationService.swift; sourceTree = "<group>"; };
 		1AE3A1762901887200FB6501 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				1AB9F3BC29034168002DF760 /* BundleExtension.swift */,
+				1AB9F3D02906FD96002DF760 /* CLLocationCoordinate2DExtension.swift */,
 				1AB9F3CC2906C947002DF760 /* DoubleExtension.swift */,
 				1AB9F3CE2906C962002DF760 /* MKCoordinateRegionExtension.swift */,
 				1AE3A1762901887200FB6501 /* StringExtension.swift */,
@@ -253,6 +256,7 @@
 				1AE3A1742901884200FB6501 /* CoreLocationService.swift in Sources */,
 				1AE3A1842902DEBC00FB6501 /* City.swift in Sources */,
 				1AE3A1792901897700FB6501 /* ViewExtension.swift in Sources */,
+				1AB9F3D12906FD96002DF760 /* CLLocationCoordinate2DExtension.swift in Sources */,
 				1AB9F3BD29034168002DF760 /* BundleExtension.swift in Sources */,
 				1AE3A17D290189A800FB6501 /* SettingsForm.swift in Sources */,
 				1AAB0D002826436600544A8F /* ContentView.swift in Sources */,

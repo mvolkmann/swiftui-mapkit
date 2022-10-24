@@ -89,13 +89,15 @@ class CoreLocationViewModel: NSObject, ObservableObject {
     }
 }
 
+// This is used to the the current location of the user.
 extension CoreLocationViewModel: CLLocationManagerDelegate {
     func locationManager(
         _: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
     ) {
         guard let location = locations.first else { return }
-        MapKitViewModel.shared.center = location.coordinate
+        let mapKitVM = MapKitViewModel.shared
+        mapKitVM.center = location.coordinate
     }
 
     func locationManager(
@@ -103,8 +105,7 @@ extension CoreLocationViewModel: CLLocationManagerDelegate {
         didFailWithError _: Error
     ) {
         print("failed to get current location - user may not have approved")
-        // The Simulator cannot get the current location.
-
+        // This happens if the Simulator cannot get the current location.
         // If the user denies sharing location, to approve it then must:
         // 1. Opening their Settings app.
         // 2. Go to Privacy ... Location Services.

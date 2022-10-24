@@ -36,14 +36,16 @@ struct MapView: UIViewRepresentable {
         mapView.delegate = context.coordinator
         mapView.showsUserLocation = true
 
-        mapView.region = MKCoordinateRegion(
+        let newRegion = MKCoordinateRegion(
             center: center,
             latitudinalMeters: radius,
             longitudinalMeters: radius
         )
+        mapView.setRegion(newRegion, animated: false)
 
         // Save a reference to the MKMapView so
-        // ContentView can obtain the current center coordinate.
+        // LikeForm can obtain the current center coordinate.
+        // This must be done on the main queue.
         Task {
             await MainActor.run {
                 mapKitVM.mapView = mapView
@@ -102,15 +104,17 @@ struct MapView: UIViewRepresentable {
         mapView.preferredConfiguration = config
 
         if let center = mapKitVM.center {
-            print("MapView.updateUIView: radius =", mapKitVM.radius)
-            mapView.region = MKCoordinateRegion(
-                center: center,
-                latitudinalMeters: mapKitVM.radius,
-                longitudinalMeters: mapKitVM.radius
-            )
+            if center != mapView.centerCoordinate {
+                let newRegion = MKCoordinateRegion(
+                    center: center,
+                    latitudinalMeters: mapKitVM.radius,
+                    longitudinalMeters: mapKitVM.radius
+                )
+                mapView.setRegion(newRegion, animated: false)
 
-            mapView.camera.heading = mapKitVM.heading
-            mapView.camera.pitch = mapKitVM.pitch
+                mapView.camera.heading = mapKitVM.heading
+                mapView.camera.pitch = mapKitVM.pitch
+            }
         }
 
         updateAnnotations(mapView)
@@ -151,6 +155,17 @@ struct MapView: UIViewRepresentable {
                // TODO: Why is force unwrap needed here?
                let place = parent.titleToPlaceMap[title!] {
                 parent.coreLocationVM.selectedPlace = place
+            }
+        }
+
+        func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+            Task {
+                await MainActor.run {
+                    parent.mapKitVM.center = mapView.region.center
+                    parent.mapKitVM.radius = mapView.region.span.longitudeDelta
+                    parent.mapKitVM.heading = mapView.camera.heading
+                    parent.mapKitVM.pitch = mapView.camera.pitch
+                }
             }
         }
     }
