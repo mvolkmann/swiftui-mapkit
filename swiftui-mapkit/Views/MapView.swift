@@ -11,8 +11,8 @@ struct MapView: UIViewRepresentable {
     typealias EmphasisStyle = MKStandardMapConfiguration.EmphasisStyle
 
     @EnvironmentObject private var appVM: AppViewModel
-    @EnvironmentObject private var coreLocationVM: CoreLocationViewModel
-    @StateObject var mapKitVM = MapKitViewModel.shared
+    @StateObject private var coreLocationVM = CoreLocationViewModel.shared
+    @StateObject private var mapKitVM = MapKitViewModel.shared
 
     @State private var annotations: [MKPointAnnotation] = []
     @State private var titleToPlaceMap: [String: Place] = [:]

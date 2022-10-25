@@ -9,8 +9,8 @@ struct ContentView: View {
     // MARK: - State
 
     @EnvironmentObject var appVM: AppViewModel
-    @EnvironmentObject var coreLocationVM: CoreLocationViewModel
-    @StateObject var mapKitVM = MapKitViewModel.shared
+    @StateObject private var coreLocationVM = CoreLocationViewModel.shared
+    @StateObject private var mapKitVM = MapKitViewModel.shared
 
     @State var isBrowsing = false
 

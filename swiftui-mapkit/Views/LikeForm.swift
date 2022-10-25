@@ -2,7 +2,7 @@ import SwiftUI
 
 struct LikeForm: View {
     @EnvironmentObject var appVM: AppViewModel
-    @StateObject var mapKitVM = MapKitViewModel.shared
+    @StateObject private var mapKitVM = MapKitViewModel.shared
 
     @State private var isAddingCity = false
     @State private var newAttraction = ""

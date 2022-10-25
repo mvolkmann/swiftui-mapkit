@@ -17,7 +17,8 @@ class CoreLocationViewModel: NSObject, ObservableObject {
 
     let size = 4000.0 // of area to display in meters
 
-    @MainActor
+    static var shared = CoreLocationViewModel()
+
     override init() {
         super.init()
 
