@@ -49,11 +49,11 @@ class MapKitViewModel: NSObject, ObservableObject {
     private let locationManager = CLLocationManager()
 
     var city: String {
-        CoreLocationService.city(from: selectedPlacemark)
+        selectedPlacemark?.city ?? ""
     }
 
     var country: String {
-        CoreLocationService.country(from: selectedPlacemark)
+        selectedPlacemark?.country ?? ""
     }
 
     var haveMatches: Bool {
@@ -61,7 +61,7 @@ class MapKitViewModel: NSObject, ObservableObject {
     }
 
     var state: String {
-        CoreLocationService.state(from: selectedPlacemark)
+        selectedPlacemark?.state ?? ""
     }
 
     var usingCurrent: Bool {

@@ -12,6 +12,7 @@
 		1A33435228268119006730C2 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A33435128268119006730C2 /* Place.swift */; };
 		1A67891C28FF15EF00F3DFD8 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A67891B28FF15EF00F3DFD8 /* Marker.swift */; };
 		1A82824E282A34D100380E9D /* SafariBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A82824D282A34D100380E9D /* SafariBrowser.swift */; };
+		1A8E283E2908752B0064955F /* CLPlacemarkExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8E283D2908752B0064955F /* CLPlacemarkExtension.swift */; };
 		1AAB0CFE2826436600544A8F /* MapExplorerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0CFD2826436600544A8F /* MapExplorerApp.swift */; };
 		1AAB0D002826436600544A8F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0CFF2826436600544A8F /* ContentView.swift */; };
 		1AAB0D022826436700544A8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAB0D012826436700544A8F /* Assets.xcassets */; };
@@ -52,6 +53,7 @@
 		1A3343532826824D006730C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1A67891B28FF15EF00F3DFD8 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		1A82824D282A34D100380E9D /* SafariBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariBrowser.swift; sourceTree = "<group>"; };
+		1A8E283D2908752B0064955F /* CLPlacemarkExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLPlacemarkExtension.swift; sourceTree = "<group>"; };
 		1AAB0CFA2826436600544A8F /* swiftui-mapkit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "swiftui-mapkit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AAB0CFD2826436600544A8F /* MapExplorerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapExplorerApp.swift; sourceTree = "<group>"; };
 		1AAB0CFF2826436600544A8F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 			children = (
 				1AB9F3BC29034168002DF760 /* BundleExtension.swift */,
 				1AB9F3D02906FD96002DF760 /* CLLocationCoordinate2DExtension.swift */,
+				1A8E283D2908752B0064955F /* CLPlacemarkExtension.swift */,
 				1AB9F3CC2906C947002DF760 /* DoubleExtension.swift */,
 				1AB9F3CE2906C962002DF760 /* MKCoordinateRegionExtension.swift */,
 				1AE3A1762901887200FB6501 /* StringExtension.swift */,
@@ -317,6 +320,7 @@
 				1AE3A1842902DEBC00FB6501 /* City.swift in Sources */,
 				1AE3A1792901897700FB6501 /* ViewExtension.swift in Sources */,
 				1AB9F3D12906FD96002DF760 /* CLLocationCoordinate2DExtension.swift in Sources */,
+				1A8E283E2908752B0064955F /* CLPlacemarkExtension.swift in Sources */,
 				1AB9F3BD29034168002DF760 /* BundleExtension.swift in Sources */,
 				1AE3A17D290189A800FB6501 /* SettingsForm.swift in Sources */,
 				1AAB0D002826436600544A8F /* ContentView.swift in Sources */,
