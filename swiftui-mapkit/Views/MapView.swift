@@ -193,11 +193,7 @@ struct MapView: UIViewRepresentable {
                     let annotation = MKPointAnnotation()
                     annotation.coordinate = place.coordinate
                     annotation.title = place.displayName
-                    // annotation.title = place.displayName + "\n" + place.address
-                    // annotation.subtitle = place.address // not displayed
-
                     titleToPlaceMap[annotation.title!] = place
-
                     return annotation
                 }
 

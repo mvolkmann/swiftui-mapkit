@@ -123,7 +123,9 @@ extension MapKitViewModel: CLLocationManagerDelegate {
 extension MapKitViewModel: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         var locations = completer.results.map { result in
-            result.title + ", " + result.subtitle
+            let title = result.title
+            let subtitle = result.subtitle
+            return subtitle.isEmpty ? title : title + ", " + subtitle
         }
         locations.sort()
         searchLocations = locations
