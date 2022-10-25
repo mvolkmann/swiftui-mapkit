@@ -86,7 +86,7 @@ struct ContentView: View {
     private func placeDetail(place: Place) -> some View {
         if let item = place.item {
             HStack {
-                VStack {
+                VStack(alignment: .leading) {
                     Text("\(place.displayName)").fontWeight(.bold)
                     if let phone = item.phoneNumber {
                         Text("\(phone)")
@@ -95,6 +95,7 @@ struct ContentView: View {
                         Text("\(address)")
                     }
                 }
+                Spacer()
                 if let itemUrl = item.url {
                     VStack {
                         // This opens the website of the selected place
@@ -109,8 +110,13 @@ struct ContentView: View {
                         }
                     }
                     .buttonStyle(.borderedProminent)
+                } else {
+                    Text("No website found")
+                        .fontWeight(.bold)
+                        .padding(.leading)
                 }
             }
+            .padding(.horizontal)
         } else {
             VStack {
                 Text("\(place.displayName)").fontWeight(.bold)

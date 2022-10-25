@@ -96,24 +96,28 @@ struct SearchForm: View {
                 }
             }
 
-            VStack(alignment: .leading) {
-                Text("Select Attraction").font(.headline)
-                attractionForm
-            }
-
-            Button("Test") {
-                if let attraction = getAttraction(
-                    city: "San Francisco",
-                    name: "Golden Gate Bridge"
-                ) {
-                    showAttraction(attraction)
-                } else {
-                    print("attraction not found")
+            if !mapKitVM.haveMatches {
+                VStack(alignment: .leading) {
+                    Text("Select Attraction").font(.headline)
+                    attractionForm
                 }
             }
-            .buttonStyle(.borderedProminent)
 
-            if let mapView = mapKitVM.mapView {
+            /*
+             Button("Test") {
+                 if let attraction = getAttraction(
+                     city: "San Francisco",
+                     name: "Golden Gate Bridge"
+                 ) {
+                     showAttraction(attraction)
+                 } else {
+                     print("attraction not found")
+                 }
+             }
+             .buttonStyle(.borderedProminent)
+             */
+
+            if !mapKitVM.haveMatches, let mapView = mapKitVM.mapView {
                 VStack(alignment: .leading) {
                     Text("Find Nearby").font(.headline)
                     HStack {

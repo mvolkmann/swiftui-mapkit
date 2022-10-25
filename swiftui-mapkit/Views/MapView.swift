@@ -60,7 +60,7 @@ struct MapView: UIViewRepresentable {
 
         switch appVM.mapType {
         case "standard":
-            let temp = MKStandardMapConfiguration(
+            let standard = MKStandardMapConfiguration(
                 elevationStyle: elevationStyle(),
                 emphasisStyle: emphasisStyle()
             )
@@ -68,7 +68,7 @@ struct MapView: UIViewRepresentable {
             // but not a property of MKMapConfiguration.
             // This adds colored lines (yellow, red, and maroon)
             // to roads only in the standard view.
-            temp.showsTraffic = true
+            standard.showsTraffic = true
 
             // pointOfInterestFilter is a property of MKStandardMapConfiguration,
             // but not a property of MKMapConfiguration.
@@ -84,19 +84,24 @@ struct MapView: UIViewRepresentable {
             // park, parking, pharmacy, police, postOffice, publicTransport,
             // restaurant, restroom, school, stadium, store, theater,
             // university, winery, and zoo.
-            temp.pointOfInterestFilter = MKPointOfInterestFilter(
-                including: [.park, .theater]
+            standard.pointOfInterestFilter = MKPointOfInterestFilter(
+                // including: [.park, .theater]
+                including: []
             )
 
-            config = temp
+            config = standard
         case "image":
             config = MKImageryMapConfiguration(
                 elevationStyle: elevationStyle()
             )
         case "hybrid":
-            config = MKHybridMapConfiguration(
+            let hybrid = MKHybridMapConfiguration(
                 elevationStyle: elevationStyle()
             )
+            hybrid.pointOfInterestFilter = MKPointOfInterestFilter(
+                including: []
+            )
+            config = hybrid
         default:
             break
         }
@@ -116,22 +121,23 @@ struct MapView: UIViewRepresentable {
             let headingChanged = heading != mapView.camera.heading
             let pitchChanged = pitch != mapView.camera.pitch
 
-            if centerChanged {
-                print(
-                    "center changed from \(mapView.region.center.description) to \(center.description)"
-                )
-            }
-            if radiusChanged {
-                print(
-                    "radius changed from \(mapView.region.radius) to \(radius)"
-                )
-            }
-            if headingChanged { print("heading changed") }
-            if pitchChanged { print("pitch changed") }
+            /*
+             if centerChanged {
+                 print(
+                     "center changed from \(mapView.region.center.description) to \(center.description)"
+                 )
+             }
+             if radiusChanged {
+                 print(
+                     "radius changed from \(mapView.region.radius) to \(radius)"
+                 )
+             }
+             if headingChanged { print("heading changed") }
+             if pitchChanged { print("pitch changed") }
+             */
 
             if centerChanged || radiusChanged || headingChanged ||
                 pitchChanged {
-                print("MapView: radius is", radius)
                 let newRegion = MKCoordinateRegion(
                     center: center,
                     latitudinalMeters: radius,
@@ -139,7 +145,7 @@ struct MapView: UIViewRepresentable {
                 )
                 // TODO: Why is the newRegion span only honored in the first call?
                 let span = newRegion.span
-                print("MapView: span before =", span)
+                // print("MapView: span before =", span)
                 mapView.setRegion(newRegion, animated: false)
                 // mapView.region.span = span // This doesn't help.
 
@@ -169,8 +175,9 @@ struct MapView: UIViewRepresentable {
                  mapView.region.span.longitudeDelta = longitudeAngle
                  */
 
-                print("MapView: span after =", mapView.region.span)
+                // print("MapView: span after =", mapView.region.span)
                 // TODO: Why does this not match the previous print statement?
+
                 mapView.camera.heading = heading
                 mapView.camera.pitch = pitch
             }

@@ -47,6 +47,8 @@ class CoreLocationViewModel: NSObject, ObservableObject {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = text
         request.region = mapView.region // only searches in this region
+        request.pointOfInterestFilter = MKPointOfInterestFilter(including: [])
+
         let search = MKLocalSearch(request: request)
 
         if let results = try? await search.start() {
