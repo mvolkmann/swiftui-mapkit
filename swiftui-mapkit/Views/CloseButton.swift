@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CloseButton: View {
-    @EnvironmentObject var appVM: AppViewModel
+    @StateObject private var appVM = AppViewModel.shared
 
     var body: some View {
         Button(action: {

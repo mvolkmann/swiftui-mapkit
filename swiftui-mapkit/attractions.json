@@ -19,6 +19,14 @@
                 "pitch": 71.7
             },
             {
+                "name": "London Eye",
+                "latitude": 51.5034,
+                "longitude": -0.1201,
+                "radius": 100.0,
+                "heading": 99.8,
+                "pitch": 72.0
+            },
+            {
                 "name": "Tower Bridge",
                 "latitude": 51.506,
                 "longitude": -0.074,

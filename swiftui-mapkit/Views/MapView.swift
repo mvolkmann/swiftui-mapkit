@@ -10,7 +10,7 @@ struct MapView: UIViewRepresentable {
     typealias ElevationStyle = MKMapConfiguration.ElevationStyle
     typealias EmphasisStyle = MKStandardMapConfiguration.EmphasisStyle
 
-    @EnvironmentObject private var appVM: AppViewModel
+    @StateObject private var appVM = AppViewModel.shared
     @StateObject private var coreLocationVM = CoreLocationViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
 

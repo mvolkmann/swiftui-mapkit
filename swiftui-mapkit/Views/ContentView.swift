@@ -8,7 +8,7 @@ import SwiftUI
 struct ContentView: View {
     // MARK: - State
 
-    @EnvironmentObject var appVM: AppViewModel
+    @StateObject private var appVM = AppViewModel.shared
     @StateObject private var coreLocationVM = CoreLocationViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
