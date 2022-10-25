@@ -2,11 +2,11 @@ import CoreLocation
 
 struct Attraction: Codable, Hashable, Identifiable {
     let name: String
-    let latitude: Double
-    let longitude: Double
-    let radius: Double
-    let heading: Double
-    let pitch: Double
+    let latitude: Double // in degrees
+    let longitude: Double // in degrees
+    let radius: Double // in meters
+    let heading: Double // in degrees
+    let pitch: Double // in degrees
 
     var id: String { name }
 

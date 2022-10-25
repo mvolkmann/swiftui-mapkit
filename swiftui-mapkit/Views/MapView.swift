@@ -104,16 +104,75 @@ struct MapView: UIViewRepresentable {
         mapView.preferredConfiguration = config
 
         if let center = mapKitVM.center {
-            if center != mapView.centerCoordinate {
+            let radius = mapKitVM.radius
+            let heading = mapKitVM.heading
+            let pitch = mapKitVM.pitch
+
+            let centerChanged = center != mapView.centerCoordinate
+            // The radius property on MKCoordinateRegion
+            // is a computed property that I added
+            // in MKCoordinateRegionExtension.swift.
+            let radiusChanged = radius != mapView.region.radius
+            let headingChanged = heading != mapView.camera.heading
+            let pitchChanged = pitch != mapView.camera.pitch
+
+            if centerChanged {
+                print(
+                    "center changed from \(mapView.region.center.description) to \(center.description)"
+                )
+            }
+            if radiusChanged {
+                print(
+                    "radius changed from \(mapView.region.radius) to \(radius)"
+                )
+            }
+            if headingChanged { print("heading changed") }
+            if pitchChanged { print("pitch changed") }
+
+            if centerChanged || radiusChanged || headingChanged ||
+                pitchChanged {
+                print("MapView: radius is", radius)
                 let newRegion = MKCoordinateRegion(
                     center: center,
-                    latitudinalMeters: mapKitVM.radius,
-                    longitudinalMeters: mapKitVM.radius
+                    latitudinalMeters: radius,
+                    longitudinalMeters: radius
                 )
+                // TODO: Why is the newRegion span only honored in the first call?
+                let span = newRegion.span
+                print("MapView: span before =", span)
                 mapView.setRegion(newRegion, animated: false)
+                // mapView.region.span = span // This doesn't help.
 
-                mapView.camera.heading = mapKitVM.heading
-                mapView.camera.pitch = mapKitVM.pitch
+                /*
+                 // This is an attempt to fix the region span
+                 // after the call to setRegion above.
+                 let left = center.offset(
+                     latitudeMeters: 0,
+                     longitudeMeters: -radius
+                 )
+                 let right = center.offset(
+                     latitudeMeters: 0,
+                     longitudeMeters: radius
+                 )
+                 let latitudeAngle = left.latitudeDifference(to: right)
+                 mapView.region.span.latitudeDelta = latitudeAngle
+
+                 let bottom = center.offset(
+                     latitudeMeters: -radius,
+                     longitudeMeters: 0
+                 )
+                 let top = center.offset(
+                     latitudeMeters: radius,
+                     longitudeMeters: 0
+                 )
+                 let longitudeAngle = bottom.longitudeDifference(to: top)
+                 mapView.region.span.longitudeDelta = longitudeAngle
+                 */
+
+                print("MapView: span after =", mapView.region.span)
+                // TODO: Why does this not match the previous print statement?
+                mapView.camera.heading = heading
+                mapView.camera.pitch = pitch
             }
         }
 
@@ -161,10 +220,13 @@ struct MapView: UIViewRepresentable {
         func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
             Task {
                 await MainActor.run {
-                    parent.mapKitVM.center = mapView.region.center
-                    parent.mapKitVM.radius = mapView.region.span.longitudeDelta
-                    parent.mapKitVM.heading = mapView.camera.heading
-                    parent.mapKitVM.pitch = mapView.camera.pitch
+                    let mapKitVM = parent.mapKitVM
+                    let region = mapView.region
+                    let camera = mapView.camera
+                    mapKitVM.center = region.center
+                    mapKitVM.radius = region.radius
+                    mapKitVM.heading = camera.heading
+                    mapKitVM.pitch = camera.pitch
                 }
             }
         }
