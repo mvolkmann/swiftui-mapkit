@@ -12,10 +12,11 @@ struct ContentView: View {
     @StateObject private var coreLocationVM = CoreLocationViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
-    @State var isBrowsing = false
+    @State var isBrowsingWebsite = false
 
-    // This is changed later to the URL of a placemark.
-    @State var url: URL = .init(string: "https://mvolkmann.github.io")!
+    // This is changed later to the URL of a placemark,
+    // but we need to initialize it to some valid URL.
+    @State var url: URL = .temporaryDirectory
 
     // MARK: - Properties
 
@@ -66,7 +67,7 @@ struct ContentView: View {
                 // because the UI needs to be started.
                 coreLocationVM.start()
             }
-            .sheet(isPresented: $isBrowsing) {
+            .sheet(isPresented: $isBrowsingWebsite) {
                 SafariBrowser(url: $url)
             }
             .sheet(isPresented: $appVM.isLiking) {
@@ -98,19 +99,19 @@ struct ContentView: View {
                     }
                 }
                 Spacer()
-                if let itemUrl = item.url {
+                if let itemURL = item.url {
                     VStack {
                         Text("Browse Website").font(.headline)
 
                         // This opens the website of the selected place
                         // in Safari.
-                        Link("In Browser", destination: itemUrl)
+                        Link("In Browser", destination: itemURL)
 
                         // This opens the website of the selected place
                         // in a sheet within this app.
                         Button("In App") {
-                            url = itemUrl
-                            isBrowsing = true
+                            url = itemURL
+                            isBrowsingWebsite = true
                         }
                     }
                     .buttonStyle(.borderedProminent)
