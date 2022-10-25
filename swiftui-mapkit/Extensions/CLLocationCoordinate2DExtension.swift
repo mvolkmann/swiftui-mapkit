@@ -55,6 +55,7 @@ extension CLLocationCoordinate2D: Equatable {
     }
 
     /// Returns the coordinates of point that is at a given offset from this one.
+    /// THIS IS NOT CURRENTLY IMPLEMENTED CORRECTLY!
     /// - Parameters:
     ///   - latitudeMeters: latitude offset in meters
     ///   - longitudeMeters: longitude offset in meters
