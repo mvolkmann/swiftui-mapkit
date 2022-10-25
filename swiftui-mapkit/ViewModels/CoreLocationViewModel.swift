@@ -92,7 +92,7 @@ class CoreLocationViewModel: NSObject, ObservableObject {
     }
 }
 
-// This is used to the the current location of the user.
+// This is used to get the current location of the user.
 extension CoreLocationViewModel: CLLocationManagerDelegate {
     func locationManager(
         _: CLLocationManager,

@@ -20,6 +20,16 @@ struct ContentView: View {
 
     // MARK: - Properties
 
+    private var loading: some View {
+        Group {
+            Spacer()
+            Text("... loading map ...").font(.largeTitle)
+            ProgressView()
+                .scaleEffect(x: 2, y: 2, anchor: .center)
+                .padding(.top)
+        }
+    }
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -34,11 +44,7 @@ struct ContentView: View {
                     MapView(center: center, radius: mapKitVM.radius)
                         .edgesIgnoringSafeArea(.bottom)
                 } else {
-                    Spacer()
-                    Text("... loading map ...").font(.largeTitle)
-                    ProgressView()
-                        .scaleEffect(x: 2, y: 2, anchor: .center)
-                        .padding(.top)
+                    loading
                 }
                 Spacer()
             }
@@ -63,8 +69,8 @@ struct ContentView: View {
             )
             .onAppear {
                 // This work is done here instead of inside the
-                // CoreLocationViewModel initializer
-                // because the UI needs to be started.
+                // CoreLocationViewModel initializer because the UI
+                // needs to be started in order to request authorization.
                 coreLocationVM.start()
             }
             .sheet(isPresented: $isBrowsingWebsite) {
@@ -78,7 +84,6 @@ struct ContentView: View {
             }
             .sheet(isPresented: $appVM.isSearching) {
                 SearchForm()
-                // .presentationDetents([.height(200)])
             }
         }
     }
@@ -125,9 +130,8 @@ struct ContentView: View {
         } else {
             VStack {
                 Text("\(place.displayName)").fontWeight(.bold)
-                let lat = place.coordinate.latitude
-                let lng = place.coordinate.longitude
-                Text("lat: \(lat), lng: \(lng)")
+                Text("latitude: \(place.coordinate.latitude)")
+                Text("longitude: \(place.coordinate.longitude)")
             }
         }
     }
