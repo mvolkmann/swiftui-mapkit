@@ -84,9 +84,9 @@ class MapKitViewModel: NSObject, ObservableObject {
         searchQuery = ""
         searchLocations = []
 
-        if let mapView, let location = placemark.location {
-            radius = 10000 // TODO: Why does this have no impact?
-            mapView.centerCoordinate = location.coordinate
+        if let location = placemark.location {
+            center = location.coordinate
+            radius = 10000
         }
     }
 

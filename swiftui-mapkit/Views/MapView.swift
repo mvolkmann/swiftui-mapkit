@@ -144,7 +144,7 @@ struct MapView: UIViewRepresentable {
                     longitudinalMeters: radius
                 )
                 // TODO: Why is the newRegion span only honored in the first call?
-                let span = newRegion.span
+                // let span = newRegion.span
                 // print("MapView: span before =", span)
                 mapView.setRegion(newRegion, animated: false)
                 // mapView.region.span = span // This doesn't help.

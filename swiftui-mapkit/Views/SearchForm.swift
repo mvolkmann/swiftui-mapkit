@@ -54,7 +54,8 @@ struct SearchForm: View {
             }
         }
         .listStyle(.plain)
-        .frame(height: 150)
+        // This leaves room for multiline city and attraction values.
+        .frame(height: 160)
     }
 
     private var matchedLocationList: some View {
@@ -83,70 +84,70 @@ struct SearchForm: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            VStack(alignment: .leading) {
-                Text("Search by City Name").font(.headline)
-                HStack {
+        // Get the default background color of Form views.
+        let bgColor = Color(UIColor.systemGroupedBackground)
+
+        VStack(spacing: 0) {
+            Rectangle()
+                .fill(bgColor)
+                .frame(maxWidth: .infinity, maxHeight: 20)
+
+            Form {
+                Section("Search by City Name") {
                     TextField("City", text: $mapKitVM.searchQuery)
-                        .textFieldStyle(.roundedBorder)
                         .focused($focusName, equals: .cityTextField)
-                }
-                if mapKitVM.haveMatches {
-                    matchedLocationList
-                }
-            }
 
-            if !mapKitVM.haveMatches {
-                VStack(alignment: .leading) {
-                    Text("Select Attraction").font(.headline)
-                    attractionForm
+                    if mapKitVM.haveMatches {
+                        matchedLocationList
+                    }
                 }
-            }
 
-            /*
-             Button("Test") {
+                if !mapKitVM.haveMatches {
+                    Section("Select Attraction") {
+                        attractionForm
+                    }
+                }
+
+                /*
+                 Button("Test") {
                  if let attraction = getAttraction(
-                     city: "San Francisco",
-                     name: "Golden Gate Bridge"
+                 city: "San Francisco",
+                 name: "Golden Gate Bridge"
                  ) {
-                     showAttraction(attraction)
+                 showAttraction(attraction)
                  } else {
-                     print("attraction not found")
+                 print("attraction not found")
                  }
-             }
-             .buttonStyle(.borderedProminent)
-             */
+                 }
+                 .buttonStyle(.borderedProminent)
+                 */
 
-            if !mapKitVM.haveMatches, let mapView = mapKitVM.mapView {
-                VStack(alignment: .leading) {
-                    Text("Find Nearby").font(.headline)
-                    HStack {
-                        TextField(
-                            "place type like bakery or pizza",
-                            text: $attractionText
-                        )
-                        .textFieldStyle(.roundedBorder)
-                        .focused($focusName, equals: .attractionTextField)
-                        Button("Search") {
-                            focusName = nil
-                            Task(priority: .background) {
-                                coreLocationVM.places =
-                                    await coreLocationVM.search(
-                                        mapView: mapView,
-                                        text: attractionText
-                                    )
-                                appVM.isSearching = false
+                if !mapKitVM.haveMatches, let mapView = mapKitVM.mapView {
+                    Section("Find Nearby") {
+                        HStack {
+                            TextField(
+                                "place type like pizza or park",
+                                text: $attractionText
+                            )
+                            .focused($focusName, equals: .attractionTextField)
+                            Button("Search") {
+                                focusName = nil
+                                Task(priority: .background) {
+                                    coreLocationVM.places =
+                                        await coreLocationVM.search(
+                                            mapView: mapView,
+                                            text: attractionText
+                                        )
+                                    appVM.isSearching = false
+                                }
                             }
+                            .disabled(attractionText.isEmpty)
                         }
-                        .disabled(attractionText.isEmpty)
                     }
                 }
             }
-
-            Spacer()
+            .headerProminence(.increased)
         }
-        .headerProminence(.increased)
-        .padding()
         .overlay(alignment: .topTrailing) {
             CloseButton()
         }

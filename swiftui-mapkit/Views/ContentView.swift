@@ -36,6 +36,8 @@ struct ContentView: View {
                     Spacer()
                     Text("... loading map ...").font(.largeTitle)
                     ProgressView()
+                        .scaleEffect(x: 2, y: 2, anchor: .center)
+                        .padding(.top)
                 }
                 Spacer()
             }
@@ -98,13 +100,15 @@ struct ContentView: View {
                 Spacer()
                 if let itemUrl = item.url {
                     VStack {
+                        Text("Browse Website").font(.headline)
+
                         // This opens the website of the selected place
                         // in Safari.
-                        Link("Website Outside", destination: itemUrl)
+                        Link("In Browser", destination: itemUrl)
 
                         // This opens the website of the selected place
                         // in a sheet within this app.
-                        Button("Website Inside") {
+                        Button("In App") {
                             url = itemUrl
                             isBrowsing = true
                         }
