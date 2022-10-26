@@ -117,6 +117,7 @@ struct SearchForm: View {
             Form {
                 Section("Search by City Name") {
                     TextField("City", text: $mapKitVM.searchQuery)
+                        .autocorrectionDisabled(true)
                         .focused($focusName, equals: .cityTextField)
 
                     if mapKitVM.haveMatches {

@@ -2,7 +2,7 @@ import Combine // for AnyCancellable
 import MapKit // This imports CoreLocation.
 import SwiftUI
 
-// Add these keys in Info of each target that queries current location:
+// Add these keys in the Info tab for each target that queries current location:
 // Privacy - Location When In Use Usage Description
 // Privacy - Location Always and When In Use Usage Description
 class MapKitViewModel: NSObject, ObservableObject {
@@ -10,11 +10,11 @@ class MapKitViewModel: NSObject, ObservableObject {
 
     @Published var center: CLLocationCoordinate2D?
     @Published var currentPlacemark: CLPlacemark?
-    @Published var heading = 0.0
+    @Published var heading = 0.0 // in degrees
     @Published var likedLocations: [String] = []
     @Published var mapView: MKMapView?
-    @Published var pitch = 0.0
-    @Published var radius = 0.0
+    @Published var pitch = 0.0 // in degrees
+    @Published var radius = 0.0 // in meters
     @Published var searchLocations: [String] = []
     @Published var searchQuery = ""
     @Published var selectedPlacemark: CLPlacemark?
@@ -31,21 +31,27 @@ class MapKitViewModel: NSObject, ObservableObject {
 
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = kCLDistanceFilterNone
-        // locationManager.requestAlwaysAuthorization()
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         locationManager.delegate = self
 
+        // A new query is started automatically when searchQuery changes.
         cancellable = $searchQuery.assign(to: \.queryFragment, on: completer)
+
+        // This cannot precede the call to super.init.
         completer.delegate = self
+
         // This prevent getting points of interest like "Buckingham Palace".
         completer.resultTypes = .address
     }
 
     // MARK: - Properites
 
+    // This can be used to cancel an active search, but we aren't using it.
     private var cancellable: AnyCancellable?
+
     private var completer: MKLocalSearchCompleter
+
     private let locationManager = CLLocationManager()
 
     var city: String {
