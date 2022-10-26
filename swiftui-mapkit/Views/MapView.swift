@@ -39,12 +39,12 @@ struct MapView: UIViewRepresentable {
         // This adds a blue circle over the current user location.
         mapView.showsUserLocation = true
 
-        let newRegion = MKCoordinateRegion(
+        let region = MKCoordinateRegion(
             center: center,
             latitudinalMeters: radius,
             longitudinalMeters: radius
         )
-        mapView.setRegion(newRegion, animated: false)
+        mapView.setRegion(region, animated: false)
 
         // Save a reference to the MKMapView so
         // LikeForm can obtain the current center coordinate.
@@ -146,17 +146,17 @@ struct MapView: UIViewRepresentable {
 
             if centerChanged || radiusChanged || headingChanged ||
                 pitchChanged {
-                let newRegion = MKCoordinateRegion(
-                    center: center,
-                    latitudinalMeters: radius,
-                    longitudinalMeters: radius
-                )
+                // It seems it is not necessary to change the region.
+                // We just need to update the camera.
+                /*
+                 let newRegion = MKCoordinateRegion(
+                     center: center,
+                     latitudinalMeters: radius,
+                     longitudinalMeters: radius
+                 )
+                 mapView.setRegion(newRegion, animated: false)
+                 */
 
-                // print("MapView: span before setRegion =", newRegion.span)
-                mapView.setRegion(newRegion, animated: false)
-                // print("MapView: span after setRegion =", mapView.region.span)
-
-                // The camera must be updated AFTER the region is changed.
                 // We must assign a new camera object, not just change
                 // the pitch and heading of the current camera object.
                 mapView.camera = MKMapCamera(
