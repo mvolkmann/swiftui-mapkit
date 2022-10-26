@@ -26,5 +26,5 @@ final class AppViewModel: ObservableObject {
 
     static var shared = AppViewModel()
 
-    private init() {}
+    private init() {} // makes this a singleton
 }
