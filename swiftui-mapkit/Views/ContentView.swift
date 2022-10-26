@@ -9,7 +9,6 @@ struct ContentView: View {
     // MARK: - State
 
     @StateObject private var appVM = AppViewModel.shared
-    @StateObject private var coreLocationVM = CoreLocationViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
     @State var isBrowsingWebsite = false
@@ -33,7 +32,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                if let place = coreLocationVM.selectedPlace {
+                if let place = mapKitVM.selectedPlace {
                     placeDetail(place: place)
                 }
 
@@ -69,9 +68,10 @@ struct ContentView: View {
             )
             .onAppear {
                 // This work is done here instead of inside the
-                // CoreLocationViewModel initializer because the UI
+                // MapKitViewModel initializer because the UI
                 // needs to be started in order to request authorization.
-                coreLocationVM.start()
+                // coreLocationVM.start()
+                mapKitVM.start()
             }
             .sheet(isPresented: $isBrowsingWebsite) {
                 SafariView(url: $url)

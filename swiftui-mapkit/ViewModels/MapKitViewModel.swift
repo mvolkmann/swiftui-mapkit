@@ -14,9 +14,11 @@ class MapKitViewModel: NSObject, ObservableObject {
     @Published var likedLocations: [String] = []
     @Published var mapView: MKMapView?
     @Published var pitch = 0.0 // in degrees
+    @Published var places: [Place] = []
     @Published var radius = 0.0 // in meters
     @Published var searchLocations: [String] = []
     @Published var searchQuery = ""
+    @Published var selectedPlace: Place?
     @Published var selectedPlacemark: CLPlacemark?
 
     static var shared = MapKitViewModel()
@@ -85,6 +87,38 @@ class MapKitViewModel: NSObject, ObservableObject {
         likedLocations.sort()
     }
 
+    // This searches for points of interest near the current location.
+    // Examples include "pizza" and "park".
+    @MainActor
+    func search(
+        mapView: MKMapView,
+        text: String,
+        exact: Bool = false // if true, requires exact matches
+    ) async -> [Place] {
+        selectedPlace = nil
+
+        var newPlaces: [Place] = []
+
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = text
+        request.region = mapView.region // only searches in this region
+        let search = MKLocalSearch(request: request)
+
+        if let results = try? await search.start() {
+            for item in results.mapItems {
+                let placemark = item.placemark
+                if !exact || placemark.name == text {
+                    if let coordinate = placemark.location?.coordinate {
+                        let place = Place(item: item, coordinate: coordinate)
+                        newPlaces.append(place)
+                    }
+                }
+            }
+        }
+
+        return newPlaces
+    }
+
     func select(placemark: CLPlacemark) {
         selectedPlacemark = placemark
         searchQuery = ""
@@ -92,8 +126,14 @@ class MapKitViewModel: NSObject, ObservableObject {
 
         if let location = placemark.location {
             center = location.coordinate
-            radius = 10000
+            radius = 10000 // default for new locations
         }
+    }
+
+    // This is called by ContentView.
+    func start() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
     }
 
     func unlikeLocation(_ location: String) {
@@ -101,6 +141,7 @@ class MapKitViewModel: NSObject, ObservableObject {
     }
 }
 
+// This is used to get the current user location.
 extension MapKitViewModel: CLLocationManagerDelegate {
     func locationManager(
         _: CLLocationManager,
@@ -110,11 +151,12 @@ extension MapKitViewModel: CLLocationManagerDelegate {
         guard currentPlacemark == nil else { return }
 
         if let location = locations.first {
+            center = location.coordinate
             CLGeocoder().reverseGeocodeLocation(
                 location
             ) { [weak self] placemarks, error in
                 if let error {
-                    print("LocationViewModel: error =", error)
+                    print("MapKitViewModel: error =", error)
                 } else if let self {
                     self.currentPlacemark = placemarks?.first
                     self.selectedPlacemark = self.currentPlacemark
@@ -123,6 +165,19 @@ extension MapKitViewModel: CLLocationManagerDelegate {
                 }
             }
         }
+    }
+
+    func locationManager(_: CLLocationManager, didFailWithError _: Error) {
+        print("""
+        MapKitViewModel: failed to get current location; \
+        user may not have approved
+        """)
+        // If the user denies sharing location, to approve it they must:
+        // 1. Open the Settings app.
+        // 2. Go to Privacy ... Location Services.
+        // 3. Tap the name of this app.
+        // 4. Change the option from "Never" to
+        //    "Ask Next Time" or "While Using the App".
     }
 }
 

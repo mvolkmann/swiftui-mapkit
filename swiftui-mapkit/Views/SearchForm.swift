@@ -6,7 +6,6 @@ struct SearchForm: View {
     // MARK: - State
 
     @StateObject private var appVM = AppViewModel.shared
-    @StateObject private var coreLocationVM = CoreLocationViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
     enum FocusName: Hashable {
@@ -67,9 +66,9 @@ struct SearchForm: View {
                 if let mapView = mapKitVM.mapView {
                     focusName = nil
                     Task(priority: .background) {
-                        coreLocationVM.places =
-                            await coreLocationVM.search(
-                                mapView: mapView,
+                        mapKitVM.places =
+                            await mapKitVM.search(
+                                mapView: mapView, // TODO: need to pass?
                                 text: attractionText
                             )
                         appVM.isSearching = false
@@ -183,6 +182,6 @@ struct SearchForm: View {
 
     private func stopSearching() {
         appVM.isSearching = false
-        coreLocationVM.selectedPlace = nil
+        mapKitVM.selectedPlace = nil
     }
 }

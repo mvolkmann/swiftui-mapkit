@@ -11,7 +11,6 @@ struct MapView: UIViewRepresentable {
     typealias EmphasisStyle = MKStandardMapConfiguration.EmphasisStyle
 
     @StateObject private var appVM = AppViewModel.shared
-    @StateObject private var coreLocationVM = CoreLocationViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
     @State private var annotations: [MKPointAnnotation] = []
@@ -192,26 +191,28 @@ struct MapView: UIViewRepresentable {
             }
         }
 
-        updateAnnotations(mapView)
+        // updateAnnotations(mapView)
     }
 
-    private func updateAnnotations(_ mapView: MKMapView) {
-        Task {
-            await MainActor.run {
-                let newAnnotations = coreLocationVM.places.map { place in
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = place.coordinate
-                    annotation.title = place.displayName
-                    titleToPlaceMap[annotation.title!] = place
-                    return annotation
-                }
+    /*
+     private func updateAnnotations(_ mapView: MKMapView) {
+         Task {
+             await MainActor.run {
+                 let newAnnotations = mapKitVM.places.map { place in
+                     let annotation = MKPointAnnotation()
+                     annotation.coordinate = place.coordinate
+                     annotation.title = place.displayName
+                     titleToPlaceMap[annotation.title!] = place
+                     return annotation
+                 }
 
-                mapView.removeAnnotations(annotations) // previous ones
-                mapView.addAnnotations(newAnnotations)
-                annotations = newAnnotations
-            }
-        }
-    }
+                 mapView.removeAnnotations(annotations) // previous ones
+                 mapView.addAnnotations(newAnnotations)
+                 annotations = newAnnotations
+             }
+         }
+     }
+     */
 
     class Coordinator: NSObject, MKMapViewDelegate {
         var parent: MapView
@@ -225,7 +226,7 @@ struct MapView: UIViewRepresentable {
             if let title = annotation.title,
                // TODO: Why is force unwrap needed here?
                let place = parent.titleToPlaceMap[title!] {
-                parent.coreLocationVM.selectedPlace = place
+                parent.mapKitVM.selectedPlace = place
             }
         }
 
