@@ -63,16 +63,11 @@ struct SearchForm: View {
             )
             .focused($focusName, equals: .attractionTextField)
             Button("Search") {
-                if let mapView = mapKitVM.mapView {
-                    focusName = nil
-                    Task(priority: .background) {
-                        mapKitVM.places =
-                            await mapKitVM.search(
-                                mapView: mapView, // TODO: need to pass?
-                                text: attractionText
-                            )
-                        appVM.isSearching = false
-                    }
+                focusName = nil
+                Task(priority: .background) {
+                    mapKitVM.places =
+                        await mapKitVM.search(text: attractionText)
+                    appVM.isSearching = false
                 }
             }
             .disabled(attractionText.isEmpty)

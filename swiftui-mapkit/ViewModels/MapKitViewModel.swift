@@ -91,10 +91,11 @@ class MapKitViewModel: NSObject, ObservableObject {
     // Examples include "pizza" and "park".
     @MainActor
     func search(
-        mapView: MKMapView,
         text: String,
         exact: Bool = false // if true, requires exact matches
     ) async -> [Place] {
+        guard let mapView else { return [] }
+
         selectedPlace = nil
 
         var newPlaces: [Place] = []

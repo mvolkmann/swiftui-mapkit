@@ -152,67 +152,36 @@ struct MapView: UIViewRepresentable {
                     longitudinalMeters: radius
                 )
                 // TODO: Why is the newRegion span only honored in the first call?
-                // let span = newRegion.span
-                // print("MapView: span before =", span)
+                // print("MapView: span before =", newRegion.span)
                 mapView.setRegion(newRegion, animated: false)
-                // mapView.region.span = span // This doesn't help.
-
-                /*
-                 // This is an attempt to fix the region span
-                 // after the call to setRegion above.
-                 let left = center.offset(
-                     latitudeMeters: 0,
-                     longitudeMeters: -radius
-                 )
-                 let right = center.offset(
-                     latitudeMeters: 0,
-                     longitudeMeters: radius
-                 )
-                 let latitudeAngle = left.latitudeDifference(to: right)
-                 mapView.region.span.latitudeDelta = latitudeAngle
-
-                 let bottom = center.offset(
-                     latitudeMeters: -radius,
-                     longitudeMeters: 0
-                 )
-                 let top = center.offset(
-                     latitudeMeters: radius,
-                     longitudeMeters: 0
-                 )
-                 let longitudeAngle = bottom.longitudeDifference(to: top)
-                 mapView.region.span.longitudeDelta = longitudeAngle
-                 */
-
-                // print("MapView: span after =", mapView.region.span)
                 // TODO: Why does this not match the previous print statement?
+                // print("MapView: span after =", mapView.region.span)
 
                 mapView.camera.heading = heading
                 mapView.camera.pitch = pitch
             }
         }
 
-        // updateAnnotations(mapView)
+        updateAnnotations(mapView)
     }
 
-    /*
-     private func updateAnnotations(_ mapView: MKMapView) {
-         Task {
-             await MainActor.run {
-                 let newAnnotations = mapKitVM.places.map { place in
-                     let annotation = MKPointAnnotation()
-                     annotation.coordinate = place.coordinate
-                     annotation.title = place.displayName
-                     titleToPlaceMap[annotation.title!] = place
-                     return annotation
-                 }
+    private func updateAnnotations(_ mapView: MKMapView) {
+        Task {
+            await MainActor.run {
+                let newAnnotations = mapKitVM.places.map { place in
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = place.coordinate
+                    annotation.title = place.displayName
+                    titleToPlaceMap[annotation.title!] = place
+                    return annotation
+                }
 
-                 mapView.removeAnnotations(annotations) // previous ones
-                 mapView.addAnnotations(newAnnotations)
-                 annotations = newAnnotations
-             }
-         }
-     }
-     */
+                mapView.removeAnnotations(annotations) // previous ones
+                mapView.addAnnotations(newAnnotations)
+                annotations = newAnnotations
+            }
+        }
+    }
 
     class Coordinator: NSObject, MKMapViewDelegate {
         var parent: MapView
