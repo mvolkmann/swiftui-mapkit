@@ -47,9 +47,7 @@ struct SearchForm: View {
                     }
                 }
                 .onChange(of: appVM.selectedAttractionIndex) { _ in
-                    if let selectedAttraction {
-                        showAttraction(selectedAttraction)
-                    }
+                    showAttraction(selectedAttraction)
                 }
             }
         }
@@ -58,18 +56,42 @@ struct SearchForm: View {
         .frame(height: 160)
     }
 
-    private var matchedLocationList: some View {
-        VStack {
-            Text("Matched Locations").font(.headline)
-            List {
-                ForEach(mapKitVM.searchLocations, id: \.self) { location in
-                    Button(location) {
-                        selectLocation(location)
+    private var findNearbyForm: some View {
+        HStack {
+            TextField(
+                "place type like pizza or park",
+                text: $attractionText
+            )
+            .focused($focusName, equals: .attractionTextField)
+            Button("Search") {
+                if let mapView = mapKitVM.mapView {
+                    focusName = nil
+                    Task(priority: .background) {
+                        coreLocationVM.places =
+                            await coreLocationVM.search(
+                                mapView: mapView,
+                                text: attractionText
+                            )
+                        appVM.isSearching = false
                     }
+                }
+            }
+            .disabled(attractionText.isEmpty)
+        }
+    }
+
+    private var matchedLocationList: some View {
+        Group {
+            Text("Matched Locations").font(.headline)
+            List(mapKitVM.searchLocations, id: \.self) { location in
+                Button(location) {
+                    selectLocation(location)
                 }
             }
             .listStyle(.plain)
             .frame(height: 300)
+            // TODO: Why doesn't this work?
+            // .frame(maxHeight: .infinity)
         }
     }
 
@@ -108,41 +130,9 @@ struct SearchForm: View {
                     }
                 }
 
-                /*
-                 Button("Test") {
-                 if let attraction = getAttraction(
-                 city: "San Francisco",
-                 name: "Golden Gate Bridge"
-                 ) {
-                 showAttraction(attraction)
-                 } else {
-                 print("attraction not found")
-                 }
-                 }
-                 .buttonStyle(.borderedProminent)
-                 */
-
-                if !mapKitVM.haveMatches, let mapView = mapKitVM.mapView {
+                if !mapKitVM.haveMatches {
                     Section("Find Nearby") {
-                        HStack {
-                            TextField(
-                                "place type like pizza or park",
-                                text: $attractionText
-                            )
-                            .focused($focusName, equals: .attractionTextField)
-                            Button("Search") {
-                                focusName = nil
-                                Task(priority: .background) {
-                                    coreLocationVM.places =
-                                        await coreLocationVM.search(
-                                            mapView: mapView,
-                                            text: attractionText
-                                        )
-                                    appVM.isSearching = false
-                                }
-                            }
-                            .disabled(attractionText.isEmpty)
-                        }
+                        findNearbyForm
                     }
                 }
             }
@@ -162,7 +152,23 @@ struct SearchForm: View {
         return city.attractions.first(where: { $0.name == name })
     }
 
-    private func showAttraction(_ attraction: Attraction) {
+    private func selectLocation(_ location: String) {
+        Task {
+            do {
+                dismissKeyboard()
+                let placemark = try await CoreLocationService
+                    .getPlacemark(from: location)
+                mapKitVM.select(placemark: placemark)
+                stopSearching()
+            } catch {
+                print("SearchForm.selectLocation error:", error)
+            }
+        }
+    }
+
+    private func showAttraction(_ attraction: Attraction?) {
+        guard let attraction else { return }
+
         mapKitVM.center = CLLocationCoordinate2D(
             latitude: attraction.latitude,
             longitude: attraction.longitude
@@ -171,22 +177,11 @@ struct SearchForm: View {
         mapKitVM.heading = attraction.heading
         mapKitVM.pitch = attraction.pitch
 
-        appVM.isSearching = false
-        coreLocationVM.selectedPlace = nil
+        stopSearching()
     }
 
-    private func selectLocation(_ location: String) {
-        Task {
-            do {
-                dismissKeyboard()
-                let placemark = try await CoreLocationService
-                    .getPlacemark(from: location)
-                mapKitVM.select(placemark: placemark)
-                appVM.isSearching = false
-                coreLocationVM.selectedPlace = nil
-            } catch {
-                print("SearchForm.selectLocation error:", error)
-            }
-        }
+    private func stopSearching() {
+        appVM.isSearching = false
+        coreLocationVM.selectedPlace = nil
     }
 }
