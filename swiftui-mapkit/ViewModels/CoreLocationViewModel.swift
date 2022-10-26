@@ -6,6 +6,7 @@ class CoreLocationViewModel: NSObject, ObservableObject {
     @Published var places: [Place] = []
     @Published var selectedPlace: Place?
 
+    // This is not currently being used.
     static let initialPlaces = [
         "Buckingham Palace",
         "Kensington Palace",
@@ -13,17 +14,13 @@ class CoreLocationViewModel: NSObject, ObservableObject {
         "Westminster Abbey"
     ]
 
-    let manager = CLLocationManager()
-
-    let size = 4000.0 // of area to display in meters
+    private let manager = CLLocationManager()
 
     static var shared = CoreLocationViewModel()
 
     override init() {
         super.init()
 
-        // TODO: Why does setting manager properties trigger the warning
-        // TODO: "Publishing changes from within view updates"?
         manager.delegate = self
         // Won't find current location without this.
         // It fails to find the current location when this is 20 or below!
@@ -34,12 +31,12 @@ class CoreLocationViewModel: NSObject, ObservableObject {
     }
 
     // This searches for points of interest near the current location.
-    // Examples include "bakery" and "pizza".
+    // Examples include "pizza" and "park".
     @MainActor
     func search(
         mapView: MKMapView,
         text: String,
-        exact: Bool = false
+        exact: Bool = false // if true, requires exact matches
     ) async -> [Place] {
         selectedPlace = nil
 
@@ -48,14 +45,11 @@ class CoreLocationViewModel: NSObject, ObservableObject {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = text
         request.region = mapView.region // only searches in this region
-        request.pointOfInterestFilter = MKPointOfInterestFilter(including: [])
-
         let search = MKLocalSearch(request: request)
 
         if let results = try? await search.start() {
             for item in results.mapItems {
                 let placemark = item.placemark
-                // print("category = \(item.pointOfInterestCategory?.rawValue ?? "none")")
                 if !exact || placemark.name == text {
                     if let coordinate = placemark.location?.coordinate {
                         let place = Place(item: item, coordinate: coordinate)
@@ -86,31 +80,31 @@ class CoreLocationViewModel: NSObject, ObservableObject {
       }
      */
 
+    // This is called by ContentView.
     func start() {
         manager.requestWhenInUseAuthorization()
         manager.requestLocation()
     }
 }
 
-// This is used to get the current location of the user.
+// This is used to get the current user location.
 extension CoreLocationViewModel: CLLocationManagerDelegate {
     func locationManager(
         _: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
     ) {
         guard let location = locations.first else { return }
-        let mapKitVM = MapKitViewModel.shared
-        mapKitVM.center = location.coordinate
+
+        MapKitViewModel.shared.center = location.coordinate
     }
 
-    func locationManager(
-        _: CLLocationManager,
-        didFailWithError _: Error
-    ) {
-        print("failed to get current location - user may not have approved")
-        // This happens if the Simulator cannot get the current location.
-        // If the user denies sharing location, to approve it then must:
-        // 1. Opening their Settings app.
+    func locationManager(_: CLLocationManager, didFailWithError _: Error) {
+        print("""
+        CoreLocationViewModel: failed to get current location; \
+        user may not have approved
+        """)
+        // If the user denies sharing location, to approve it they must:
+        // 1. Open the Settings app.
         // 2. Go to Privacy ... Location Services.
         // 3. Tap the name of this app.
         // 4. Change the option from "Never" to
