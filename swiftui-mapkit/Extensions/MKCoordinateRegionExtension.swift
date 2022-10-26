@@ -13,7 +13,10 @@ extension MKCoordinateRegion: Equatable {
 
         let height = center.latitudeDistance(degrees: span.latitudeDelta)
         let width = center.longitudeDistance(degrees: span.longitudeDelta)
-        return min(width, height) / 2.0
+        // TODO: This calculation is wrong!
+        let result = max(width, height) / 2.0 + 105.0
+        print("height =", height, "width =", width, "result =", result)
+        return result
     }
 
     public static func == (

@@ -151,14 +151,20 @@ struct MapView: UIViewRepresentable {
                     latitudinalMeters: radius,
                     longitudinalMeters: radius
                 )
-                // TODO: Why is the newRegion span only honored in the first call?
-                // print("MapView: span before =", newRegion.span)
-                mapView.setRegion(newRegion, animated: false)
-                // TODO: Why does this not match the previous print statement?
-                // print("MapView: span after =", mapView.region.span)
 
-                mapView.camera.heading = heading
-                mapView.camera.pitch = pitch
+                // print("MapView: span before setRegion =", newRegion.span)
+                mapView.setRegion(newRegion, animated: false)
+                // print("MapView: span after setRegion =", mapView.region.span)
+
+                // The camera must be updated AFTER the region is changed.
+                // We must assign a new camera object, not just change
+                // the pitch and heading of the current camera object.
+                mapView.camera = MKMapCamera(
+                    lookingAtCenter: center,
+                    fromDistance: radius,
+                    pitch: pitch,
+                    heading: heading
+                )
             }
         }
 

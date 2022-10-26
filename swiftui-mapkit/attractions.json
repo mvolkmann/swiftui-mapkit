@@ -4,19 +4,19 @@
         "attractions": [
             {
                 "name": "Buckingham Palace",
-                "latitude": 51.5016,
-                "longitude": -0.1412,
-                "radius": 115.0,
-                "heading": 237.4,
+                "latitude": 51.5015,
+                "longitude": -0.1414,
+                "radius": 450.0,
+                "heading": 237.0,
                 "pitch": 62.6
             },
             {
                 "name": "Kensington Palace",
                 "latitude": 51.5053,
-                "longitude": -0.1874,
-                "radius": 100.0,
+                "longitude": -0.1875,
+                "radius": 1044.0,
                 "heading": 256.1,
-                "pitch": 71.7
+                "pitch": 71.6
             },
             {
                 "name": "London Eye",
