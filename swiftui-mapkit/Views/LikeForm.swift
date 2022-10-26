@@ -8,10 +8,41 @@ struct LikeForm: View {
     @State private var newAttraction = ""
     @State private var newCity = ""
 
+    enum FocusName: Hashable {
+        case attractionTextField
+        case cityTextField
+    }
+
+    @FocusState var focusName: FocusName?
+
+    private var attractionRow: some View {
+        HStack {
+            TextField("Attraction", text: $newAttraction)
+                .focused($focusName, equals: .attractionTextField)
+
+            Button("Add") {
+                guard let mapView = mapKitVM.mapView else { return }
+
+                let center = mapView.centerCoordinate
+                let region = mapView.region
+                let camera = mapView.camera
+                let attraction = Attraction(
+                    name: newAttraction,
+                    latitude: center.latitude,
+                    longitude: center.longitude,
+                    radius: region.radius,
+                    heading: camera.heading,
+                    pitch: camera.pitch
+                )
+                // TODO: Fix this to allow users to add attractions.
+                // selectedCity!.addAttraction(attraction)
+            }
+        }
+    }
+
     private var mapJSON: String {
         guard let mapView = mapKitVM.mapView else { return "" }
 
-        // YOU ARE NOT CORRECTLY CAPTURING MAP CHANGES BEFORE THIS IS CALLED!
         let region = mapView.region
         let center = region.center
         let camera = mapView.camera
@@ -24,7 +55,13 @@ struct LikeForm: View {
         "heading": \(Double(camera.heading).places(1)),
         "pitch": \(Double(camera.pitch).places(1))
         """
+
+        // This is printed to the console so it can be
+        // manually copied into attractions.json.
+        // This won't be needed when the ability to
+        // store attractions in Core Data is implemented.
         print("\n" + json)
+
         return json
     }
 
@@ -60,43 +97,43 @@ struct LikeForm: View {
                 appVM.selectedAttractionIndex = -1
             }
 
-            Button(
-                action: { isAddingCity = true },
-                label: { Image(systemName: "plus.circle") }
-            )
-
             if isAddingCity {
                 HStack {
                     TextField("New City/Area", text: $newCity)
+                        .focused($focusName, equals: .cityTextField)
+                        .textFieldStyle(.roundedBorder)
+
                     Button("Add") {
                         appVM.cities.append(City(name: newCity))
+                        // Select the last city.
                         appVM.selectedCityIndex = appVM.cities.count - 1
+                        stopAddingCity()
                     }
+
+                    Button(
+                        action: { stopAddingCity() },
+                        label: {
+                            Image(systemName: "x.circle")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .tint(.gray)
+                                .padding(.leading)
+                        }
+                    )
+                    // This is needed to prevent a tap on this button
+                    // from also triggering a tap on the "Add" button.
+                    .buttonStyle(.borderless)
                 }
+            } else {
+                Button("Add City") {
+                    isAddingCity = true
+                    focusName = .cityTextField
+                }
+                .buttonStyle(.bordered)
             }
 
-            if selectedCity != nil {
-                HStack {
-                    TextField("Attraction", text: $newAttraction)
-                    Button("Add") {
-                        guard let mapView = mapKitVM.mapView else { return }
-
-                        // TODO: This does not get the current mapView settings!
-                        let center = mapView.centerCoordinate
-                        let region = mapView.region
-                        let camera = mapView.camera
-                        let attraction = Attraction(
-                            name: newAttraction,
-                            latitude: center.latitude,
-                            longitude: center.longitude,
-                            radius: region.radius,
-                            heading: camera.heading,
-                            pitch: camera.pitch
-                        )
-                        // TODO: Fix this to allow users to add attractions.
-                        // selectedCity!.addAttraction(attraction)
-                    }
-                }
+            if appVM.selectedCityIndex != -1 {
+                attractionRow
             }
 
             Spacer()
@@ -105,5 +142,11 @@ struct LikeForm: View {
         .overlay(alignment: .topTrailing) {
             CloseButton()
         }
+    }
+
+    private func stopAddingCity() {
+        dismissKeyboard()
+        newCity = ""
+        isAddingCity = false
     }
 }

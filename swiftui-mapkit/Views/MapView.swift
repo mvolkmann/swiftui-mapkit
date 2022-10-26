@@ -4,8 +4,8 @@ import SwiftUI
 // For now we have to wrap an MKMapView in a UIViewRepresenatable
 // in order to use the iOS 16 MapKit features in SwiftUI.
 struct MapView: UIViewRepresentable {
-    var center: CLLocationCoordinate2D // initial, not current
-    var radius: Double
+    var center: CLLocationCoordinate2D // holds lat/lng angles in degrees
+    var radius: Double // in meters
 
     typealias ElevationStyle = MKMapConfiguration.ElevationStyle
     typealias EmphasisStyle = MKStandardMapConfiguration.EmphasisStyle
@@ -27,13 +27,17 @@ struct MapView: UIViewRepresentable {
             EmphasisStyle.muted : EmphasisStyle.default
     }
 
+    // This is required to conform to UIViewRepresentable.
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
 
+    // This is required to conform to UIViewRepresentable.
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
+
+        // This adds a blue circle over the current user location.
         mapView.showsUserLocation = true
 
         let newRegion = MKCoordinateRegion(
@@ -55,7 +59,8 @@ struct MapView: UIViewRepresentable {
         return mapView
     }
 
-    func updateUIView(_ mapView: MKMapView, context _: Context) {
+    // This handles changes made in SettingsForm.
+    private func getConfig() -> MKMapConfiguration {
         var config: MKMapConfiguration!
 
         switch appVM.mapType {
@@ -106,7 +111,11 @@ struct MapView: UIViewRepresentable {
             break
         }
 
-        mapView.preferredConfiguration = config
+        return config
+    }
+
+    func updateUIView(_ mapView: MKMapView, context _: Context) {
+        mapView.preferredConfiguration = getConfig()
 
         if let center = mapKitVM.center {
             let radius = mapKitVM.radius
@@ -197,7 +206,7 @@ struct MapView: UIViewRepresentable {
                     return annotation
                 }
 
-                mapView.removeAnnotations(annotations)
+                mapView.removeAnnotations(annotations) // previous ones
                 mapView.addAnnotations(newAnnotations)
                 annotations = newAnnotations
             }

@@ -22,7 +22,7 @@ final class AppViewModel: ObservableObject {
     // because we want to persist the last values between uses of that view.
     @Published var selectedAttractionIndex = -1
     // @Published var selectedCityIndex = -1
-    @Published var selectedCityIndex = 0 // London
+    @Published var selectedCityIndex = 0 // London; Want this default?
 
     static var shared = AppViewModel()
 
