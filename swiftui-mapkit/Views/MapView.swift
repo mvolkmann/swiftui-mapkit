@@ -39,12 +39,21 @@ struct MapView: UIViewRepresentable {
         // This adds a blue circle over the current user location.
         mapView.showsUserLocation = true
 
-        let region = MKCoordinateRegion(
-            center: center,
-            latitudinalMeters: radius,
-            longitudinalMeters: radius
+        /*
+         let region = MKCoordinateRegion(
+             center: center,
+             latitudinalMeters: radius,
+             longitudinalMeters: radius
+         )
+         mapView.setRegion(region, animated: false)
+         */
+
+        mapView.camera = MKMapCamera(
+            lookingAtCenter: center,
+            fromDistance: radius,
+            pitch: 0.0,
+            heading: 0.0
         )
-        mapView.setRegion(region, animated: false)
 
         // Save a reference to the MKMapView so
         // LikeForm can obtain the current center coordinate.
