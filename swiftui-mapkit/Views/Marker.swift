@@ -1,5 +1,7 @@
 import SwiftUI
 
+// This is not currently used.
+// Was it used for predefined London landmarks?
 struct Marker: View {
     var label: String
     var icon: String = "mappin.circle.fill"

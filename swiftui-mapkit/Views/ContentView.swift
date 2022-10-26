@@ -74,7 +74,7 @@ struct ContentView: View {
                 coreLocationVM.start()
             }
             .sheet(isPresented: $isBrowsingWebsite) {
-                SafariBrowser(url: $url)
+                SafariView(url: $url)
             }
             .sheet(isPresented: $appVM.isLiking) {
                 LikeForm()
