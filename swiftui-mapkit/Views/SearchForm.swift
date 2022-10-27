@@ -70,9 +70,10 @@ struct SearchForm: View {
             if let selectedArea {
                 List {
                     ForEach(selectedArea.attractions) { attraction in
+                        // Button actions don't work inside a List!
+                        // We need to use the onTapGesture modifier instead.
                         Button(attraction.name, action: {})
                             .onTapGesture {
-                                print("got tap")
                                 showAttraction(attraction)
                             }
                     }
