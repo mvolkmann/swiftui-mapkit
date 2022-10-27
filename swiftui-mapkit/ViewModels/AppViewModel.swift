@@ -11,7 +11,7 @@ final class AppViewModel: ObservableObject {
     // @Published var cities: [City] =
     //    Bundle.main.decode([City].self, from: "attractions.json")
 
-    @Published var isLiking = false
+    @Published var isSaving = false
     @Published var isSearching = false
     @Published var isSetting = false
     @Published var mapElevation = "realistic" // other is "flat"

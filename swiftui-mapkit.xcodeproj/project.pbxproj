@@ -22,7 +22,7 @@
 		1AAB0D052826436700544A8F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAB0D042826436700544A8F /* Preview Assets.xcassets */; };
 		1AB9F3BD29034168002DF760 /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3BC29034168002DF760 /* BundleExtension.swift */; };
 		1AB9F3BF29034AAC002DF760 /* attractions.json in Resources */ = {isa = PBXBuildFile; fileRef = 1AB9F3BB29033DA4002DF760 /* attractions.json */; };
-		1AB9F3CB2906C927002DF760 /* LikeForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3CA2906C927002DF760 /* LikeForm.swift */; };
+		1AB9F3CB2906C927002DF760 /* SaveAttraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3CA2906C927002DF760 /* SaveAttraction.swift */; };
 		1AB9F3CD2906C947002DF760 /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3CC2906C947002DF760 /* DoubleExtension.swift */; };
 		1AB9F3CF2906C962002DF760 /* MKCoordinateRegionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3CE2906C962002DF760 /* MKCoordinateRegionExtension.swift */; };
 		1AB9F3D12906FD96002DF760 /* CLLocationCoordinate2DExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3D02906FD96002DF760 /* CLLocationCoordinate2DExtension.swift */; };
@@ -67,7 +67,7 @@
 		1AAB0D042826436700544A8F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1AB9F3BB29033DA4002DF760 /* attractions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = attractions.json; path = "swiftui-mapkit/attractions.json"; sourceTree = SOURCE_ROOT; };
 		1AB9F3BC29034168002DF760 /* BundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtension.swift; sourceTree = "<group>"; };
-		1AB9F3CA2906C927002DF760 /* LikeForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeForm.swift; sourceTree = "<group>"; };
+		1AB9F3CA2906C927002DF760 /* SaveAttraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveAttraction.swift; sourceTree = "<group>"; };
 		1AB9F3CC2906C947002DF760 /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		1AB9F3CE2906C962002DF760 /* MKCoordinateRegionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKCoordinateRegionExtension.swift; sourceTree = "<group>"; };
 		1AB9F3D02906FD96002DF760 /* CLLocationCoordinate2DExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtension.swift; sourceTree = "<group>"; };
@@ -107,7 +107,7 @@
 			children = (
 				1AAB0CFF2826436600544A8F /* ContentView.swift */,
 				1AE3A17E29018A9800FB6501 /* CloseButton.swift */,
-				1AB9F3CA2906C927002DF760 /* LikeForm.swift */,
+				1AB9F3CA2906C927002DF760 /* SaveAttraction.swift */,
 				1A0D5ABC29006DDB007AA0F7 /* MapView.swift */,
 				1A67891B28FF15EF00F3DFD8 /* Marker.swift */,
 				1A82824D282A34D100380E9D /* SafariView.swift */,
@@ -323,7 +323,7 @@
 				1A33435228268119006730C2 /* Place.swift in Sources */,
 				1A0D5ABF29006E34007AA0F7 /* AppViewModel.swift in Sources */,
 				1A82824E282A34D100380E9D /* SafariView.swift in Sources */,
-				1AB9F3CB2906C927002DF760 /* LikeForm.swift in Sources */,
+				1AB9F3CB2906C927002DF760 /* SaveAttraction.swift in Sources */,
 				1AE3A1742901884200FB6501 /* CoreLocationService.swift in Sources */,
 				1AE3A1842902DEBC00FB6501 /* Area.swift in Sources */,
 				1AE3A1792901897700FB6501 /* ViewExtension.swift in Sources */,

@@ -6,7 +6,7 @@ struct CloseButton: View {
     var body: some View {
         Button(action: {
             // Close any sheet that might be open.
-            appVM.isLiking = false
+            appVM.isSaving = false
             appVM.isSetting = false
             appVM.isSearching = false
         }) {

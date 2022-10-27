@@ -57,7 +57,7 @@ struct ContentView: View {
                 ),
                 trailing: HStack {
                     Button(
-                        action: { appVM.isLiking = true },
+                        action: { appVM.isSaving = true },
                         label: { Image(systemName: "heart") }
                     )
                     Button(
@@ -76,8 +76,8 @@ struct ContentView: View {
             .sheet(isPresented: $isBrowsingWebsite) {
                 SafariView(url: $url)
             }
-            .sheet(isPresented: $appVM.isLiking) {
-                LikeForm()
+            .sheet(isPresented: $appVM.isSaving) {
+                SaveAttraction()
             }
             .sheet(isPresented: $appVM.isSetting) {
                 SettingsForm()

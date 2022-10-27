@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct LikeForm: View {
+struct SaveAttraction: View {
     // MARK: - State
 
     @StateObject private var appVM = AppViewModel.shared
@@ -22,7 +22,7 @@ struct LikeForm: View {
 
     private var addAreaRow: some View {
         HStack {
-            TextField("New City/Area", text: $newArea)
+            TextField("New city/area name", text: $newArea)
                 .focused($focusName, equals: .areaTextField)
                 .textFieldStyle(.roundedBorder)
 
@@ -33,6 +33,7 @@ struct LikeForm: View {
                         // Select the last city.
                         appVM.selectedAreaIndex =
                             cloudKitVM.areas.count - 1
+                        // THIS IS WRONG DUE TO SORTING!
                         stopAddingCity()
                     } catch {
                         Log.error("error adding area: \(error)")
@@ -60,7 +61,7 @@ struct LikeForm: View {
 
     private var addAttractionRow: some View {
         HStack {
-            TextField("Attraction", text: $newAttraction)
+            TextField("Attraction name", text: $newAttraction)
                 .focused($focusName, equals: .attractionTextField)
 
             Button("Add") {
@@ -101,31 +102,38 @@ struct LikeForm: View {
     }
 
     var body: some View {
-        List {
-            Text("Save Map").font(.headline)
-            Text(mapJSON)
-                .padding()
-                .border(.gray)
+        VStack {
+            Text("Save Attraction").font(.title)
 
-            Picker("City/Area", selection: $appVM.selectedAreaIndex) {
-                Text("None").tag(-1)
-                let enumeration = Array(cloudKitVM.areas.enumerated())
-                ForEach(enumeration, id: \.element) { index, area in
-                    Text(area.name).tag(index)
+            // Text(mapJSON).padding().border(.gray)
+
+            HStack {
+                Text("City/Area").font(.headline)
+                Spacer()
+                Picker("City/Area", selection: $appVM.selectedAreaIndex) {
+                    Text("None").tag(-1)
+                    let enumeration = Array(cloudKitVM.areas.enumerated())
+                    ForEach(enumeration, id: \.element) { index, area in
+                        Text(area.name).tag(index)
+                    }
                 }
-            }
-            .onChange(of: appVM.selectedAreaIndex) { _ in
-                appVM.selectedAttraction = nil
+                .onChange(of: appVM.selectedAreaIndex) { _ in
+                    appVM.selectedAttraction = nil
+                    focusName = .attractionTextField
+                }
             }
 
             if isAddingArea {
                 addAreaRow
             } else {
-                Button("Add City/Area") {
-                    isAddingArea = true
-                    focusName = .areaTextField
+                HStack {
+                    Spacer()
+                    Button("New City/Area") {
+                        isAddingArea = true
+                        focusName = .areaTextField
+                    }
+                    .buttonStyle(.bordered)
                 }
-                .buttonStyle(.bordered)
             }
 
             if appVM.selectedAreaIndex != -1 {
@@ -162,7 +170,7 @@ struct LikeForm: View {
                     pitch: camera.pitch
                 )
 
-                appVM.isLiking = false // closes sheet
+                appVM.isSaving = false // closes sheet
             } catch {
                 Log.error("error adding attraction: \(error)")
             }
