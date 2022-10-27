@@ -116,6 +116,13 @@ class CloudKitViewModel: ObservableObject {
         }
     }
 
+    func deleteArea(_ area: Area) async throws {
+        try await cloudKit.delete(item: area)
+        DispatchQueue.main.async {
+            self.areas.removeAll(where: { $0 == area })
+        }
+    }
+
     private func deleteAttraction(
         area: Area,
         offset: IndexSet.Element

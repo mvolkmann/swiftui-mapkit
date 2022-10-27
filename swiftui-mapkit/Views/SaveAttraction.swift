@@ -8,6 +8,7 @@ struct SaveAttraction: View {
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
     @State private var isAddingArea = false
+    @State private var isConfirmingDelete = false
     @State private var newArea = ""
     @State private var newAttraction = ""
 
@@ -68,6 +69,30 @@ struct SaveAttraction: View {
         }
     }
 
+    @ViewBuilder
+    private var deleteButton: some View {
+        let count = appVM.selectedArea?.attractions.count ?? 0
+        let word = count == 1 ? "attraction" : "attractions"
+        let message = count == 0 ? "" :
+            "This area has \(count) \(word) that will also be deleted."
+
+        Button("Delete Selected Area") {
+            isConfirmingDelete = true
+        }
+        .buttonStyle(.bordered)
+        .confirmationDialog(
+            "Are you sure you want to delete the selected area?",
+            isPresented: $isConfirmingDelete,
+            titleVisibility: .visible,
+            actions: {
+                Button("Delete", role: .destructive) {
+                    deleteSelectedArea()
+                }
+            },
+            message: { Text(message) }
+        )
+    }
+
     private var mapJSON: String {
         guard let mapView = mapKitVM.mapView else { return "" }
 
@@ -118,8 +143,11 @@ struct SaveAttraction: View {
                 addAreaRow
             } else {
                 HStack {
+                    if appVM.selectedArea != nil {
+                        deleteButton
+                    }
                     Spacer()
-                    Button("New City/Area") {
+                    Button("New Area") {
                         isAddingArea = true
                         focusName = .areaTextField
                     }
@@ -164,6 +192,19 @@ struct SaveAttraction: View {
                 appVM.isSaving = false // closes sheet
             } catch {
                 Log.error("error adding attraction: \(error)")
+            }
+        }
+    }
+
+    private func deleteSelectedArea() {
+        guard let area = appVM.selectedArea else { return }
+        if !area.attractions.isEmpty {}
+        Task {
+            do {
+                try await cloudKitVM.deleteArea(area)
+                appVM.selectedArea = nil
+            } catch {
+                Log.error(error)
             }
         }
     }
