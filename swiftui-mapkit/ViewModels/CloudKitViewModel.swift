@@ -75,7 +75,11 @@ class CloudKitViewModel: ObservableObject {
 
     func createArea(name: String) async throws -> Area {
         let record = CKRecord(recordType: "Areas")
-        record.setValue(name as CKRecordValue, forKey: "name")
+        record.setValue(
+            name.trim() as CKRecordValue,
+            forKey: "name"
+        )
+
         let area = Area(record: record)
         try await cloudKit.create(item: area)
 
@@ -99,7 +103,7 @@ class CloudKitViewModel: ObservableObject {
         let record = CKRecord(recordType: "Attractions")
         record.setValuesForKeys([
             "area": area,
-            "name": name,
+            "name": name.trim(),
             "latitude": latitude,
             "longitude": longitude,
             "radius": radius,
