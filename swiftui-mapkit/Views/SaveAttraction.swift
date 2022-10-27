@@ -101,27 +101,20 @@ struct SaveAttraction: View {
         let camera = mapView.camera
         let decimals = 4
 
-        let json = """
+        return """
         "latitude": \(center.latitude.places(decimals)),
         "longitude": \(center.longitude.places(decimals)),
         "radius": \(region.radius.places(decimals)),
         "heading": \(Double(camera.heading).places(1)),
         "pitch": \(Double(camera.pitch).places(1))
         """
-
-        // This is printed to the console so it can be
-        // manually copied into attractions.json.
-        // This won't be needed when the ability to
-        // store attractions in Core Data is implemented.
-        // Login.info("\n" + json)
-
-        return json
     }
 
     var body: some View {
         VStack {
             Text("Save Attraction").font(.title)
 
+            // This is useful for debugging.
             // Text(mapJSON).padding().border(.gray)
 
             HStack {
@@ -164,6 +157,11 @@ struct SaveAttraction: View {
         .padding()
         .overlay(alignment: .topTrailing) {
             CloseButton()
+        }
+        .onAppear {
+            // This is printed to the console so it can be
+            // manually copied into attractions.json.
+            Log.info("\n" + mapJSON)
         }
     }
 

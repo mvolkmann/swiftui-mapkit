@@ -80,10 +80,10 @@ struct ContentView: View {
                 SaveAttraction()
             }
             .sheet(isPresented: $appVM.isSetting) {
-                SettingsForm()
+                SettingsSheet()
             }
             .sheet(isPresented: $appVM.isSearching) {
-                SearchForm()
+                SearchSheet()
             }
         }
     }

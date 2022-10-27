@@ -2,7 +2,7 @@ import CoreLocation
 import MapKit // for MKCoordinateRegionMakeWithDistance
 import SwiftUI
 
-struct SearchForm: View {
+struct SearchSheet: View {
     // MARK: - State
 
     @StateObject private var appVM = AppViewModel.shared
@@ -60,38 +60,29 @@ struct SearchForm: View {
                         Text(area.name).tag(area as Area?)
                     }
                 }
+                .padding(.bottom)
                 .onChange(of: appVM.selectedArea) { _ in
                     appVM.selectedAttraction = nil
                 }
             }
 
-            if let selectedArea = appVM.selectedArea {
-                List {
-                    ForEach(selectedArea.attractions) { attraction in
-                        // Button actions don't work inside a List!
-                        // We need to use the onTapGesture modifier instead.
-                        Button(attraction.name, action: {})
-                            .onTapGesture {
-                                showAttraction(attraction)
-                            }
+            if let area = appVM.selectedArea {
+                // We need to use List so we can use the onDelete modifier.
+                List(selection: $appVM.selectedAttraction) {
+                    ForEach(area.attractions) { attraction in
+                        Text(attraction.name).tag(attraction)
                     }
                     .onDelete { offsets in
-                        Task {
-                            do {
-                                try await cloudKitVM.deleteAttractions(
-                                    area: selectedArea,
-                                    offsets: offsets
-                                )
-                            } catch {
-                                Log.error(error)
-                            }
-                        }
+                        deleteAttractions(offsets: offsets)
                     }
                 }
                 .listStyle(.plain)
             }
 
             Spacer()
+        }
+        .onChange(of: appVM.selectedAttraction) { attraction in
+            showAttraction(attraction)
         }
     }
 
@@ -118,8 +109,8 @@ struct SearchForm: View {
             Text("Search By").font(.title)
 
             Picker("Search By", selection: $appVM.searchBy) {
-                Text("Address").tag("address")
                 Text("Attraction").tag("attraction")
+                Text("Address").tag("address")
                 Text("Place Kind").tag("kind")
             }
             .pickerStyle(.segmented)
@@ -144,6 +135,20 @@ struct SearchForm: View {
     }
 
     // MARK: - Methods
+
+    private func deleteAttractions(offsets: IndexSet) {
+        guard let area = appVM.selectedArea else { return }
+        Task {
+            do {
+                try await cloudKitVM.deleteAttractions(
+                    area: area,
+                    offsets: offsets
+                )
+            } catch {
+                Log.error(error)
+            }
+        }
+    }
 
     private func getAttraction(area: String, name: String) -> Attraction? {
         guard let area = cloudKitVM.areas.first(where: { $0.name == area })

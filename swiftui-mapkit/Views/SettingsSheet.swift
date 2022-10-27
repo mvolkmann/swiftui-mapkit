@@ -1,7 +1,7 @@
 import SwiftUI
 
 // These are settings that affect the map display.
-struct SettingsForm: View {
+struct SettingsSheet: View {
     @StateObject private var appVM = AppViewModel.shared
 
     var body: some View {

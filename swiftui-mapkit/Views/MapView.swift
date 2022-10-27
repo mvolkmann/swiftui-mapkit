@@ -56,7 +56,7 @@ struct MapView: UIViewRepresentable {
         )
 
         // Save a reference to the MKMapView so
-        // LikeForm can obtain the current center coordinate.
+        // SaveSheet can obtain the current center coordinate.
         // This must be done on the main queue.
         Task {
             await MainActor.run {
@@ -67,7 +67,7 @@ struct MapView: UIViewRepresentable {
         return mapView
     }
 
-    // This handles changes made in SettingsForm.
+    // This handles changes made in SettingsSheet.
     private func getConfig() -> MKMapConfiguration {
         var config: MKMapConfiguration!
 
