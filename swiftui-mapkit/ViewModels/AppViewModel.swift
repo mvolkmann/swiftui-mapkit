@@ -8,8 +8,8 @@ final class AppViewModel: ObservableObject {
     // - Expand the "Copy Bundle Resources" section.
     // - Click the "+" button and select the file.
     // - Rebuild the app.
-    @Published var cities: [City] =
-        Bundle.main.decode([City].self, from: "attractions.json")
+    // @Published var cities: [City] =
+    //    Bundle.main.decode([City].self, from: "attractions.json")
 
     @Published var isLiking = false
     @Published var isSearching = false
@@ -20,9 +20,8 @@ final class AppViewModel: ObservableObject {
 
     // These are here instead of being @State properties in SearchForm.swift
     // because we want to persist the last values between uses of that view.
+    @Published var selectedAreaIndex = -1
     @Published var selectedAttractionIndex = -1
-    // @Published var selectedCityIndex = -1
-    @Published var selectedCityIndex = 0 // London; Want this default?
 
     static var shared = AppViewModel()
 

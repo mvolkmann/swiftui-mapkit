@@ -6,11 +6,12 @@ struct SearchForm: View {
     // MARK: - State
 
     @StateObject private var appVM = AppViewModel.shared
+    @StateObject private var cloudKitVM = CloudKitViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
     enum FocusName: Hashable {
+        case areaTextField
         case attractionTextField
-        case cityTextField
     }
 
     @FocusState var focusName: FocusName?
@@ -22,25 +23,26 @@ struct SearchForm: View {
     private var attractionForm: some View {
         // Form { // This adds too much top padding, so using List.
         List {
-            Picker("City/Area", selection: $appVM.selectedCityIndex) {
+            Picker("City/Area", selection: $appVM.selectedAreaIndex) {
                 Text("None").tag(-1)
-                let enumeration = Array(appVM.cities.enumerated())
-                ForEach(enumeration, id: \.element) { index, city in
-                    Text(city.name).tag(index)
+                let areas = cloudKitVM.areas
+                let enumeration = Array(areas.enumerated())
+                ForEach(enumeration, id: \.element) { index, area in
+                    Text(area.name).tag(index)
                 }
             }
-            .onChange(of: appVM.selectedCityIndex) { _ in
+            .onChange(of: appVM.selectedAreaIndex) { _ in
                 appVM.selectedAttractionIndex = -1
             }
 
-            if let selectedCity {
+            if let selectedArea {
                 Picker(
                     "Attraction",
                     selection: $appVM.selectedAttractionIndex
                 ) {
                     Text("None").tag(-1)
                     let enumeration =
-                        Array(selectedCity.attractions.enumerated())
+                        Array(selectedArea.attractions.enumerated())
                     ForEach(enumeration, id: \.element) { index, attraction in
                         Text(attraction.name).tag(index)
                     }
@@ -51,7 +53,7 @@ struct SearchForm: View {
             }
         }
         .listStyle(.plain)
-        // This leaves room for multiline city and attraction values.
+        // This leaves room for multiline area and attraction values.
         .frame(height: 160)
     }
 
@@ -89,14 +91,14 @@ struct SearchForm: View {
         }
     }
 
-    private var selectedAttraction: Attraction? {
-        let index = appVM.selectedAttractionIndex
-        return index == -1 ? nil : selectedCity?.attractions[index]
+    private var selectedArea: Area? {
+        let index = appVM.selectedAreaIndex
+        return index == -1 ? nil : cloudKitVM.areas[index]
     }
 
-    private var selectedCity: City? {
-        let index = appVM.selectedCityIndex
-        return index == -1 ? nil : appVM.cities[index]
+    private var selectedAttraction: Attraction? {
+        let index = appVM.selectedAttractionIndex
+        return index == -1 ? nil : selectedArea?.attractions[index]
     }
 
     var body: some View {
@@ -112,7 +114,7 @@ struct SearchForm: View {
                 Section("Search by City Name") {
                     TextField("City", text: $mapKitVM.searchQuery)
                         .autocorrectionDisabled(true)
-                        .focused($focusName, equals: .cityTextField)
+                        .focused($focusName, equals: .areaTextField)
 
                     if mapKitVM.haveMatches {
                         matchedLocationList
@@ -140,11 +142,11 @@ struct SearchForm: View {
 
     // MARK: - Methods
 
-    private func getAttraction(city: String, name: String) -> Attraction? {
-        guard let city = appVM.cities.first(where: { $0.name == city })
+    private func getAttraction(area: String, name: String) -> Attraction? {
+        guard let area = cloudKitVM.areas.first(where: { $0.name == area })
         else { return nil }
 
-        return city.attractions.first(where: { $0.name == name })
+        return area.attractions.first(where: { $0.name == name })
     }
 
     private func selectLocation(_ location: String) {
@@ -156,7 +158,7 @@ struct SearchForm: View {
                 mapKitVM.select(placemark: placemark)
                 stopSearching()
             } catch {
-                print("SearchForm.selectLocation error:", error)
+                Log.error(error)
             }
         }
     }

@@ -161,7 +161,7 @@ extension MapKitViewModel: CLLocationManagerDelegate {
                 location
             ) { [weak self] placemarks, error in
                 if let error {
-                    print("MapKitViewModel: error =", error)
+                    Log.error(error)
                 } else if let self {
                     self.currentPlacemark = placemarks?.first
                     self.selectedPlacemark = self.currentPlacemark
@@ -173,10 +173,7 @@ extension MapKitViewModel: CLLocationManagerDelegate {
     }
 
     func locationManager(_: CLLocationManager, didFailWithError _: Error) {
-        print("""
-        MapKitViewModel: failed to get current location; \
-        user may not have approved
-        """)
+        Log.error("failed to get current location; user may not have approved")
         // If the user denies sharing location, to approve it they must:
         // 1. Open the Settings app.
         // 2. Go to Privacy ... Location Services.

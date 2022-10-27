@@ -138,21 +138,6 @@ struct MapView: UIViewRepresentable {
             let headingChanged = heading != mapView.camera.heading
             let pitchChanged = pitch != mapView.camera.pitch
 
-            /*
-             if centerChanged {
-                 print(
-                     "center changed from \(mapView.region.center.description) to \(center.description)"
-                 )
-             }
-             if radiusChanged {
-                 print(
-                     "radius changed from \(mapView.region.radius) to \(radius)"
-                 )
-             }
-             if headingChanged { print("heading changed") }
-             if pitchChanged { print("pitch changed") }
-             */
-
             if centerChanged || radiusChanged || headingChanged ||
                 pitchChanged {
                 // It seems it is not necessary to change the region.

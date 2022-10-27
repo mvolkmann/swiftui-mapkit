@@ -15,7 +15,7 @@ extension MKCoordinateRegion: Equatable {
         let width = center.longitudeDistance(degrees: span.longitudeDelta)
         // TODO: This calculation is wrong!
         let result = max(width, height) / 2.0 + 105.0
-        // print("height =", height, "width =", width, "result =", result)
+        // Log.debug("height =", height, "width =", width, "result =", result)
         return result
     }
 

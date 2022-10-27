@@ -10,6 +10,9 @@
 		1A0D5ABD29006DDB007AA0F7 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0D5ABC29006DDB007AA0F7 /* MapView.swift */; };
 		1A0D5ABF29006E34007AA0F7 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0D5ABE29006E34007AA0F7 /* AppViewModel.swift */; };
 		1A33435228268119006730C2 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A33435128268119006730C2 /* Place.swift */; };
+		1A3A6DB92909BF1C00183860 /* CloudKitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3A6DB82909BF1C00183860 /* CloudKitViewModel.swift */; };
+		1A3A6DBB2909BFE100183860 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3A6DBA2909BFE100183860 /* Log.swift */; };
+		1A3A6DBD2909C02700183860 /* CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3A6DBC2909C02700183860 /* CloudKit.swift */; };
 		1A67891C28FF15EF00F3DFD8 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A67891B28FF15EF00F3DFD8 /* Marker.swift */; };
 		1A82824E282A34D100380E9D /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A82824D282A34D100380E9D /* SafariView.swift */; };
 		1A8E283E2908752B0064955F /* CLPlacemarkExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8E283D2908752B0064955F /* CLPlacemarkExtension.swift */; };
@@ -31,7 +34,7 @@
 		1AE3A17B2901899C00FB6501 /* SearchForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A17A2901899C00FB6501 /* SearchForm.swift */; };
 		1AE3A17D290189A800FB6501 /* SettingsForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A17C290189A800FB6501 /* SettingsForm.swift */; };
 		1AE3A17F29018A9800FB6501 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A17E29018A9800FB6501 /* CloseButton.swift */; };
-		1AE3A1842902DEBC00FB6501 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1832902DEBC00FB6501 /* City.swift */; };
+		1AE3A1842902DEBC00FB6501 /* Area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1832902DEBC00FB6501 /* Area.swift */; };
 		1AE3A1862902DF0A00FB6501 /* Attraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1852902DF0A00FB6501 /* Attraction.swift */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +53,10 @@
 		1A0D5ABE29006E34007AA0F7 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
 		1A33435128268119006730C2 /* Place.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
 		1A3343532826824D006730C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1A3A6DB72909BB4C00183860 /* swiftui-mapkit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "swiftui-mapkit.entitlements"; sourceTree = "<group>"; };
+		1A3A6DB82909BF1C00183860 /* CloudKitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitViewModel.swift; sourceTree = "<group>"; };
+		1A3A6DBA2909BFE100183860 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		1A3A6DBC2909C02700183860 /* CloudKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKit.swift; sourceTree = "<group>"; };
 		1A67891B28FF15EF00F3DFD8 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		1A82824D282A34D100380E9D /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		1A8E283D2908752B0064955F /* CLPlacemarkExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLPlacemarkExtension.swift; sourceTree = "<group>"; };
@@ -73,7 +80,7 @@
 		1AE3A17A2901899C00FB6501 /* SearchForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchForm.swift; sourceTree = "<group>"; };
 		1AE3A17C290189A800FB6501 /* SettingsForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsForm.swift; sourceTree = "<group>"; };
 		1AE3A17E29018A9800FB6501 /* CloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
-		1AE3A1832902DEBC00FB6501 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
+		1AE3A1832902DEBC00FB6501 /* Area.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Area.swift; sourceTree = "<group>"; };
 		1AE3A1852902DF0A00FB6501 /* Attraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attraction.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				1A0D5ABE29006E34007AA0F7 /* AppViewModel.swift */,
+				1A3A6DB82909BF1C00183860 /* CloudKitViewModel.swift */,
 				1AE3A1702901876E00FB6501 /* MapKitViewModel.swift */,
 			);
 			path = ViewModels;
@@ -140,10 +148,13 @@
 		1AAB0CFC2826436600544A8F /* swiftui-mapkit */ = {
 			isa = PBXGroup;
 			children = (
+				1A3A6DB72909BB4C00183860 /* swiftui-mapkit.entitlements */,
 				1AAB0CFD2826436600544A8F /* MapExplorerApp.swift */,
 				1A3343532826824D006730C2 /* Info.plist */,
 				1AAB0D012826436700544A8F /* Assets.xcassets */,
 				1AB9F3BB29033DA4002DF760 /* attractions.json */,
+				1A3A6DBC2909C02700183860 /* CloudKit.swift */,
+				1A3A6DBA2909BFE100183860 /* Log.swift */,
 				1AE3A1752901886600FB6501 /* Extensions */,
 				1AE3A1822902DE9A00FB6501 /* Models */,
 				1AE3A1722901883700FB6501 /* Services */,
@@ -196,7 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				1AE3A1852902DF0A00FB6501 /* Attraction.swift */,
-				1AE3A1832902DEBC00FB6501 /* City.swift */,
+				1AE3A1832902DEBC00FB6501 /* Area.swift */,
 				1A33435128268119006730C2 /* Place.swift */,
 			);
 			path = Models;
@@ -307,19 +318,22 @@
 				1AE3A17F29018A9800FB6501 /* CloseButton.swift in Sources */,
 				1A0D5ABD29006DDB007AA0F7 /* MapView.swift in Sources */,
 				1AE3A1862902DF0A00FB6501 /* Attraction.swift in Sources */,
+				1A3A6DB92909BF1C00183860 /* CloudKitViewModel.swift in Sources */,
 				1AE3A17B2901899C00FB6501 /* SearchForm.swift in Sources */,
 				1A33435228268119006730C2 /* Place.swift in Sources */,
 				1A0D5ABF29006E34007AA0F7 /* AppViewModel.swift in Sources */,
 				1A82824E282A34D100380E9D /* SafariView.swift in Sources */,
 				1AB9F3CB2906C927002DF760 /* LikeForm.swift in Sources */,
 				1AE3A1742901884200FB6501 /* CoreLocationService.swift in Sources */,
-				1AE3A1842902DEBC00FB6501 /* City.swift in Sources */,
+				1AE3A1842902DEBC00FB6501 /* Area.swift in Sources */,
 				1AE3A1792901897700FB6501 /* ViewExtension.swift in Sources */,
 				1AB9F3D12906FD96002DF760 /* CLLocationCoordinate2DExtension.swift in Sources */,
+				1A3A6DBB2909BFE100183860 /* Log.swift in Sources */,
 				1A8E283E2908752B0064955F /* CLPlacemarkExtension.swift in Sources */,
 				1AB9F3BD29034168002DF760 /* BundleExtension.swift in Sources */,
 				1AE3A17D290189A800FB6501 /* SettingsForm.swift in Sources */,
 				1AAB0D002826436600544A8F /* ContentView.swift in Sources */,
+				1A3A6DBD2909C02700183860 /* CloudKit.swift in Sources */,
 				1AAB0CFE2826436600544A8F /* MapExplorerApp.swift in Sources */,
 				1AE3A1712901876E00FB6501 /* MapKitViewModel.swift in Sources */,
 				1AE3A1772901887200FB6501 /* StringExtension.swift in Sources */,
@@ -466,6 +480,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "swiftui-mapkit/swiftui-mapkit.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"swiftui-mapkit/Preview Content\"";
@@ -500,6 +515,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "swiftui-mapkit/swiftui-mapkit.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"swiftui-mapkit/Preview Content\"";
