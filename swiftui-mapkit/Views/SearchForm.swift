@@ -10,71 +10,15 @@ struct SearchForm: View {
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
     enum FocusName: Hashable {
-        case areaTextField
-        case attractionTextField
+        case address
+        case kind
     }
 
-    @FocusState var focusName: FocusName?
+    @FocusState private var focusName: FocusName?
 
-    @State var attractionText = ""
+    @State private var kind = ""
 
     // MARK: - Properties
-
-    private var attractionForm: some View {
-        // Form { // This adds too much top padding, so using List.
-        List {
-            Picker("City/Area", selection: $appVM.selectedAreaIndex) {
-                Text("None").tag(-1)
-                let areas = cloudKitVM.areas
-                let enumeration = Array(areas.enumerated())
-                ForEach(enumeration, id: \.element) { index, area in
-                    Text(area.name).tag(index)
-                }
-            }
-            .onChange(of: appVM.selectedAreaIndex) { _ in
-                appVM.selectedAttractionIndex = -1
-            }
-
-            if let selectedArea {
-                Picker(
-                    "Attraction",
-                    selection: $appVM.selectedAttractionIndex
-                ) {
-                    Text("None").tag(-1)
-                    let enumeration =
-                        Array(selectedArea.attractions.enumerated())
-                    ForEach(enumeration, id: \.element) { index, attraction in
-                        Text(attraction.name).tag(index)
-                    }
-                }
-                .onChange(of: appVM.selectedAttractionIndex) { _ in
-                    showAttraction(selectedAttraction)
-                }
-            }
-        }
-        .listStyle(.plain)
-        // This leaves room for multiline area and attraction values.
-        .frame(height: 160)
-    }
-
-    private var findNearbyForm: some View {
-        HStack {
-            TextField(
-                "place type like pizza or park",
-                text: $attractionText
-            )
-            .focused($focusName, equals: .attractionTextField)
-            Button("Search") {
-                focusName = nil
-                Task(priority: .background) {
-                    mapKitVM.places =
-                        await mapKitVM.search(text: attractionText)
-                    appVM.isSearching = false
-                }
-            }
-            .disabled(attractionText.isEmpty)
-        }
-    }
 
     private var matchedLocationList: some View {
         Group {
@@ -91,50 +35,115 @@ struct SearchForm: View {
         }
     }
 
+    private var searchByAddress: some View {
+        VStack {
+            TextField("Address", text: $mapKitVM.searchQuery)
+                .textFieldStyle(.roundedBorder)
+                .autocorrectionDisabled(true)
+                .focused($focusName, equals: FocusName.address)
+
+            if mapKitVM.haveMatches {
+                matchedLocationList
+            }
+        }
+        .onAppear { focusName = .address }
+    }
+
+    private var searchByAttraction: some View {
+        VStack {
+            HStack {
+                Text("City/Area").font(.headline)
+                Spacer()
+                Picker("City/Area", selection: $appVM.selectedAreaIndex) {
+                    Text("None").tag(-1)
+                    let areas = cloudKitVM.areas
+                    let enumeration = Array(areas.enumerated())
+                    ForEach(enumeration, id: \.element) { index, area in
+                        Text(area.name).tag(index)
+                    }
+                }
+                .onChange(of: appVM.selectedAreaIndex) { _ in
+                    appVM.selectedAttraction = nil
+                }
+            }
+
+            if let selectedArea {
+                List {
+                    ForEach(selectedArea.attractions) { attraction in
+                        Button(attraction.name, action: {})
+                            .onTapGesture {
+                                print("got tap")
+                                showAttraction(attraction)
+                            }
+                    }
+                    .onDelete { offsets in
+                        Task {
+                            do {
+                                try await cloudKitVM.deleteAttractions(
+                                    area: selectedArea,
+                                    offsets: offsets
+                                )
+                            } catch {
+                                Log.error(error)
+                            }
+                        }
+                    }
+                }
+                .listStyle(.plain)
+            }
+
+            Spacer()
+        }
+    }
+
+    private var searchByKind: some View {
+        HStack {
+            TextField("place kind like pizza or park", text: $kind)
+                .textFieldStyle(.roundedBorder)
+                .focused($focusName, equals: FocusName.kind)
+
+            Button("Search") {
+                Task(priority: .background) {
+                    mapKitVM.places =
+                        await mapKitVM.search(text: kind)
+                    appVM.isSearching = false
+                }
+            }
+            .disabled(kind.isEmpty)
+        }
+        .onAppear { focusName = .kind }
+    }
+
     private var selectedArea: Area? {
         let index = appVM.selectedAreaIndex
         return index == -1 ? nil : cloudKitVM.areas[index]
     }
 
-    private var selectedAttraction: Attraction? {
-        let index = appVM.selectedAttractionIndex
-        return index == -1 ? nil : selectedArea?.attractions[index]
-    }
-
     var body: some View {
-        // Get the default background color of Form views.
-        let bgColor = Color(UIColor.systemGroupedBackground)
+        VStack {
+            Text("Search By").font(.title)
 
-        VStack(spacing: 0) {
-            Rectangle()
-                .fill(bgColor)
-                .frame(maxWidth: .infinity, maxHeight: 20)
-
-            Form {
-                Section("Search by City Name") {
-                    TextField("City", text: $mapKitVM.searchQuery)
-                        .autocorrectionDisabled(true)
-                        .focused($focusName, equals: .areaTextField)
-
-                    if mapKitVM.haveMatches {
-                        matchedLocationList
-                    }
-                }
-
-                if !mapKitVM.haveMatches {
-                    Section("Select Attraction") {
-                        attractionForm
-                    }
-                }
-
-                if !mapKitVM.haveMatches {
-                    Section("Find Nearby") {
-                        findNearbyForm
-                    }
-                }
+            Picker("Search By", selection: $appVM.searchBy) {
+                Text("Address").tag("address")
+                Text("Attraction").tag("attraction")
+                Text("Place Kind").tag("kind")
             }
-            .headerProminence(.increased)
+            .pickerStyle(.segmented)
+
+            switch appVM.searchBy {
+            case "address":
+                searchByAddress
+            case "attraction":
+                searchByAttraction
+            case "kind":
+                searchByKind
+            default:
+                Text("") // should never happen
+            }
+
+            Spacer()
         }
+        .padding()
         .overlay(alignment: .topTrailing) {
             CloseButton()
         }

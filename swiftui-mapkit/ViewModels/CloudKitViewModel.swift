@@ -5,8 +5,6 @@ class CloudKitViewModel: ObservableObject {
     // MARK: - State
 
     @Published var areas: [Area] = []
-    // TODO: Do you need this property?
-    @Published var attractions: [Attraction] = []
 
     private static let containerId =
         "iCloud.r.mark.volkmann.gmail.com.swiftui-mapkit"
@@ -27,7 +25,7 @@ class CloudKitViewModel: ObservableObject {
                 }
 
                 try await retrieveAreas()
-                try await retrieveAttractions()
+                let attractions = try await retrieveAttractions()
 
                 Task {
                     await MainActor.run {
@@ -110,25 +108,26 @@ class CloudKitViewModel: ObservableObject {
         try await cloudKit.create(item: attraction)
 
         DispatchQueue.main.sync {
-            self.attractions.append(attraction)
-            self.attractions.sort { $0.name < $1.name }
             if let area = addAttractionToArea(attraction) {
                 area.sortAttractions()
             }
         }
     }
 
-    private func deleteAttraction(offset: IndexSet.Element) async throws {
-        let attraction = attractions[offset]
+    private func deleteAttraction(
+        area: Area,
+        offset: IndexSet.Element
+    ) async throws {
+        let attraction = area.attractions[offset]
         try await cloudKit.delete(item: attraction)
         DispatchQueue.main.async {
-            self.attractions.remove(at: offset)
+            area.attractions.remove(at: offset)
         }
     }
 
-    func deleteAttractions(offsets: IndexSet) async throws {
+    func deleteAttractions(area: Area, offsets: IndexSet) async throws {
         for offset in offsets {
-            try await deleteAttraction(offset: offset)
+            try await deleteAttraction(area: area, offset: offset)
         }
     }
 
@@ -140,29 +139,10 @@ class CloudKitViewModel: ObservableObject {
         DispatchQueue.main.sync { self.areas = areas }
     }
 
-    func retrieveAttractions() async throws {
-        let attractions = try await cloudKit.retrieve(
+    func retrieveAttractions() async throws -> [Attraction] {
+        try await cloudKit.retrieve(
             recordType: "Attractions",
             sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)]
         ) as [Attraction]
-        DispatchQueue.main.sync { self.attractions = attractions }
-    }
-
-    func updateAttraction(attraction: Attraction) async throws {
-        try await cloudKit.update(item: attraction)
-
-        // Update the corresponding published attraction object.
-        let id = attraction.record.recordID
-        let index = attractions
-            .firstIndex { attraction in attraction.record.recordID == id }
-        if let index = index {
-            // Update the published attraction object.
-            DispatchQueue.main.async { [weak self] in
-                self?.attractions[index].record = attraction.record
-            }
-        } else {
-            // This should never happen.
-            throw "CloudKitViewModel.updateAttraction: attraction not found"
-        }
     }
 }

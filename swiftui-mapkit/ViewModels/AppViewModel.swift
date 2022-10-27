@@ -17,11 +17,12 @@ final class AppViewModel: ObservableObject {
     @Published var mapElevation = "realistic" // other is "flat"
     @Published var mapEmphasis = "default" // other is "muted"
     @Published var mapType = "image" // other are "standard" and "hybrid"
+    @Published var searchBy: String = "address"
 
     // These are here instead of being @State properties in SearchForm.swift
     // because we want to persist the last values between uses of that view.
     @Published var selectedAreaIndex = -1
-    @Published var selectedAttractionIndex = -1
+    @Published var selectedAttraction: Attraction?
 
     static var shared = AppViewModel()
 

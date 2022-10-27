@@ -100,11 +100,6 @@ struct LikeForm: View {
         return index == -1 ? nil : cloudKitVM.areas[index]
     }
 
-    private var selectedAttraction: Attraction? {
-        let index = appVM.selectedAttractionIndex
-        return index == -1 ? nil : selectedArea?.attractions[index]
-    }
-
     var body: some View {
         List {
             Text("Save Map").font(.headline)
@@ -120,7 +115,7 @@ struct LikeForm: View {
                 }
             }
             .onChange(of: appVM.selectedAreaIndex) { _ in
-                appVM.selectedAttractionIndex = -1
+                appVM.selectedAttraction = nil
             }
 
             if isAddingArea {
@@ -167,7 +162,6 @@ struct LikeForm: View {
                     pitch: camera.pitch
                 )
 
-                // newAttraction = ""
                 appVM.isLiking = false // closes sheet
             } catch {
                 Log.error("error adding attraction: \(error)")
