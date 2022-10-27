@@ -29,11 +29,8 @@ struct SaveAttraction: View {
             Button("Add") {
                 Task {
                     do {
-                        try await cloudKitVM.createArea(name: newArea)
-                        // Select the last city.
-                        appVM.selectedAreaIndex =
-                            cloudKitVM.areas.count - 1
-                        // THIS IS WRONG DUE TO SORTING!
+                        appVM.selectedArea =
+                            try await cloudKitVM.createArea(name: newArea)
                         stopAddingCity()
                     } catch {
                         Log.error("error adding area: \(error)")
@@ -96,11 +93,6 @@ struct SaveAttraction: View {
         return json
     }
 
-    private var selectedArea: Area? {
-        let index = appVM.selectedAreaIndex
-        return index == -1 ? nil : cloudKitVM.areas[index]
-    }
-
     var body: some View {
         VStack {
             Text("Save Attraction").font(.title)
@@ -110,14 +102,13 @@ struct SaveAttraction: View {
             HStack {
                 Text("City/Area").font(.headline)
                 Spacer()
-                Picker("City/Area", selection: $appVM.selectedAreaIndex) {
-                    Text("None").tag(-1)
-                    let enumeration = Array(cloudKitVM.areas.enumerated())
-                    ForEach(enumeration, id: \.element) { index, area in
-                        Text(area.name).tag(index)
+                Picker("City/Area", selection: $appVM.selectedArea) {
+                    Text("None").tag(nil as Area?)
+                    ForEach(cloudKitVM.areas) { area in
+                        Text(area.name).tag(area as Area?)
                     }
                 }
-                .onChange(of: appVM.selectedAreaIndex) { _ in
+                .onChange(of: appVM.selectedArea) { _ in
                     appVM.selectedAttraction = nil
                     focusName = .attractionTextField
                 }
@@ -136,7 +127,7 @@ struct SaveAttraction: View {
                 }
             }
 
-            if appVM.selectedAreaIndex != -1 {
+            if appVM.selectedArea != nil {
                 addAttractionRow
             }
 
@@ -152,7 +143,7 @@ struct SaveAttraction: View {
 
     private func addAttraction() {
         guard let mapView = mapKitVM.mapView else { return }
-        guard let selectedArea else { return }
+        guard let selectedArea = appVM.selectedArea else { return }
 
         let center = mapView.centerCoordinate
         let region = mapView.region

@@ -54,20 +54,18 @@ struct SearchForm: View {
             HStack {
                 Text("City/Area").font(.headline)
                 Spacer()
-                Picker("City/Area", selection: $appVM.selectedAreaIndex) {
-                    Text("None").tag(-1)
-                    let areas = cloudKitVM.areas
-                    let enumeration = Array(areas.enumerated())
-                    ForEach(enumeration, id: \.element) { index, area in
-                        Text(area.name).tag(index)
+                Picker("City/Area", selection: $appVM.selectedArea) {
+                    Text("None").tag(nil as Area?)
+                    ForEach(cloudKitVM.areas) { area in
+                        Text(area.name).tag(area as Area?)
                     }
                 }
-                .onChange(of: appVM.selectedAreaIndex) { _ in
+                .onChange(of: appVM.selectedArea) { _ in
                     appVM.selectedAttraction = nil
                 }
             }
 
-            if let selectedArea {
+            if let selectedArea = appVM.selectedArea {
                 List {
                     ForEach(selectedArea.attractions) { attraction in
                         // Button actions don't work inside a List!
@@ -113,11 +111,6 @@ struct SearchForm: View {
             .disabled(kind.isEmpty)
         }
         .onAppear { focusName = .kind }
-    }
-
-    private var selectedArea: Area? {
-        let index = appVM.selectedAreaIndex
-        return index == -1 ? nil : cloudKitVM.areas[index]
     }
 
     var body: some View {

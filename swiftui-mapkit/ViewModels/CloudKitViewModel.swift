@@ -73,7 +73,7 @@ class CloudKitViewModel: ObservableObject {
         return area
     }
 
-    func createArea(name: String) async throws {
+    func createArea(name: String) async throws -> Area {
         let record = CKRecord(recordType: "Areas")
         record.setValue(name as CKRecordValue, forKey: "name")
         let area = Area(record: record)
@@ -83,6 +83,8 @@ class CloudKitViewModel: ObservableObject {
             self.areas.append(area)
             self.areas.sort { $0.name < $1.name }
         }
+
+        return area
     }
 
     func createAttraction(

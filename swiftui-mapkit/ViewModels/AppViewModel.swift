@@ -21,7 +21,7 @@ final class AppViewModel: ObservableObject {
 
     // These are here instead of being @State properties in SearchForm.swift
     // because we want to persist the last values between uses of that view.
-    @Published var selectedAreaIndex = -1
+    @Published var selectedArea: Area?
     @Published var selectedAttraction: Attraction?
 
     static var shared = AppViewModel()
