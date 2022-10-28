@@ -1,8 +1,12 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 // These are settings that affect the map display.
 struct SettingsSheet: View {
     @StateObject private var appVM = AppViewModel.shared
+
+    @State private var isExporting = false
+    @State private var isImporting = false
 
     var body: some View {
         VStack {
@@ -34,12 +38,49 @@ struct SettingsSheet: View {
             }
             .pickerStyle(.segmented)
 
+            HStack {
+                Button("Import Attractions") {
+                    isImporting = true
+                }
+                Button("Export Attractions") {
+                    isExporting = true
+                }
+            }
+            .buttonStyle(.bordered)
+
             Spacer()
         }
+        .fileImporter(
+            isPresented: $isImporting,
+            allowedContentTypes: [UTType.json],
+            allowsMultipleSelection: false,
+            onCompletion: { result in
+                do {
+                    let urls = try result.get()
+                    if let url = urls.first {
+                        if url.startAccessingSecurityScopedResource() {
+                            print("fileImporter onCompletion: url =", url)
+                            let json = try String(
+                                contentsOf: url,
+                                encoding: .utf8
+                            )
+                            print("fileImporter onCompletion: json =", json)
+                        } else {
+                            print("fileImporter onCompletion: cannot access")
+                        }
+                    } else {
+                        print("fileImporter onCompletion: no url")
+                    }
+                } catch {
+                    Log.error("error reading JSON file: \(error)")
+                }
+            }
+        )
         .padding()
         .overlay(alignment: .topTrailing) {
             CloseButton()
         }
-        .presentationDetents([.height(200)])
+        // .presentationDetents([.height(200)])
+        .presentationDetents([.height(400)])
     }
 }
