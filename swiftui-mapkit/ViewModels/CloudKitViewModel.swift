@@ -96,7 +96,7 @@ class CloudKitViewModel: ObservableObject {
         name: String,
         latitude: Double,
         longitude: Double,
-        radius: Double,
+        distance: Double,
         heading: Double,
         pitch: Double
     ) async throws {
@@ -106,7 +106,7 @@ class CloudKitViewModel: ObservableObject {
             "name": name.trim(),
             "latitude": latitude,
             "longitude": longitude,
-            "radius": radius,
+            "distance": distance,
             "heading": heading,
             "pitch": pitch
         ])

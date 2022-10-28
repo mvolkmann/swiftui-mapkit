@@ -6,18 +6,18 @@ import SwiftUI
 // Privacy - Location When In Use Usage Description
 // Privacy - Location Always and When In Use Usage Description
 class MapKitViewModel: NSObject, ObservableObject {
-    static let defaultRadius = 10000.0 // in meters
+    static let defaultDistance = 10000.0 // in meters
 
     // MARK: - State
 
     @Published var center: CLLocationCoordinate2D?
     @Published var currentPlacemark: CLPlacemark?
+    @Published var distance = 0.0 // changed in initializer
     @Published var heading = 0.0 // in degrees
     @Published var likedLocations: [String] = []
     @Published var mapView: MKMapView?
     @Published var pitch = 0.0 // in degrees
     @Published var places: [Place] = []
-    @Published var radius = 0.0 // changed in initializer
     @Published var searchLocations: [String] = []
     @Published var searchQuery = ""
     @Published var selectedPlace: Place?
@@ -33,7 +33,7 @@ class MapKitViewModel: NSObject, ObservableObject {
 
         super.init()
 
-        radius = Self.defaultRadius
+        distance = Self.defaultDistance
 
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = kCLDistanceFilterNone
@@ -131,7 +131,7 @@ class MapKitViewModel: NSObject, ObservableObject {
 
         if let location = placemark.location {
             center = location.coordinate
-            radius = Self.defaultRadius
+            distance = Self.defaultDistance
         }
     }
 

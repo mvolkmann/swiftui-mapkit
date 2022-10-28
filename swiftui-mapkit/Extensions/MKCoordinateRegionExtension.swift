@@ -3,7 +3,7 @@ import MapKit
 extension MKCoordinateRegion: Equatable {
     // Computes the radius in meters of a region
     // based on its current MKCoordinateSpan values.
-    var radius: CLLocationDistance {
+    var distance: CLLocationDistance {
         // The "*Delta" properties in a MKCoordinateSpan object
         // found in the MKCoordinateRegion "span" property are
         // the distance in degrees, not meters, from map edge to edge.
@@ -13,7 +13,7 @@ extension MKCoordinateRegion: Equatable {
 
         let height = center.latitudeDistance(degrees: span.latitudeDelta)
         let width = center.longitudeDistance(degrees: span.longitudeDelta)
-        // TODO: This calculation is wrong!
+        // TODO: This calculation doesn't match camera.centerCoordinateDistance!
         let result = max(width, height) / 2.0 + 105.0
         // Log.debug("height =", height, "width =", width, "result =", result)
         return result
@@ -23,6 +23,8 @@ extension MKCoordinateRegion: Equatable {
         lhs: MKCoordinateRegion,
         rhs: MKCoordinateRegion
     ) -> Bool {
-        lhs.center == rhs.center && lhs.radius == rhs.radius
+        lhs.center == rhs.center &&
+            lhs.span.latitudeDelta == rhs.span.latitudeDelta &&
+            lhs.span.longitudeDelta == rhs.span.longitudeDelta
     }
 }

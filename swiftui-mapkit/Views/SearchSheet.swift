@@ -178,7 +178,7 @@ struct SearchSheet: View {
             latitude: attraction.latitude,
             longitude: attraction.longitude
         )
-        mapKitVM.radius = attraction.radius
+        mapKitVM.distance = attraction.distance
         mapKitVM.heading = attraction.heading
         mapKitVM.pitch = attraction.pitch
 

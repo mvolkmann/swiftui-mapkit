@@ -40,7 +40,7 @@ struct ContentView: View {
                 if let center = mapKitVM.center {
                     // This approach uses UIKit in order to
                     // utilize some cool MapKit features.
-                    MapView(center: center, radius: mapKitVM.radius)
+                    MapView(center: center, distance: mapKitVM.distance)
                         .edgesIgnoringSafeArea(.bottom)
                 } else {
                     loading

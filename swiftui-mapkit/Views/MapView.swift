@@ -5,7 +5,7 @@ import SwiftUI
 // in order to use the iOS 16 MapKit features in SwiftUI.
 struct MapView: UIViewRepresentable {
     var center: CLLocationCoordinate2D // holds lat/lng angles in degrees
-    var radius: Double // in meters
+    var distance: Double // in meters
 
     typealias ElevationStyle = MKMapConfiguration.ElevationStyle
     typealias EmphasisStyle = MKStandardMapConfiguration.EmphasisStyle
@@ -39,18 +39,9 @@ struct MapView: UIViewRepresentable {
         // This adds a blue circle over the current user location.
         mapView.showsUserLocation = true
 
-        /*
-         let region = MKCoordinateRegion(
-             center: center,
-             latitudinalMeters: radius,
-             longitudinalMeters: radius
-         )
-         mapView.setRegion(region, animated: false)
-         */
-
         mapView.camera = MKMapCamera(
             lookingAtCenter: center,
-            fromDistance: radius,
+            fromDistance: distance,
             pitch: 0.0,
             heading: 0.0
         )
@@ -126,7 +117,7 @@ struct MapView: UIViewRepresentable {
         mapView.preferredConfiguration = getConfig()
 
         if let center = mapKitVM.center {
-            let radius = mapKitVM.radius
+            let distance = mapKitVM.distance
             let heading = mapKitVM.heading
             let pitch = mapKitVM.pitch
 
@@ -134,28 +125,17 @@ struct MapView: UIViewRepresentable {
             // The radius property on MKCoordinateRegion
             // is a computed property that I added
             // in MKCoordinateRegionExtension.swift.
-            let radiusChanged = radius != mapView.region.radius
+            let distanceChanged = distance != mapView.region.distance
             let headingChanged = heading != mapView.camera.heading
             let pitchChanged = pitch != mapView.camera.pitch
 
-            if centerChanged || radiusChanged || headingChanged ||
+            if centerChanged || distanceChanged || headingChanged ||
                 pitchChanged {
-                // It seems it is not necessary to change the region.
-                // We just need to update the camera.
-                /*
-                 let newRegion = MKCoordinateRegion(
-                     center: center,
-                     latitudinalMeters: radius,
-                     longitudinalMeters: radius
-                 )
-                 mapView.setRegion(newRegion, animated: false)
-                 */
-
                 // We must assign a new camera object, not just change
                 // the pitch and heading of the current camera object.
                 mapView.camera = MKMapCamera(
                     lookingAtCenter: center,
-                    fromDistance: radius,
+                    fromDistance: distance,
                     pitch: pitch,
                     heading: heading
                 )
@@ -206,7 +186,7 @@ struct MapView: UIViewRepresentable {
                     let region = mapView.region
                     let camera = mapView.camera
                     mapKitVM.center = region.center
-                    mapKitVM.radius = region.radius
+                    mapKitVM.distance = region.distance
                     mapKitVM.heading = camera.heading
                     mapKitVM.pitch = camera.pitch
                 }

@@ -26,6 +26,7 @@ struct SaveAttraction: View {
     private var addAreaRow: some View {
         HStack {
             TextField("New city/area name", text: $newArea)
+                .autocorrectionDisabled(true)
                 .focused($focusName, equals: .areaTextField)
                 .textFieldStyle(.roundedBorder)
 
@@ -61,12 +62,16 @@ struct SaveAttraction: View {
     private var addAttractionRow: some View {
         HStack {
             TextField("Attraction name", text: $newAttraction)
+                .autocorrectionDisabled(true)
                 .focused($focusName, equals: .attractionTextField)
 
             Button("Add") {
                 addAttraction()
             }
             .disabled(newAttraction.isEmpty)
+        }
+        .onAppear {
+            focusName = .attractionTextField
         }
         .alert(
             "Invalid Attraction Name",
@@ -113,7 +118,7 @@ struct SaveAttraction: View {
         return """
         "latitude": \(center.latitude.places(decimals)),
         "longitude": \(center.longitude.places(decimals)),
-        "radius": \(region.radius.places(decimals)),
+        "distance": \(region.distance.places(decimals)),
         "heading": \(Double(camera.heading).places(1)),
         "pitch": \(Double(camera.pitch).places(1))
         """
@@ -203,7 +208,6 @@ struct SaveAttraction: View {
         guard let selectedArea = appVM.selectedArea else { return }
 
         let center = mapView.centerCoordinate
-        let region = mapView.region
         let camera = mapView.camera
         let cloudKitVM = CloudKitViewModel.shared
         Task {
@@ -213,7 +217,7 @@ struct SaveAttraction: View {
                     name: newAttraction,
                     latitude: center.latitude,
                     longitude: center.longitude,
-                    radius: region.radius,
+                    distance: camera.centerCoordinateDistance,
                     heading: camera.heading,
                     pitch: camera.pitch
                 )
