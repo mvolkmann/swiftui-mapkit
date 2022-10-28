@@ -29,9 +29,6 @@ struct SearchSheet: View {
                 }
             }
             .listStyle(.plain)
-            .frame(height: 300)
-            // TODO: Why doesn't this work?
-            // .frame(maxHeight: .infinity)
         }
     }
 

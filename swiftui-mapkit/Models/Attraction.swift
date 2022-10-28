@@ -1,5 +1,4 @@
 import CloudKit
-import CoreLocation
 
 final class Attraction: CloudKitable, Hashable, Identifiable {
     init(record: CKRecord) {
