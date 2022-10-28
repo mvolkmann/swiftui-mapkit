@@ -48,7 +48,7 @@ class MapKitViewModel: NSObject, ObservableObject {
         completer.delegate = self
 
         // This prevent getting points of interest like "Buckingham Palace".
-        completer.resultTypes = .address
+        completer.resultTypes = [.address, .pointOfInterest]
     }
 
     // MARK: - Properites

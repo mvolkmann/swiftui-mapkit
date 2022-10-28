@@ -9,6 +9,8 @@ struct SaveAttraction: View {
 
     @State private var isAddingArea = false
     @State private var isConfirmingDelete = false
+    @State private var isInvalidArea = false
+    @State private var isInvalidAttraction = false
     @State private var newArea = ""
     @State private var newAttraction = ""
 
@@ -28,21 +30,12 @@ struct SaveAttraction: View {
                 .textFieldStyle(.roundedBorder)
 
             Button("Add") {
-                Task {
-                    do {
-                        appVM.selectedArea =
-                            try await cloudKitVM.createArea(name: newArea)
-                        stopAddingCity()
-                    } catch {
-                        Log.error("error adding area: \(error)")
-                        stopAddingCity()
-                    }
-                }
+                addArea()
             }
             .disabled(newArea.isEmpty)
 
             Button(
-                action: { stopAddingCity() },
+                action: stopAddingArea,
                 label: {
                     Image(systemName: "x.circle")
                         .resizable()
@@ -55,6 +48,14 @@ struct SaveAttraction: View {
             // from also triggering a tap on the "Add" button.
             .buttonStyle(.borderless)
         }
+        .alert(
+            "Invalid Area Name",
+            isPresented: $isInvalidArea,
+            actions: {}, // no custom buttons
+            message: {
+                Text("The city/area name must be unique.")
+            }
+        )
     }
 
     private var addAttractionRow: some View {
@@ -67,6 +68,14 @@ struct SaveAttraction: View {
             }
             .disabled(newAttraction.isEmpty)
         }
+        .alert(
+            "Invalid Attraction Name",
+            isPresented: $isInvalidAttraction,
+            actions: {}, // no custom buttons
+            message: {
+                Text("The attraction name must be unique within its area.")
+            }
+        )
     }
 
     @ViewBuilder
@@ -167,7 +176,29 @@ struct SaveAttraction: View {
 
     // MARK: - Methods
 
+    private func addArea() {
+        guard isUniqueArea(newArea) else {
+            isInvalidArea = true
+            return
+        }
+
+        Task {
+            do {
+                appVM.selectedArea =
+                    try await cloudKitVM.createArea(name: newArea)
+            } catch {
+                Log.error("error adding area: \(error)")
+            }
+            stopAddingArea()
+        }
+    }
+
     private func addAttraction() {
+        guard isUniqueAttraction(newAttraction) else {
+            isInvalidAttraction = true
+            return
+        }
+
         guard let mapView = mapKitVM.mapView else { return }
         guard let selectedArea = appVM.selectedArea else { return }
 
@@ -207,7 +238,16 @@ struct SaveAttraction: View {
         }
     }
 
-    private func stopAddingCity() {
+    private func isUniqueArea(_ name: String) -> Bool {
+        !cloudKitVM.areas.contains(where: { $0.name == name })
+    }
+
+    private func isUniqueAttraction(_ name: String) -> Bool {
+        guard let area = appVM.selectedArea else { return true }
+        return !area.attractions.contains(where: { $0.name == name })
+    }
+
+    private func stopAddingArea() {
         dismissKeyboard()
         newArea = ""
         isAddingArea = false
