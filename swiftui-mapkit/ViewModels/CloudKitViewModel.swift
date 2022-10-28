@@ -14,37 +14,9 @@ class CloudKitViewModel: ObservableObject {
     // This class is a singleton.
     private init() {
         cloudKit = CloudKit(containerId: Self.containerId)
+
         Task {
-            do {
-                let statusText = try await cloudKit.statusText()
-                guard statusText == "available" else {
-                    Log.info(
-                        "CloudKitViewModel.init: CloudKit is not available"
-                    )
-                    return
-                }
-
-                try await retrieveAreas()
-                let attractions = try await retrieveAttractions()
-
-                Task {
-                    await MainActor.run {
-                        // Associate attractions with areas.
-                        for attraction in attractions {
-                            let _ = addAttractionToArea(attraction)
-                        }
-
-                        // We cannot iterate over the areas and mutate them
-                        // but we can iterate over the indices
-                        // and mutate the area objects found by index.
-                        for index in areas.indices {
-                            areas[index].sortAttractions()
-                        }
-                    }
-                }
-            } catch {
-                Log.error(error)
-            }
+            await load()
         }
     }
 
@@ -141,6 +113,43 @@ class CloudKitViewModel: ObservableObject {
     func deleteAttractions(area: Area, offsets: IndexSet) async throws {
         for offset in offsets {
             try await deleteAttraction(area: area, offset: offset)
+        }
+    }
+
+    func load() async {
+        do {
+            let statusText = try await cloudKit.statusText()
+            guard statusText == "available" else {
+                Log.info(
+                    "CloudKitViewModel.init: CloudKit is not available"
+                )
+                return
+            }
+
+            try await retrieveAreas()
+            let attractions = try await retrieveAttractions()
+
+            Task {
+                await MainActor.run {
+                    // Associate attractions with areas.
+                    for attraction in attractions {
+                        print(
+                            "CloudKitViewModel.load: adding",
+                            attraction.name
+                        )
+                        let _ = addAttractionToArea(attraction)
+                    }
+
+                    // We cannot iterate over the areas and mutate them
+                    // but we can iterate over the indices
+                    // and mutate the area objects found by index.
+                    for index in areas.indices {
+                        areas[index].sortAttractions()
+                    }
+                }
+            }
+        } catch {
+            Log.error(error)
         }
     }
 

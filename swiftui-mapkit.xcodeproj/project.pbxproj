@@ -36,6 +36,8 @@
 		1AE3A17F29018A9800FB6501 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A17E29018A9800FB6501 /* CloseButton.swift */; };
 		1AE3A1842902DEBC00FB6501 /* Area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1832902DEBC00FB6501 /* Area.swift */; };
 		1AE3A1862902DF0A00FB6501 /* Attraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1852902DF0A00FB6501 /* Attraction.swift */; };
+		1AF027BC290C731B00AF1ADB /* AttractionDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF027BB290C731B00AF1ADB /* AttractionDecodable.swift */; };
+		1AF027BE290C76CE00AF1ADB /* JSONFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF027BD290C76CE00AF1ADB /* JSONFile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +84,8 @@
 		1AE3A17E29018A9800FB6501 /* CloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
 		1AE3A1832902DEBC00FB6501 /* Area.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Area.swift; sourceTree = "<group>"; };
 		1AE3A1852902DF0A00FB6501 /* Attraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attraction.swift; sourceTree = "<group>"; };
+		1AF027BB290C731B00AF1ADB /* AttractionDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttractionDecodable.swift; sourceTree = "<group>"; };
+		1AF027BD290C76CE00AF1ADB /* JSONFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONFile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,7 +211,9 @@
 			isa = PBXGroup;
 			children = (
 				1AE3A1852902DF0A00FB6501 /* Attraction.swift */,
+				1AF027BB290C731B00AF1ADB /* AttractionDecodable.swift */,
 				1AE3A1832902DEBC00FB6501 /* Area.swift */,
+				1AF027BD290C76CE00AF1ADB /* JSONFile.swift */,
 				1A33435128268119006730C2 /* Place.swift */,
 			);
 			path = Models;
@@ -327,6 +333,7 @@
 				1AE3A1742901884200FB6501 /* CoreLocationService.swift in Sources */,
 				1AE3A1842902DEBC00FB6501 /* Area.swift in Sources */,
 				1AE3A1792901897700FB6501 /* ViewExtension.swift in Sources */,
+				1AF027BC290C731B00AF1ADB /* AttractionDecodable.swift in Sources */,
 				1AB9F3D12906FD96002DF760 /* CLLocationCoordinate2DExtension.swift in Sources */,
 				1A3A6DBB2909BFE100183860 /* Log.swift in Sources */,
 				1A8E283E2908752B0064955F /* CLPlacemarkExtension.swift in Sources */,
@@ -339,6 +346,7 @@
 				1AE3A1772901887200FB6501 /* StringExtension.swift in Sources */,
 				1AB9F3CF2906C962002DF760 /* MKCoordinateRegionExtension.swift in Sources */,
 				1A67891C28FF15EF00F3DFD8 /* Marker.swift in Sources */,
+				1AF027BE290C76CE00AF1ADB /* JSONFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
