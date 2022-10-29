@@ -172,9 +172,11 @@ struct MapView: UIViewRepresentable {
 
         @MainActor
         func mapView(_: MKMapView, didSelect annotation: MKAnnotation) {
-            if let title = annotation.title,
-               // TODO: Why is force unwrap needed here?
-               let place = parent.titleToPlaceMap[title!] {
+            // annotation.title has the following optional-optional type:
+            // type optional var title: String? { get }
+            if let optionalTitle = annotation.title,
+               let title = optionalTitle,
+               let place = parent.titleToPlaceMap[title] {
                 parent.mapKitVM.selectedPlace = place
             }
         }
