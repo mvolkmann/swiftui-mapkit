@@ -5,7 +5,7 @@ import SwiftUI
 // Add these keys in the Info tab for each target that queries current location:
 // Privacy - Location When In Use Usage Description
 // Privacy - Location Always and When In Use Usage Description
-class MapKitViewModel: NSObject, ObservableObject {
+final class MapKitViewModel: NSObject, ObservableObject {
     static let defaultDistance = 10000.0 // in meters
 
     // MARK: - State

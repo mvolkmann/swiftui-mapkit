@@ -1,7 +1,7 @@
 import CloudKit
 import SwiftUI
 
-class CloudKitViewModel: ObservableObject {
+final class CloudKitViewModel: ObservableObject {
     // MARK: - State
 
     @Published var areas: [Area] = []
