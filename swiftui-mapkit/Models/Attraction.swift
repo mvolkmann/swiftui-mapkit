@@ -37,6 +37,9 @@ extension Attraction: Encodable {
     }
 
     func encode(to encoder: Encoder) throws {
+        // The order in which the properties are output seems to be random
+        // unless the JSONEncoder outputFormatter property is set.
+        // See the SettingsSheet getJSON method.
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(area, forKey: .area)
         try container.encode(name, forKey: .name)

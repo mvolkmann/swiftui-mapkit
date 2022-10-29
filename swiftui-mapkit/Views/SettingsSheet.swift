@@ -94,7 +94,9 @@ struct SettingsSheet: View {
         var json = ""
 
         let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
+        // This causes the generated JSON to be pretty printed
+        // AND sorts the properties within each object alphabetically.
+        encoder.outputFormatting = .prettyPrinted // .union(.sortedKeys)
 
         let attractions = cloudKitVM.areas.flatMap { $0.attractions }
         if let encoded = try? encoder.encode(attractions) {
