@@ -24,30 +24,25 @@ struct PlaceDetail: View {
                     }
                     Spacer()
                     if let itemURL = item.url {
-                        VStack {
-                            Text("Browse Website").font(.headline)
+                        /*
+                         // This opens the website of the selected place
+                         // in Safari.
+                         Link("Website", destination: itemURL)
+                         */
 
-                            // This opens the website of the selected place
-                            // in Safari.
-                            Link("In Browser", destination: itemURL)
-
-                            // This opens the website of the selected place
-                            // in a sheet within this app.
-                            Button("In App") {
-                                url = itemURL
-                                isBrowsingWebsite = true
-                            }
+                        // This opens the website of the selected place
+                        // in a sheet within this app.
+                        Button("Website") {
+                            url = itemURL
+                            isBrowsingWebsite = true
                         }
                         .buttonStyle(.borderedProminent)
+                        .padding(.top, 40) // leaves room from CloseButton
                     } else {
                         Text("No website found")
                             .fontWeight(.bold)
                             .padding(.leading)
                     }
-                }
-                .padding(.horizontal)
-                .sheet(isPresented: $isBrowsingWebsite) {
-                    SafariView(url: $url)
                 }
             } else {
                 Text("\(place.displayName)").fontWeight(.bold)
@@ -55,10 +50,14 @@ struct PlaceDetail: View {
                 Text("longitude: \(place.coordinate.longitude)")
             }
         }
+        .padding()
         .overlay(alignment: .topTrailing) {
             CloseButton {
                 MapKitViewModel.shared.selectedPlace = nil
             }
+        }
+        .sheet(isPresented: $isBrowsingWebsite) {
+            SafariView(url: $url)
         }
     }
 }

@@ -25,7 +25,7 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 0) {
                 if let place = mapKitVM.selectedPlace {
                     PlaceDetail(place: place)
                 }
