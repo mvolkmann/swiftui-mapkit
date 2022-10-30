@@ -11,12 +11,6 @@ struct ContentView: View {
     @StateObject private var appVM = AppViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
-    @State var isBrowsingWebsite = false
-
-    // This is changed later to the URL of a placemark,
-    // but we need to initialize it to some valid URL.
-    @State var url: URL = .temporaryDirectory
-
     // MARK: - Properties
 
     private var loading: some View {
@@ -33,7 +27,7 @@ struct ContentView: View {
         NavigationStack {
             VStack {
                 if let place = mapKitVM.selectedPlace {
-                    placeDetail(place: place)
+                    PlaceDetail(place: place)
                 }
 
                 // If we have a location to show on the map ...
@@ -73,9 +67,6 @@ struct ContentView: View {
                 // coreLocationVM.start()
                 mapKitVM.start()
             }
-            .sheet(isPresented: $isBrowsingWebsite) {
-                SafariView(url: $url)
-            }
             .sheet(isPresented: $appVM.isSaving) {
                 SaveAttraction()
             }
@@ -84,54 +75,6 @@ struct ContentView: View {
             }
             .sheet(isPresented: $appVM.isSearching) {
                 SearchSheet()
-            }
-        }
-    }
-
-    // MARK: - Methods
-
-    @ViewBuilder
-    private func placeDetail(place: Place) -> some View {
-        if let item = place.item {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("\(place.displayName)").fontWeight(.bold)
-                    if let phone = item.phoneNumber {
-                        Text("\(phone)")
-                    }
-                    if let address = place.address {
-                        Text("\(address)")
-                    }
-                }
-                Spacer()
-                if let itemURL = item.url {
-                    VStack {
-                        Text("Browse Website").font(.headline)
-
-                        // This opens the website of the selected place
-                        // in Safari.
-                        Link("In Browser", destination: itemURL)
-
-                        // This opens the website of the selected place
-                        // in a sheet within this app.
-                        Button("In App") {
-                            url = itemURL
-                            isBrowsingWebsite = true
-                        }
-                    }
-                    .buttonStyle(.borderedProminent)
-                } else {
-                    Text("No website found")
-                        .fontWeight(.bold)
-                        .padding(.leading)
-                }
-            }
-            .padding(.horizontal)
-        } else {
-            VStack {
-                Text("\(place.displayName)").fontWeight(.bold)
-                Text("latitude: \(place.coordinate.latitude)")
-                Text("longitude: \(place.coordinate.longitude)")
             }
         }
     }

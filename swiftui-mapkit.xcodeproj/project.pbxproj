@@ -38,6 +38,7 @@
 		1AE3A1862902DF0A00FB6501 /* Attraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3A1852902DF0A00FB6501 /* Attraction.swift */; };
 		1AF027BC290C731B00AF1ADB /* AttractionDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF027BB290C731B00AF1ADB /* AttractionDecodable.swift */; };
 		1AF027BE290C76CE00AF1ADB /* JSONFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF027BD290C76CE00AF1ADB /* JSONFile.swift */; };
+		1AF027C0290F26BA00AF1ADB /* PlaceDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF027BF290F26BA00AF1ADB /* PlaceDetail.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +87,7 @@
 		1AE3A1852902DF0A00FB6501 /* Attraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attraction.swift; sourceTree = "<group>"; };
 		1AF027BB290C731B00AF1ADB /* AttractionDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttractionDecodable.swift; sourceTree = "<group>"; };
 		1AF027BD290C76CE00AF1ADB /* JSONFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONFile.swift; sourceTree = "<group>"; };
+		1AF027BF290F26BA00AF1ADB /* PlaceDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetail.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 				1AAB0CFF2826436600544A8F /* ContentView.swift */,
 				1A0D5ABC29006DDB007AA0F7 /* MapView.swift */,
 				1A67891B28FF15EF00F3DFD8 /* Marker.swift */,
+				1AF027BF290F26BA00AF1ADB /* PlaceDetail.swift */,
 				1A82824D282A34D100380E9D /* SafariView.swift */,
 				1AB9F3CA2906C927002DF760 /* SaveAttraction.swift */,
 				1AE3A17A2901899C00FB6501 /* SearchSheet.swift */,
@@ -324,6 +327,7 @@
 				1AE3A17F29018A9800FB6501 /* CloseButton.swift in Sources */,
 				1A0D5ABD29006DDB007AA0F7 /* MapView.swift in Sources */,
 				1AE3A1862902DF0A00FB6501 /* Attraction.swift in Sources */,
+				1AF027C0290F26BA00AF1ADB /* PlaceDetail.swift in Sources */,
 				1A3A6DB92909BF1C00183860 /* CloudKitViewModel.swift in Sources */,
 				1AE3A17B2901899C00FB6501 /* SearchSheet.swift in Sources */,
 				1A33435228268119006730C2 /* Place.swift in Sources */,
