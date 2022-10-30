@@ -114,11 +114,17 @@ struct MapView: UIViewRepresentable {
     }
 
     func updateUIView(_ mapView: MKMapView, context _: Context) {
+        // Update the map with changes in SettingSheet.
+        Task {
+            await MainActor.run {
+                mapView.preferredConfiguration = getConfig()
+            }
+        }
+
+        // Update annotations for places like parks and restaurants.
         updateAnnotations(mapView)
 
-        guard appVM.shouldUpdateCamera else { return }
-
-        if let center = mapKitVM.center {
+        if appVM.shouldUpdateCamera, let center = mapKitVM.center {
             Task {
                 await MainActor.run {
                     mapView.preferredConfiguration = getConfig()
