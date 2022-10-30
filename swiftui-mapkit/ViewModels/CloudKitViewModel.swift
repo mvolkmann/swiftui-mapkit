@@ -133,10 +133,6 @@ final class CloudKitViewModel: ObservableObject {
                 await MainActor.run {
                     // Associate attractions with areas.
                     for attraction in attractions {
-                        print(
-                            "CloudKitViewModel.load: adding",
-                            attraction.name
-                        )
                         let _ = addAttractionToArea(attraction)
                     }
 

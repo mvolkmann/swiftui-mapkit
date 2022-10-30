@@ -18,6 +18,7 @@ final class AppViewModel: ObservableObject {
     @Published var mapEmphasis = "default" // other is "muted"
     @Published var mapType = "image" // other are "standard" and "hybrid"
     @Published var searchBy: String = "attraction"
+    @Published var shouldUpdateCamera = true
 
     // These are here instead of being @State properties in SearchSheet.swift
     // because we want to persist the last values between uses of that view.

@@ -179,6 +179,8 @@ struct SearchSheet: View {
         mapKitVM.heading = attraction.heading
         mapKitVM.pitch = attraction.pitch
 
+        appVM.shouldUpdateCamera = true
+
         stopSearching()
     }
 

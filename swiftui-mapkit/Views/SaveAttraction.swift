@@ -119,7 +119,7 @@ struct SaveAttraction: View {
         "latitude": \(center.latitude.places(decimals)),
         "longitude": \(center.longitude.places(decimals)),
         "distance": \(region.distance.places(decimals)),
-        "heading": \(Double(camera.heading).places(1)),
+        "heading": \(angle(camera.heading).places(1)),
         "pitch": \(Double(camera.pitch).places(1))
         """
     }
@@ -207,8 +207,8 @@ struct SaveAttraction: View {
         guard let mapView = mapKitVM.mapView else { return }
         guard let selectedArea = appVM.selectedArea else { return }
 
-        let center = mapView.centerCoordinate
         let camera = mapView.camera
+        let center = camera.centerCoordinate
         let cloudKitVM = CloudKitViewModel.shared
         Task {
             do {
@@ -218,7 +218,7 @@ struct SaveAttraction: View {
                     latitude: center.latitude,
                     longitude: center.longitude,
                     distance: camera.centerCoordinateDistance,
-                    heading: camera.heading,
+                    heading: angle(camera.heading),
                     pitch: camera.pitch
                 )
 
@@ -227,6 +227,10 @@ struct SaveAttraction: View {
                 Log.error("error adding attraction: \(error)")
             }
         }
+    }
+
+    private func angle(_ degrees: Double) -> Double {
+        degrees == -0.0 ? -degrees : degrees == 360.0 ? 0 : degrees
     }
 
     private func deleteSelectedArea() {

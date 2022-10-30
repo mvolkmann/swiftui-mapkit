@@ -26,38 +26,6 @@ struct MapView: UIViewRepresentable {
             EmphasisStyle.muted : EmphasisStyle.default
     }
 
-    // This is required to conform to UIViewRepresentable.
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-
-    // This is required to conform to UIViewRepresentable.
-    func makeUIView(context: Context) -> MKMapView {
-        let mapView = MKMapView()
-        mapView.delegate = context.coordinator
-
-        // This adds a blue circle over the current user location.
-        mapView.showsUserLocation = true
-
-        mapView.camera = MKMapCamera(
-            lookingAtCenter: center,
-            fromDistance: distance,
-            pitch: 0.0,
-            heading: 0.0
-        )
-
-        // Save a reference to the MKMapView so
-        // SaveSheet can obtain the current center coordinate.
-        // This must be done on the main queue.
-        Task {
-            await MainActor.run {
-                mapKitVM.mapView = mapView
-            }
-        }
-
-        return mapView
-    }
-
     // This handles changes made in SettingsSheet.
     private func getConfig() -> MKMapConfiguration {
         var config: MKMapConfiguration!
@@ -113,39 +81,62 @@ struct MapView: UIViewRepresentable {
         return config
     }
 
-    func updateUIView(_ mapView: MKMapView, context _: Context) {
-        mapView.preferredConfiguration = getConfig()
+    // This is required to conform to UIViewRepresentable.
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
 
-        if let center = mapKitVM.center {
-            let distance = mapKitVM.distance
-            let heading = mapKitVM.heading
-            let pitch = mapKitVM.pitch
+    // This is required to conform to UIViewRepresentable.
+    func makeUIView(context: Context) -> MKMapView {
+        let mapView = MKMapView()
+        mapView.delegate = context.coordinator
 
-            let centerChanged = center != mapView.centerCoordinate
-            // The radius property on MKCoordinateRegion
-            // is a computed property that I added
-            // in MKCoordinateRegionExtension.swift.
-            let distanceChanged = distance != mapView.region.distance
-            let headingChanged = heading != mapView.camera.heading
-            let pitchChanged = pitch != mapView.camera.pitch
+        // This adds a blue circle over the current user location.
+        mapView.showsUserLocation = true
 
-            if centerChanged || distanceChanged || headingChanged ||
-                pitchChanged {
-                // We must assign a new camera object, not just change
-                // the pitch and heading of the current camera object.
-                mapView.camera = MKMapCamera(
-                    lookingAtCenter: center,
-                    fromDistance: distance,
-                    pitch: pitch,
-                    heading: heading
-                )
+        mapView.camera = MKMapCamera(
+            lookingAtCenter: center,
+            fromDistance: distance,
+            pitch: 0.0,
+            heading: 0.0
+        )
+
+        // Save a reference to the MKMapView
+        // so SaveSheet can obtain the current center coordinate.
+        // This must be done on the main queue.
+        Task {
+            await MainActor.run {
+                mapKitVM.mapView = mapView
             }
         }
 
-        updateAnnotations(mapView)
+        return mapView
     }
 
+    func updateUIView(_ mapView: MKMapView, context _: Context) {
+        updateAnnotations(mapView)
+
+        guard appVM.shouldUpdateCamera else { return }
+
+        if let center = mapKitVM.center {
+            Task {
+                await MainActor.run {
+                    mapView.preferredConfiguration = getConfig()
+                    mapView.camera = MKMapCamera(
+                        lookingAtCenter: center,
+                        fromDistance: mapKitVM.distance,
+                        pitch: mapKitVM.pitch,
+                        heading: mapKitVM.heading
+                    )
+                    appVM.shouldUpdateCamera = false
+                }
+            }
+        }
+    }
+
+    // This adds annotations for places like parks and restaurants.
     private func updateAnnotations(_ mapView: MKMapView) {
+        print("MapView.updateAnnotations entered")
         Task {
             await MainActor.run {
                 let newAnnotations = mapKitVM.places.map { place in
@@ -170,6 +161,9 @@ struct MapView: UIViewRepresentable {
             self.parent = parent
         }
 
+        // This is called when an annotation is tapped.
+        // It allows displaying the name, phone number, address, and website
+        // of the place associated with the annotation.
         @MainActor
         func mapView(_: MKMapView, didSelect annotation: MKAnnotation) {
             // annotation.title has the following optional-optional type:
@@ -178,20 +172,6 @@ struct MapView: UIViewRepresentable {
                let title = optionalTitle,
                let place = parent.titleToPlaceMap[title] {
                 parent.mapKitVM.selectedPlace = place
-            }
-        }
-
-        func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
-            Task {
-                await MainActor.run {
-                    let mapKitVM = parent.mapKitVM
-                    let region = mapView.region
-                    let camera = mapView.camera
-                    mapKitVM.center = region.center
-                    mapKitVM.distance = region.distance
-                    mapKitVM.heading = camera.heading
-                    mapKitVM.pitch = camera.pitch
-                }
             }
         }
     }
