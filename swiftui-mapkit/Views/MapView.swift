@@ -136,7 +136,6 @@ struct MapView: UIViewRepresentable {
 
     // This adds annotations for places like parks and restaurants.
     private func updateAnnotations(_ mapView: MKMapView) {
-        print("MapView.updateAnnotations entered")
         Task {
             await MainActor.run {
                 let newAnnotations = mapKitVM.places.map { place in

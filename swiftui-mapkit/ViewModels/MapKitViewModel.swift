@@ -123,7 +123,6 @@ final class MapKitViewModel: NSObject, ObservableObject {
             }
         }
 
-        print("MapKitViewModel.search: newPlaces =", newPlaces)
         return newPlaces
     }
 

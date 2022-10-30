@@ -10,49 +10,54 @@ struct PlaceDetail: View {
     let place: Place
 
     var body: some View {
-        if let item = place.item {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("\(place.displayName)").fontWeight(.bold)
-                    if let phone = item.phoneNumber {
-                        Text("\(phone)")
-                    }
-                    if let address = place.address {
-                        Text("\(address)")
-                    }
-                }
-                Spacer()
-                if let itemURL = item.url {
-                    VStack {
-                        Text("Browse Website").font(.headline)
-
-                        // This opens the website of the selected place
-                        // in Safari.
-                        Link("In Browser", destination: itemURL)
-
-                        // This opens the website of the selected place
-                        // in a sheet within this app.
-                        Button("In App") {
-                            url = itemURL
-                            isBrowsingWebsite = true
+        VStack {
+            if let item = place.item {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("\(place.displayName)").fontWeight(.bold)
+                        if let phone = item.phoneNumber {
+                            Text("\(phone)")
+                        }
+                        if let address = place.address {
+                            Text("\(address)")
                         }
                     }
-                    .buttonStyle(.borderedProminent)
-                } else {
-                    Text("No website found")
-                        .fontWeight(.bold)
-                        .padding(.leading)
+                    Spacer()
+                    if let itemURL = item.url {
+                        VStack {
+                            Text("Browse Website").font(.headline)
+
+                            // This opens the website of the selected place
+                            // in Safari.
+                            Link("In Browser", destination: itemURL)
+
+                            // This opens the website of the selected place
+                            // in a sheet within this app.
+                            Button("In App") {
+                                url = itemURL
+                                isBrowsingWebsite = true
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                    } else {
+                        Text("No website found")
+                            .fontWeight(.bold)
+                            .padding(.leading)
+                    }
                 }
-            }
-            .padding(.horizontal)
-            .sheet(isPresented: $isBrowsingWebsite) {
-                SafariView(url: $url)
-            }
-        } else {
-            VStack {
+                .padding(.horizontal)
+                .sheet(isPresented: $isBrowsingWebsite) {
+                    SafariView(url: $url)
+                }
+            } else {
                 Text("\(place.displayName)").fontWeight(.bold)
                 Text("latitude: \(place.coordinate.latitude)")
                 Text("longitude: \(place.coordinate.longitude)")
+            }
+        }
+        .overlay(alignment: .topTrailing) {
+            CloseButton {
+                MapKitViewModel.shared.selectedPlace = nil
             }
         }
     }

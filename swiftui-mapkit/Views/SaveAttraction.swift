@@ -170,7 +170,9 @@ struct SaveAttraction: View {
         }
         .padding()
         .overlay(alignment: .topTrailing) {
-            CloseButton()
+            CloseButton {
+                appVM.isSaving = false
+            }
         }
         .onAppear {
             // This is printed to the console so it can be

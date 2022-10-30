@@ -127,7 +127,9 @@ struct SearchSheet: View {
         }
         .padding()
         .overlay(alignment: .topTrailing) {
-            CloseButton()
+            CloseButton {
+                appVM.isSearching = false
+            }
         }
     }
 

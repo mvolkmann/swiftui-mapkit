@@ -66,7 +66,9 @@ struct SettingsSheet: View {
         )
         .padding()
         .overlay(alignment: .topTrailing) {
-            CloseButton()
+            CloseButton {
+                appVM.isSetting = false
+            }
         }
         .presentationDetents([.height(220)])
     }
