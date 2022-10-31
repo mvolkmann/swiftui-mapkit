@@ -37,7 +37,6 @@ struct SearchSheet: View {
         Button("Delete Selected Area") {
             isConfirmingDelete = true
         }
-        .buttonStyle(.bordered)
         .confirmationDialog(
             "Are you sure you want to delete the selected area?",
             isPresented: $isConfirmingDelete,
@@ -99,7 +98,6 @@ struct SearchSheet: View {
             }
 
             if let area = appVM.selectedArea {
-                deleteButton
                 attractionList(area: area)
             }
 
@@ -190,10 +188,15 @@ struct SearchSheet: View {
 
     private func attractionList(area: Area) -> some View {
         VStack {
-            EditButton()
+            HStack {
+                EditButton()
+                Spacer()
+                deleteButton
+            }
 
             if isEditing {
                 Text("Tap an attraction name to edit it.")
+                    .padding(.top)
             }
 
             // We need to use List so we can use the onDelete modifier.
