@@ -32,6 +32,20 @@ To recall a saved map view:
 - Select an area to display a list of saved attractions in that area.
 - Tap an attraction name.
 
+I have saved map views for many London attractions.
+Here is Buckingham Palace.
+Note how I can:
+- zoom in and out by pinching and spreading with two fingers
+- rotate by spinning two fingers
+- and change the pitch by dragging two fingers up and down
+
+Here is the London Eye ferris wheel.
+Note how it is actually rotating!
+
+Here is the Big Ben clock.
+It shows the current time in London.
+The clock hands move each minute.
+
 Users can search for specific kinds of places near the current map location.
 Examples include parks and restaurants of specific types such as "pizza".
 Matching places are displayed with map annotations.
@@ -51,18 +65,18 @@ To adjust settings, tap the gear icon in the upper-right.
 The settings sheet supports customizing the following map characteristics:
 
 - type
-  - Standard - drawing with road names
-  - Image - satellite image without road names
-  - Hybrid - satellite image with road names
+  - Standard - displays a map drawing with road names
+  - Image - displays a satellite image without road names
+  - Hybrid - displays a satellite image with road names
   
 - elevation - only affects Image and Hybrid map types
-  - Flat - less detail
-  - Realistic - more detail
+  - Flat - shows less detail
+  - Realistic - shows more detail
   
 - emphasis - only affects the Standard map type
-  - Default - full color
-  - Muted - muted colors for better display of overlays
+  - Default - uses full color
+  - Muted - uses muted colors for better display of overlays
 
-The settings sheet also contains buttons
-for exporting and importing map attractions in a JSON file.
+The settings sheet also contains buttons for
+exporting and importing map attractions in a JSON file.
 This is useful for sharing saved map views with others.
