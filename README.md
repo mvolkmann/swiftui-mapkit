@@ -7,15 +7,17 @@ The 3D effect is much more pronounced at popular locations
 for which Apple has provided more map detail.
 
 The map can also be positioned by searching for an address.
+To do this:
 For example, tap the magnifier glass icon in the upper-left,
-tap the "Address" tab, enter "Navy Pier", and tap "Navy Pier Ferris Wheel".
 
 - Tap the magnifier glass icon in the upper-left.
 - Tap the "Address" tab.
 - Enter part of an address such as a street or city name.
+  I'll search for "Navy Pier" which is in Chicago.
 - Tap one of the matches displayed in the list below the text input.
+  I'll tap "Navy Pier Ferris Wheel".
 
-Map views can be saved using CloudKit.
+Map views can be saved in a user-specific database using CloudKit.
 Each saved map view is given an area name such as "London" or "Yellowstone" and
 an attraction name such as "Buckingham Palace" or "Grand Prismatic Spring".
 To save the current map view:
