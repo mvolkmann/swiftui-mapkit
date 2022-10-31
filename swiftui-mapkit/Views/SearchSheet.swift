@@ -87,6 +87,7 @@ struct SearchSheet: View {
             Text("Matched Locations").font(.headline)
             List(mapKitVM.searchLocations, id: \.self) { location in
                 Button(location) {
+                    appVM.selectedAttraction = nil
                     selectLocation(location)
                 }
             }
