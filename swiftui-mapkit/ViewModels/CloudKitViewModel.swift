@@ -93,6 +93,12 @@ final class CloudKitViewModel: ObservableObject {
     }
 
     func deleteArea(_ area: Area) async throws {
+        // Delete all the attractions associated with the area.
+        for attraction in area.attractions {
+            try await deleteAttraction(area: area, attraction: attraction)
+        }
+
+        // Delete the area.
         try await cloudKit.delete(item: area)
         DispatchQueue.main.async {
             self.areas.removeAll(where: { $0 == area })
@@ -103,10 +109,19 @@ final class CloudKitViewModel: ObservableObject {
         area: Area,
         offset: IndexSet.Element
     ) async throws {
-        let attraction = area.attractions[offset]
+        try await deleteAttraction(
+            area: area,
+            attraction: area.attractions[offset]
+        )
+    }
+
+    private func deleteAttraction(
+        area: Area,
+        attraction: Attraction
+    ) async throws {
         try await cloudKit.delete(item: attraction)
         DispatchQueue.main.async {
-            area.attractions.remove(at: offset)
+            area.attractions.removeAll(where: { $0.name == attraction.name })
         }
     }
 

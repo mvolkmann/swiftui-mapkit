@@ -21,11 +21,35 @@ struct SearchSheet: View {
 
     @State private var attractionName = ""
     @State private var editingAttraction: Attraction?
+    @State private var isConfirmingDelete = false
+    @State private var kind = ""
     @State private var message = ""
 
-    @State private var kind = ""
-
     // MARK: - Properties
+
+    @ViewBuilder
+    private var deleteButton: some View {
+        let count = appVM.selectedArea?.attractions.count ?? 0
+        let word = count == 1 ? "attraction" : "attractions"
+        let message = count == 0 ? "" :
+            "This area has \(count) \(word) that will also be deleted."
+
+        Button("Delete Selected Area") {
+            isConfirmingDelete = true
+        }
+        .buttonStyle(.bordered)
+        .confirmationDialog(
+            "Are you sure you want to delete the selected area?",
+            isPresented: $isConfirmingDelete,
+            titleVisibility: .visible,
+            actions: {
+                Button("Delete", role: .destructive) {
+                    deleteSelectedArea()
+                }
+            },
+            message: { Text(message) }
+        )
+    }
 
     private var isEditing: Bool {
         editMode?.wrappedValue.isEditing == true
@@ -75,6 +99,7 @@ struct SearchSheet: View {
             }
 
             if let area = appVM.selectedArea {
+                deleteButton
                 attractionList(area: area)
             }
 
@@ -219,6 +244,19 @@ struct SearchSheet: View {
                     area: area,
                     offsets: offsets
                 )
+            } catch {
+                Log.error(error)
+            }
+        }
+    }
+
+    private func deleteSelectedArea() {
+        guard let area = appVM.selectedArea else { return }
+        if !area.attractions.isEmpty {}
+        Task {
+            do {
+                try await cloudKitVM.deleteArea(area)
+                appVM.selectedArea = nil
             } catch {
                 Log.error(error)
             }
