@@ -49,11 +49,12 @@ final class MapKitViewModel: NSObject, ObservableObject {
         // This cannot precede the call to super.init.
         completer.delegate = self
 
-        // This prevent getting points of interest like "Buckingham Palace".
-        completer.resultTypes = [.address, .pointOfInterest]
+        // This specifies the types of search completions to include.
+        // Perhaps all are included if this is not specified.
+        // completer.resultTypes = [.address, .pointOfInterest, .query]
     }
 
-    // MARK: - Properites
+    // MARK: - Properties
 
     // This can be used to cancel an active search, but we aren't using it.
     private var cancellable: AnyCancellable?

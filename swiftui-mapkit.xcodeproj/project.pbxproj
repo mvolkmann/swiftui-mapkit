@@ -88,6 +88,7 @@
 		1AF027BB290C731B00AF1ADB /* AttractionDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttractionDecodable.swift; sourceTree = "<group>"; };
 		1AF027BD290C76CE00AF1ADB /* JSONFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONFile.swift; sourceTree = "<group>"; };
 		1AF027BF290F26BA00AF1ADB /* PlaceDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetail.swift; sourceTree = "<group>"; };
+		1AF027C3291003D700AF1ADB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +138,7 @@
 		1AAB0CF12826436600544A8F = {
 			isa = PBXGroup;
 			children = (
+				1AF027C3291003D700AF1ADB /* README.md */,
 				1AAB0CFC2826436600544A8F /* swiftui-mapkit */,
 				1AB9F3D72907F809002DF760 /* swiftui-mapkitTests */,
 				1AAB0CFB2826436600544A8F /* Products */,

@@ -17,6 +17,10 @@ struct CoreLocationService {
     // This is not currently used.
     static func getPlacemark(from addressString: String) async throws
         -> CLPlacemark {
+        print(
+            "CoreLocationService.getPlacemark: addressString =",
+            addressString
+        )
         // Cannot call this more than 50 times per second.
         let placemarks = try await CLGeocoder()
             .geocodeAddressString(addressString)

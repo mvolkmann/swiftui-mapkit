@@ -8,8 +8,8 @@ final class AppViewModel: ObservableObject {
     // - Expand the "Copy Bundle Resources" section.
     // - Click the "+" button and select the file.
     // - Rebuild the app.
-    // @Published var cities: [City] =
-    //    Bundle.main.decode([City].self, from: "attractions.json")
+    // @Published var cities: [Area] =
+    //    Bundle.main.decode([Area].self, from: "attractions.json")
 
     @Published var isSaving = false
     @Published var isSearching = false

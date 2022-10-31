@@ -9,6 +9,8 @@ struct SearchSheet: View {
     @StateObject private var cloudKitVM = CloudKitViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
+    @State private var message = ""
+
     enum FocusName: Hashable {
         case address
         case kind
@@ -49,9 +51,9 @@ struct SearchSheet: View {
     private var searchByAttraction: some View {
         VStack {
             HStack {
-                Text("City/Area").font(.headline)
+                Text("Area").font(.headline)
                 Spacer()
-                Picker("City/Area", selection: $appVM.selectedArea) {
+                Picker("Area", selection: $appVM.selectedArea) {
                     Text("None").tag(nil as Area?)
                     ForEach(cloudKitVM.areas) { area in
                         Text(area.name).tag(area as Area?)
@@ -112,6 +114,10 @@ struct SearchSheet: View {
             }
             .pickerStyle(.segmented)
 
+            if !message.isEmpty {
+                Text(message).foregroundColor(.red).fontWeight(.bold)
+            }
+
             switch appVM.searchBy {
             case "address":
                 searchByAddress
@@ -162,10 +168,13 @@ struct SearchSheet: View {
                 dismissKeyboard()
                 let placemark = try await CoreLocationService
                     .getPlacemark(from: location)
+                appVM.shouldUpdateCamera = true
                 mapKitVM.select(placemark: placemark)
                 stopSearching()
+            } catch CLError.geocodeFoundNoResult {
+                message = "Failed to find matching map location."
             } catch {
-                Log.error(error)
+                message = error.localizedDescription
             }
         }
     }
@@ -187,6 +196,7 @@ struct SearchSheet: View {
     }
 
     private func stopSearching() {
+        message = ""
         appVM.isSearching = false
         mapKitVM.selectedPlace = nil
     }

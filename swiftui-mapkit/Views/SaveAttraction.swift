@@ -132,9 +132,9 @@ struct SaveAttraction: View {
             // Text(mapJSON).padding().border(.gray)
 
             HStack {
-                Text("City/Area").font(.headline)
+                Text("Area").font(.headline)
                 Spacer()
-                Picker("City/Area", selection: $appVM.selectedArea) {
+                Picker("Area", selection: $appVM.selectedArea) {
                     Text("None").tag(nil as Area?)
                     ForEach(cloudKitVM.areas) { area in
                         Text(area.name).tag(area as Area?)
