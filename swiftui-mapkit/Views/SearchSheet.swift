@@ -9,6 +9,7 @@ struct SearchSheet: View {
 
     enum FocusName: Hashable {
         case address
+        case areaName
         case attractionName
         case kind
     }
@@ -19,24 +20,35 @@ struct SearchSheet: View {
     @StateObject private var cloudKitVM = CloudKitViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
+    @State private var areaName = ""
     @State private var attractionName = ""
+    @State private var editingArea: Area?
     @State private var editingAttraction: Attraction?
     @State private var isConfirmingDelete = false
     @State private var kind = ""
     @State private var message = ""
 
+    // MARK: - Constants
+
+    private static let buttonSize = 30.0
+
     // MARK: - Properties
 
     @ViewBuilder
-    private var deleteButton: some View {
+    private var deleteAreaButton: some View {
         let count = appVM.selectedArea?.attractions.count ?? 0
         let word = count == 1 ? "attraction" : "attractions"
         let message = count == 0 ? "" :
             "This area has \(count) \(word) that will also be deleted."
 
-        Button("Delete Selected Area") {
-            isConfirmingDelete = true
-        }
+        Button(
+            action: { isConfirmingDelete = true },
+            label: {
+                Image(systemName: "trash.circle")
+                    .resizable()
+                    .frame(width: Self.buttonSize, height: Self.buttonSize)
+            }
+        )
         .confirmationDialog(
             "Are you sure you want to delete the selected area?",
             isPresented: $isConfirmingDelete,
@@ -47,6 +59,22 @@ struct SearchSheet: View {
                 }
             },
             message: { Text(message) }
+        )
+    }
+
+    private var editAreaButton: some View {
+        Button(
+            action: {
+                if let area = appVM.selectedArea {
+                    areaName = area.name
+                    editingArea = area
+                }
+            },
+            label: {
+                Image(systemName: "pencil.circle")
+                    .resizable()
+                    .frame(width: Self.buttonSize, height: Self.buttonSize)
+            }
         )
     }
 
@@ -85,19 +113,37 @@ struct SearchSheet: View {
             HStack {
                 Text("Area").font(.headline)
                 Spacer()
+                if appVM.selectedArea != nil {
+                    editAreaButton
+                    deleteAreaButton
+                }
                 Picker("Area", selection: $appVM.selectedArea) {
                     Text("None").tag(nil as Area?)
                     ForEach(cloudKitVM.areas) { area in
                         Text(area.name).tag(area as Area?)
                     }
                 }
-                .padding(.bottom)
                 .onChange(of: appVM.selectedArea) { _ in
                     appVM.selectedAttraction = nil
                 }
             }
 
-            if let area = appVM.selectedArea {
+            if let area = editingArea {
+                HStack {
+                    TextField("", text: $areaName)
+                        .textFieldStyle(.roundedBorder)
+                        .focused($focusName, equals: .areaName)
+
+                    Button("Rename") {
+                        area.record["name"] = areaName
+                        Task {
+                            try? await cloudKitVM.updateItem(area)
+                            editingArea = nil
+                        }
+                    }
+                    .buttonStyle(.bordered)
+                }
+            } else if let area = appVM.selectedArea {
                 attractionList(area: area)
             }
 
@@ -166,16 +212,8 @@ struct SearchSheet: View {
             TextField("Attraction Name", text: $attractionName)
                 .textFieldStyle(.roundedBorder)
                 .focused($focusName, equals: .attractionName)
-            /*
-                .onAppear {
-                    focusName = .attractionName
-                }
-             */
 
             Button("Rename") {
-                print(
-                    "renaming \(attraction.name) to \(attractionName)"
-                )
                 attraction.record["name"] = attractionName
                 Task {
                     try? await cloudKitVM.updateItem(attraction)
@@ -191,7 +229,6 @@ struct SearchSheet: View {
             HStack {
                 EditButton()
                 Spacer()
-                deleteButton
             }
 
             if isEditing {
