@@ -128,12 +128,15 @@ struct MapView: UIViewRepresentable {
             Task {
                 await MainActor.run {
                     mapView.preferredConfiguration = getConfig()
-                    mapView.camera = MKMapCamera(
+                    let currentCenter = mapView.camera.centerCoordinate
+                    let newCamera = MKMapCamera(
                         lookingAtCenter: center,
                         fromDistance: mapKitVM.distance,
                         pitch: mapKitVM.pitch,
                         heading: mapKitVM.heading
                     )
+                    let isClose = center.isCloseTo(currentCenter)
+                    mapView.setCamera(newCamera, animated: isClose)
                     appVM.shouldUpdateCamera = false
                 }
             }

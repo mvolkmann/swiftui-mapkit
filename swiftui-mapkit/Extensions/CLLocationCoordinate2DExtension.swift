@@ -12,6 +12,15 @@ extension CLLocationCoordinate2D: Equatable {
         lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
     }
 
+    /// Returns a Bool that indicates whether a given coordinate is "close" to this one.
+    public func isCloseTo(_ other: Self) -> Bool {
+        let closeDegrees = 0.1
+        let latDiff = abs(latitude - other.latitude)
+        let lngDiff = abs(longitude - other.longitude)
+        // print("latDiff =", latDiff, ", lngDiff =", lngDiff)
+        return latDiff <= closeDegrees && lngDiff <= closeDegrees
+    }
+
     /// Returns the latitude difference in degrees to another coordinate.
     /// - Parameters:
     ///   - to: other CLLocationCoordinate2D
