@@ -135,11 +135,7 @@ struct SearchSheet: View {
                         .focused($focusName, equals: .areaName)
 
                     Button("Rename") {
-                        area.record["name"] = areaName
-                        Task {
-                            try? await cloudKitVM.updateItem(area)
-                            editingArea = nil
-                        }
+                        renameArea(area)
                     }
                     .buttonStyle(.bordered)
                 }
@@ -308,6 +304,29 @@ struct SearchSheet: View {
         else { return nil }
 
         return area.attractions.first(where: { $0.name == name })
+    }
+
+    private func renameArea(_ area: Area) {
+        Task {
+            do {
+                // Update all the attractions for the area.
+                // This wouldn't be necessary if attraction records
+                // referred to their area its record name (unique id).
+                // Maybe you need to make that change.
+                for attraction in area.attractions {
+                    attraction.record["area"] = areaName
+                    try await cloudKitVM.updateItem(attraction)
+                }
+
+                // Update the area.
+                area.record["name"] = areaName
+                try await cloudKitVM.updateItem(area)
+
+                editingArea = nil
+            } catch {
+                Log.error("error renaming area: \(error)")
+            }
+        }
     }
 
     private func selectLocation(_ location: String) {
