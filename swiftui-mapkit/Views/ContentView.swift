@@ -23,6 +23,10 @@ struct ContentView: View {
         }
     }
 
+    private var title: String {
+        appVM.selectedAttraction?.name ?? "Map Explorer"
+    }
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -42,7 +46,7 @@ struct ContentView: View {
                 Spacer()
             }
             .edgesIgnoringSafeArea(.bottom)
-            .navigationTitle("Map Explorer")
+            .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: Button(

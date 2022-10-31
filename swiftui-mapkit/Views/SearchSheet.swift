@@ -5,22 +5,31 @@ import SwiftUI
 struct SearchSheet: View {
     // MARK: - State
 
-    @StateObject private var appVM = AppViewModel.shared
-    @StateObject private var cloudKitVM = CloudKitViewModel.shared
-    @StateObject private var mapKitVM = MapKitViewModel.shared
-
-    @State private var message = ""
+    @Environment(\.editMode) private var editMode
 
     enum FocusName: Hashable {
         case address
+        case attractionName
         case kind
     }
 
     @FocusState private var focusName: FocusName?
 
+    @StateObject private var appVM = AppViewModel.shared
+    @StateObject private var cloudKitVM = CloudKitViewModel.shared
+    @StateObject private var mapKitVM = MapKitViewModel.shared
+
+    @State private var attractionName = ""
+    @State private var editingAttraction: Attraction?
+    @State private var message = ""
+
     @State private var kind = ""
 
     // MARK: - Properties
+
+    private var isEditing: Bool {
+        editMode?.wrappedValue.isEditing == true
+    }
 
     private var matchedLocationList: some View {
         Group {
@@ -66,22 +75,10 @@ struct SearchSheet: View {
             }
 
             if let area = appVM.selectedArea {
-                // We need to use List so we can use the onDelete modifier.
-                List(selection: $appVM.selectedAttraction) {
-                    ForEach(area.attractions) { attraction in
-                        Text(attraction.name).tag(attraction)
-                    }
-                    .onDelete { offsets in
-                        deleteAttractions(offsets: offsets)
-                    }
-                }
-                .listStyle(.plain)
+                attractionList(area: area)
             }
 
             Spacer()
-        }
-        .onChange(of: appVM.selectedAttraction) { attraction in
-            showAttraction(attraction)
         }
     }
 
@@ -140,6 +137,79 @@ struct SearchSheet: View {
     }
 
     // MARK: - Methods
+
+    private func attractionEdit(_ attraction: Attraction) -> some View {
+        HStack {
+            TextField("Attraction Name", text: $attractionName)
+                .textFieldStyle(.roundedBorder)
+                .focused($focusName, equals: .attractionName)
+            /*
+                .onAppear {
+                    focusName = .attractionName
+                }
+             */
+
+            Button("Rename") {
+                print(
+                    "renaming \(attraction.name) to \(attractionName)"
+                )
+                attraction.record["name"] = attractionName
+                Task {
+                    try? await cloudKitVM.updateItem(attraction)
+                    editingAttraction = nil
+                }
+            }
+            .buttonStyle(.bordered)
+        }
+    }
+
+    private func attractionList(area: Area) -> some View {
+        VStack {
+            EditButton()
+
+            if isEditing {
+                Text("Tap an attraction name to edit it.")
+            }
+
+            // We need to use List so we can use the onDelete modifier.
+            List(selection: $appVM.selectedAttraction) {
+                ForEach(area.attractions) { attraction in
+                    if isEditing {
+                        if attraction == editingAttraction {
+                            attractionEdit(attraction)
+                        } else {
+                            Button(attraction.name, action: {})
+                                .tag(attraction)
+                                // Button actions don't work when inside a List.
+                                .onTapGesture {
+                                    editingAttraction = attraction
+                                    attractionName = attraction.name
+                                    // Delay changing focusName so it
+                                    // happens after the TextField is rendered.
+                                    DispatchQueue.main.asyncAfter(
+                                        deadline: .now() + 0.1
+                                    ) {
+                                        focusName = .attractionName
+                                    }
+                                }
+                        }
+                    } else {
+                        Text(attraction.name)
+                            .tag(attraction)
+                    }
+                }
+                .onDelete { offsets in
+                    deleteAttractions(offsets: offsets)
+                }
+            }
+            .listStyle(.plain)
+            .onChange(of: appVM.selectedAttraction) { attraction in
+                if !isEditing, let attraction {
+                    showAttraction(attraction)
+                }
+            }
+        }
+    }
 
     private func deleteAttractions(offsets: IndexSet) {
         guard let area = appVM.selectedArea else { return }

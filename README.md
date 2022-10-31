@@ -1,6 +1,10 @@
 # Map Explorer
 
-This app uses MapKit to allow users view maps.
+This is a script for a video that demonstrates this app.
+
+I'd like to demonstrate a new iOS app I created
+that is tentatively called "Map Explorer".
+The app uses MapKit to allow users to view maps.
 The map begins at the current user location.
 It can be panned, zoomed, rotated, and tilted for a 3D effect.
 The 3D effect is much more pronounced at popular locations
@@ -8,7 +12,6 @@ for which Apple has provided more map detail.
 
 The map can also be positioned by searching for an address.
 To do this:
-For example, tap the magnifier glass icon in the upper-left,
 
 - Tap the magnifier glass icon in the upper-left.
 - Tap the "Address" tab.

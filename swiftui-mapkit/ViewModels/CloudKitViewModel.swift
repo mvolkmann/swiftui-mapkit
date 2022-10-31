@@ -163,4 +163,8 @@ final class CloudKitViewModel: ObservableObject {
             sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)]
         ) as [Attraction]
     }
+
+    func updateItem(_ item: CloudKitable) async throws {
+        try await cloudKit.update(item: item)
+    }
 }
