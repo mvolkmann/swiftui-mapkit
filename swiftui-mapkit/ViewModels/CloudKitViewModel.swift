@@ -28,19 +28,24 @@ final class CloudKitViewModel: ObservableObject {
 
     // MARK: - Methods
 
-    private func addAttractionToArea(_ attraction: Attraction) -> Area? {
+    private func addAttractionToArea(
+        _ attraction: Attraction
+    ) async throws -> Area? {
         let areaName = attraction.area
 
         // Find the area of the attraction.
-        let area = areas.first(where: {
+        var area = areas.first(where: {
             area in area.name == areaName
         })
 
+        // If the area doesn't exist, create it.
+        if area == nil {
+            area = try await createArea(name: areaName)
+        }
+
         // We can't use "if let" here
         // because we need to mutate the area.
-        if area != nil {
-            area!.addAttraction(attraction)
-        }
+        area!.addAttraction(attraction)
 
         return area
     }
@@ -85,9 +90,15 @@ final class CloudKitViewModel: ObservableObject {
         let attraction = Attraction(record: record)
         try await cloudKit.create(item: attraction)
 
-        DispatchQueue.main.sync {
-            if let area = addAttractionToArea(attraction) {
-                area.sortAttractions()
+        _ = DispatchQueue.main.sync {
+            Task {
+                do {
+                    if let area = try await addAttractionToArea(attraction) {
+                        area.sortAttractions()
+                    }
+                } catch {
+                    Log.error("error creating attraction: \(error)")
+                }
             }
         }
     }
@@ -144,11 +155,11 @@ final class CloudKitViewModel: ObservableObject {
             try await retrieveAreas()
             let attractions = try await retrieveAttractions()
 
-            Task {
-                await MainActor.run {
+            _ = await MainActor.run {
+                Task {
                     // Associate attractions with areas.
                     for attraction in attractions {
-                        let _ = addAttractionToArea(attraction)
+                        _ = try await addAttractionToArea(attraction)
                     }
 
                     // We cannot iterate over the areas and mutate them
