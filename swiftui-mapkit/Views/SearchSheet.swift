@@ -243,7 +243,7 @@ struct SearchSheet: View {
                             Button(attraction.name, action: {})
                                 .tag(attraction)
                                 // Button actions don't work when inside a List.
-                                .onTapGesture {
+                                .onTap {
                                     editingAttraction = attraction
                                     attractionName = attraction.name
                                     // Delay changing focusName so it

@@ -14,12 +14,12 @@ struct PlaceDetail: View {
             if let item = place.item {
                 HStack {
                     VStack(alignment: .leading) {
-                        Text("\(place.displayName)").fontWeight(.bold)
+                        Text(place.displayName).fontWeight(.bold)
                         if let phone = item.phoneNumber {
-                            Text("\(phone)")
+                            Text(phone)
                         }
                         if let address = place.address {
-                            Text("\(address)")
+                            Text(address)
                         }
                     }
                     Spacer()
@@ -45,7 +45,7 @@ struct PlaceDetail: View {
                     }
                 }
             } else {
-                Text("\(place.displayName)").fontWeight(.bold)
+                Text(place.displayName).fontWeight(.bold)
                 Text("latitude: \(place.coordinate.latitude)")
                 Text("longitude: \(place.coordinate.longitude)")
             }

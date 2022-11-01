@@ -12,4 +12,11 @@ extension View {
             )
         }
     #endif
+
+    public func onTap(
+        count: Int = 1,
+        perform: @escaping () -> Void
+    ) -> some View {
+        onTapGesture(count: count, perform: perform)
+    }
 }
