@@ -307,23 +307,6 @@ struct SearchSheet: View {
         return area.attractions.first(where: { $0.name == name })
     }
 
-    private func lookAroundSnapshot(
-        lookAroundScene: MKLookAroundScene
-    ) async throws -> UIImage {
-        let snapshotOptions = MKLookAroundSnapshotter.Options()
-        snapshotOptions.size = CGSize(width: 128, height: 128)
-
-        // Turn off all point of interest labels in the snapshot.
-        snapshotOptions.pointOfInterestFilter =
-            MKPointOfInterestFilter.excludingAll
-
-        let snapshotter = MKLookAroundSnapshotter(
-            scene: lookAroundScene,
-            options: snapshotOptions
-        )
-        return try await snapshotter.snapshot.image
-    }
-
     private func renameArea(_ area: Area) {
         Task {
             do {
@@ -353,7 +336,7 @@ struct SearchSheet: View {
                 dismissKeyboard()
                 let placemark = try await CoreLocationService
                     .getPlacemark(from: location)
-                appVM.shouldUpdateCamera = true
+                mapKitVM.shouldUpdateCamera = true
                 mapKitVM.select(placemark: placemark)
                 stopSearching()
             } catch CLError.geocodeFoundNoResult {
@@ -374,23 +357,7 @@ struct SearchSheet: View {
         mapKitVM.distance = attraction.distance
         mapKitVM.heading = attraction.heading
         mapKitVM.pitch = attraction.pitch
-
-        appVM.isShowingLookAround = false
-        mapKitVM.lookAroundImage = nil
-
-        Task {
-            do {
-                mapKitVM.lookAroundScene = try await mapKitVM.lookAroundScene()
-                if let scene = mapKitVM.lookAroundScene {
-                    mapKitVM.lookAroundImage =
-                        try await lookAroundSnapshot(lookAroundScene: scene)
-                }
-            } catch {
-                Log.error("error getting look around data: \(error)")
-            }
-        }
-
-        appVM.shouldUpdateCamera = true
+        mapKitVM.shouldUpdateCamera = true
 
         stopSearching()
     }

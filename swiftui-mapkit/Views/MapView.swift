@@ -113,32 +113,34 @@ struct MapView: UIViewRepresentable {
         return mapView
     }
 
+    @MainActor
     func updateUIView(_ mapView: MKMapView, context _: Context) {
-        // Update the map with changes in SettingSheet.
+        // I was getting the error "The following Metal object is being
+        // destroyed while still required to be alive by the command buffer".
+        // This thread provided a solution:
+        // https://developer.apple.com/forums/thread/699119
+        // I had to edit the current Xcode scheme, click "Run" in the left nav,
+        // and uncheck the "API Validation" checkbox in the "Metal" section.
+
         Task {
-            await MainActor.run {
+            // Update the map with changes in SettingSheet.
+            mapView.preferredConfiguration = getConfig()
+
+            // Update annotations for places like parks and restaurants.
+            updateAnnotations(mapView)
+
+            if mapKitVM.shouldUpdateCamera, let center = mapKitVM.center {
                 mapView.preferredConfiguration = getConfig()
-            }
-        }
-
-        // Update annotations for places like parks and restaurants.
-        updateAnnotations(mapView)
-
-        if appVM.shouldUpdateCamera, let center = mapKitVM.center {
-            Task {
-                await MainActor.run {
-                    mapView.preferredConfiguration = getConfig()
-                    let currentCenter = mapView.camera.centerCoordinate
-                    let newCamera = MKMapCamera(
-                        lookingAtCenter: center,
-                        fromDistance: mapKitVM.distance,
-                        pitch: mapKitVM.pitch,
-                        heading: mapKitVM.heading
-                    )
-                    let isClose = center.isCloseTo(currentCenter)
-                    mapView.setCamera(newCamera, animated: isClose)
-                    appVM.shouldUpdateCamera = false
-                }
+                let currentCenter = mapView.camera.centerCoordinate
+                let newCamera = MKMapCamera(
+                    lookingAtCenter: center,
+                    fromDistance: mapKitVM.distance,
+                    pitch: mapKitVM.pitch,
+                    heading: mapKitVM.heading
+                )
+                let isClose = center.isCloseTo(currentCenter)
+                mapView.setCamera(newCamera, animated: isClose)
+                mapKitVM.shouldUpdateCamera = false
             }
         }
     }
@@ -180,6 +182,16 @@ struct MapView: UIViewRepresentable {
                let title = optionalTitle,
                let place = parent.titleToPlaceMap[title] {
                 parent.mapKitVM.selectedPlace = place
+            }
+        }
+
+        func mapView(_: MKMapView, regionDidChangeAnimated _: Bool) {
+            Task {
+                do {
+                    try await parent.mapKitVM.lookAroundUpdate()
+                } catch {
+                    Log.error("error updating look around: \(error)")
+                }
             }
         }
     }

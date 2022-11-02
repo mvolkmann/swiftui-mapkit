@@ -3,6 +3,8 @@ import SwiftUI
 struct CloseButton: View {
     @StateObject private var appVM = AppViewModel.shared
 
+    var color: Color = .gray
+
     let onTap: () -> Void
 
     // var body: some View {
@@ -11,7 +13,7 @@ struct CloseButton: View {
             Image(systemName: "x.circle")
                 .resizable()
                 .frame(width: 20, height: 20)
-                .tint(.gray)
+                .tint(color)
                 .padding()
         }
     }

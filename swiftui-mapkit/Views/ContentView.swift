@@ -82,25 +82,29 @@ struct ContentView: View {
 
     @ViewBuilder
     private func map(center: CLLocationCoordinate2D) -> some View {
-        if appVM.isShowingLookAround,
+        if mapKitVM.isShowingLookAround,
            let scene = mapKitVM.lookAroundScene {
             LookAround(scene: scene)
                 .overlay(alignment: .topTrailing) {
-                    CloseButton {
-                        appVM.isShowingLookAround = false
+                    CloseButton(color: .white) {
+                        mapKitVM.isShowingLookAround = false
                     }
                 }
         } else {
             ZStack(alignment: .bottom) {
                 MapView(center: center, distance: mapKitVM.distance)
                     .edgesIgnoringSafeArea(.bottom)
-                if let image = mapKitVM.lookAroundImage {
+                if let snapshot = mapKitVM.lookAroundSnapshot {
                     Button(
                         action: {
-                            appVM.isShowingLookAround = true
+                            #warning(
+                                "Why do we lose the zoom level when this is tapped?"
+                            )
+                            mapKitVM.shouldUpdateCamera = true
+                            mapKitVM.isShowingLookAround = true
                         },
                         label: {
-                            Image(uiImage: image)
+                            Image(uiImage: snapshot)
                         }
                     )
                     .overlay(alignment: .bottomTrailing) {

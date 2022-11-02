@@ -17,15 +17,17 @@ final class MapKitViewModel: NSObject, ObservableObject {
     @Published var pitch = 0.0 // in degrees
 
     @Published var currentPlacemark: CLPlacemark?
+    @Published var isShowingLookAround = false
     @Published var likedLocations: [String] = []
-    @Published var lookAroundImage: UIImage?
     @Published var lookAroundScene: MKLookAroundScene?
+    @Published var lookAroundSnapshot: UIImage?
     @Published var mapView: MKMapView?
     @Published var places: [Place] = []
     @Published var searchLocations: [String] = []
     @Published var searchQuery = ""
     @Published var selectedPlace: Place?
     @Published var selectedPlacemark: CLPlacemark?
+    @Published var shouldUpdateCamera = true
 
     static var shared = MapKitViewModel()
 
@@ -96,15 +98,46 @@ final class MapKitViewModel: NSObject, ObservableObject {
         likedLocations.sort()
     }
 
-    func lookAroundScene() async throws -> MKLookAroundScene? {
-        guard let center else { return nil }
+    @MainActor
+    func lookAroundUpdate() async throws {
+        lookAroundScene = nil
+        lookAroundSnapshot = nil
+        isShowingLookAround = false
+
+        // guard let center else { return }
+        guard let center = mapView?.camera.centerCoordinate else { return }
 
         let request = MKLookAroundSceneRequest(coordinate: center)
 
         // If the returned scene is nil,
         // no Look Around is available for the location.
-        // return try await request.scene
-        return try await request.scene
+        let scene = try await request.scene
+        let snapshot = try await lookAroundSnapshot(scene: scene)
+
+        lookAroundScene = scene
+        lookAroundSnapshot = snapshot
+        if lookAroundScene == nil {
+            isShowingLookAround = false
+        }
+    }
+
+    private func lookAroundSnapshot(
+        scene: MKLookAroundScene?
+    ) async throws -> UIImage? {
+        guard let scene else { return nil }
+
+        let snapshotOptions = MKLookAroundSnapshotter.Options()
+        snapshotOptions.size = CGSize(width: 128, height: 128)
+
+        // Turn off all point of interest labels in the snapshot.
+        snapshotOptions.pointOfInterestFilter =
+            MKPointOfInterestFilter.excludingAll
+
+        let snapshotter = MKLookAroundSnapshotter(
+            scene: scene,
+            options: snapshotOptions
+        )
+        return try await snapshotter.snapshot.image
     }
 
     // This searches for points of interest near the current location.
