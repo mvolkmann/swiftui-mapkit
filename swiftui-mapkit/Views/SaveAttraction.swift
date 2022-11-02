@@ -93,7 +93,7 @@ struct SaveAttraction: View {
         return """
         "latitude": \(center.latitude.places(decimals)),
         "longitude": \(center.longitude.places(decimals)),
-        "distance": \(region.distance.places(decimals)),
+        "distance": \(camera.centerCoordinateDistance.places(decimals)),
         "heading": \(angle(camera.heading).places(1)),
         "pitch": \(Double(camera.pitch).places(1))
         """

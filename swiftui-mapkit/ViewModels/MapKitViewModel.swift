@@ -18,6 +18,8 @@ final class MapKitViewModel: NSObject, ObservableObject {
 
     @Published var currentPlacemark: CLPlacemark?
     @Published var likedLocations: [String] = []
+    @Published var lookAroundImage: UIImage?
+    @Published var lookAroundScene: MKLookAroundScene?
     @Published var mapView: MKMapView?
     @Published var places: [Place] = []
     @Published var searchLocations: [String] = []
@@ -92,6 +94,17 @@ final class MapKitViewModel: NSObject, ObservableObject {
     func likeLocation(_ location: String) {
         likedLocations.append(location)
         likedLocations.sort()
+    }
+
+    func lookAroundScene() async throws -> MKLookAroundScene? {
+        guard let center else { return nil }
+
+        let request = MKLookAroundSceneRequest(coordinate: center)
+
+        // If the returned scene is nil,
+        // no Look Around is available for the location.
+        // return try await request.scene
+        return try await request.scene
     }
 
     // This searches for points of interest near the current location.

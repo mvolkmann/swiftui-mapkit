@@ -21,6 +21,7 @@
 		1AAB0D002826436600544A8F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0CFF2826436600544A8F /* ContentView.swift */; };
 		1AAB0D022826436700544A8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAB0D012826436700544A8F /* Assets.xcassets */; };
 		1AAB0D052826436700544A8F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAB0D042826436700544A8F /* Preview Assets.xcassets */; };
+		1AB2A96F2912C5A900A20F79 /* LookAround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB2A96E2912C5A900A20F79 /* LookAround.swift */; };
 		1AB9F3BD29034168002DF760 /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3BC29034168002DF760 /* BundleExtension.swift */; };
 		1AB9F3BF29034AAC002DF760 /* attractions.json in Resources */ = {isa = PBXBuildFile; fileRef = 1AB9F3BB29033DA4002DF760 /* attractions.json */; };
 		1AB9F3CB2906C927002DF760 /* SaveAttraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3CA2906C927002DF760 /* SaveAttraction.swift */; };
@@ -70,6 +71,7 @@
 		1AAB0CFF2826436600544A8F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1AAB0D012826436700544A8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1AAB0D042826436700544A8F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1AB2A96E2912C5A900A20F79 /* LookAround.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookAround.swift; sourceTree = "<group>"; };
 		1AB9F3BB29033DA4002DF760 /* attractions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = attractions.json; path = "swiftui-mapkit/attractions.json"; sourceTree = SOURCE_ROOT; };
 		1AB9F3BC29034168002DF760 /* BundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtension.swift; sourceTree = "<group>"; };
 		1AB9F3CA2906C927002DF760 /* SaveAttraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveAttraction.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 			children = (
 				1AE3A17E29018A9800FB6501 /* CloseButton.swift */,
 				1AAB0CFF2826436600544A8F /* ContentView.swift */,
+				1AB2A96E2912C5A900A20F79 /* LookAround.swift */,
 				1A0D5ABC29006DDB007AA0F7 /* MapView.swift */,
 				1A67891B28FF15EF00F3DFD8 /* Marker.swift */,
 				1AF027BF290F26BA00AF1ADB /* PlaceDetail.swift */,
@@ -349,6 +352,7 @@
 				1A8E283E2908752B0064955F /* CLPlacemarkExtension.swift in Sources */,
 				1AB9F3BD29034168002DF760 /* BundleExtension.swift in Sources */,
 				1AE3A17D290189A800FB6501 /* SettingsSheet.swift in Sources */,
+				1AB2A96F2912C5A900A20F79 /* LookAround.swift in Sources */,
 				1AAB0D002826436600544A8F /* ContentView.swift in Sources */,
 				1A3A6DBD2909C02700183860 /* CloudKit.swift in Sources */,
 				1AAB0CFE2826436600544A8F /* MapExplorerApp.swift in Sources */,

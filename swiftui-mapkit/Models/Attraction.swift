@@ -7,6 +7,9 @@ final class Attraction: CloudKitable, Hashable, Identifiable {
 
     var record: CKRecord
 
+    #warning(
+        "This should use the unique id of the area rather than its name to refer to it!"
+    )
     var area: String { record["area"] as? String ?? "" }
     var distance: Double { record["distance"] as? Double ?? 0.0 }
     var heading: Double { record["heading"] as? Double ?? 0.0 }

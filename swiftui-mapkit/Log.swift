@@ -46,7 +46,7 @@ enum Log {
 
     static func debug(
         _ message: String,
-        file: String = #file,
+        file: String = #fileID,
         function: String = #function,
         line: Int = #line
     ) {
@@ -56,7 +56,7 @@ enum Log {
 
     static func error(
         _ err: Error,
-        file: String = #file,
+        file: String = #fileID,
         function: String = #function,
         line: Int = #line
     ) {
@@ -66,7 +66,7 @@ enum Log {
 
     static func error(
         _ message: String,
-        file: String = #file,
+        file: String = #fileID,
         function: String = #function,
         line: Int = #line
     ) {
@@ -76,7 +76,7 @@ enum Log {
 
     static func fault(
         _ message: String,
-        file: String = #file,
+        file: String = #fileID,
         function: String = #function,
         line: Int = #line
     ) {
@@ -86,7 +86,7 @@ enum Log {
 
     static func info(
         _ message: String,
-        file: String = #file,
+        file: String = #fileID,
         function: String = #function,
         line: Int = #line
     ) {

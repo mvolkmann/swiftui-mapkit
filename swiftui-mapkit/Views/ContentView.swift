@@ -36,10 +36,28 @@ struct ContentView: View {
 
                 // If we have a location to show on the map ...
                 if let center = mapKitVM.center {
-                    // This approach uses UIKit in order to
-                    // utilize some cool MapKit features.
-                    MapView(center: center, distance: mapKitVM.distance)
-                        .edgesIgnoringSafeArea(.bottom)
+                    if appVM.isShowingLookAround,
+                       let scene = mapKitVM.lookAroundScene {
+                        LookAround(scene: scene)
+                    } else {
+                        // ZStack(alignment: .bottomLeading) {
+                        ZStack {
+                            // This approach uses UIKit in order to
+                            // utilize some cool MapKit features.
+                            MapView(center: center, distance: mapKitVM.distance)
+                                .edgesIgnoringSafeArea(.bottom)
+                            if let image = mapKitVM.lookAroundImage {
+                                Button(
+                                    action: {
+                                        appVM.isShowingLookAround = true
+                                    },
+                                    label: {
+                                        Image(uiImage: image)
+                                    }
+                                )
+                            }
+                        }
+                    }
                 } else {
                     loading
                 }
