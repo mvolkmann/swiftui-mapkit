@@ -24,7 +24,7 @@ struct SaveAttraction: View {
 
     private var addAreaRow: some View {
         HStack {
-            TextField("New city/area name", text: $newArea)
+            MyTextField("New city/area name", text: $newArea)
                 .autocorrectionDisabled(true)
                 .focused($focusName, equals: .areaTextField)
                 .textFieldStyle(.roundedBorder)
@@ -60,7 +60,7 @@ struct SaveAttraction: View {
 
     private var addAttractionRow: some View {
         HStack {
-            TextField("Attraction name", text: $newAttraction)
+            MyTextField("Attraction name", text: $newAttraction)
                 .autocorrectionDisabled(true)
                 .focused($focusName, equals: .attractionTextField)
 

@@ -97,7 +97,7 @@ struct SearchSheet: View {
 
     private var searchByAddress: some View {
         VStack {
-            TextField("Address", text: $mapKitVM.searchQuery)
+            MyTextField("Address", text: $mapKitVM.searchQuery)
                 .textFieldStyle(.roundedBorder)
                 .autocorrectionDisabled(true)
                 .focused($focusName, equals: FocusName.address)
@@ -131,7 +131,7 @@ struct SearchSheet: View {
 
             if let area = editingArea {
                 HStack {
-                    TextField("", text: $areaName)
+                    MyTextField("", text: $areaName)
                         .textFieldStyle(.roundedBorder)
                         .focused($focusName, equals: .areaName)
 
@@ -150,7 +150,7 @@ struct SearchSheet: View {
 
     private var searchByKind: some View {
         HStack {
-            TextField("place kind like pizza or park", text: $kind)
+            MyTextField("place kind like pizza or park", text: $kind)
                 .textFieldStyle(.roundedBorder)
                 .focused($focusName, equals: FocusName.kind)
 
@@ -206,7 +206,7 @@ struct SearchSheet: View {
 
     private func attractionEdit(_ attraction: Attraction) -> some View {
         HStack {
-            TextField("Attraction Name", text: $attractionName)
+            MyTextField("Attraction Name", text: $attractionName)
                 .textFieldStyle(.roundedBorder)
                 .focused($focusName, equals: .attractionName)
 
