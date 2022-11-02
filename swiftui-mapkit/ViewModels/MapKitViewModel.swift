@@ -104,7 +104,6 @@ final class MapKitViewModel: NSObject, ObservableObject {
         lookAroundSnapshot = nil
         isShowingLookAround = false
 
-        // guard let center else { return }
         guard let center = mapView?.camera.centerCoordinate else { return }
 
         let request = MKLookAroundSceneRequest(coordinate: center)

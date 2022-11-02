@@ -82,31 +82,32 @@ struct ContentView: View {
 
     @ViewBuilder
     private func map(center: CLLocationCoordinate2D) -> some View {
-        if mapKitVM.isShowingLookAround,
-           let scene = mapKitVM.lookAroundScene {
-            LookAround(scene: scene)
-                .overlay(alignment: .topTrailing) {
-                    CloseButton(color: .white) {
-                        mapKitVM.isShowingLookAround = false
-                    }
-                }
-        } else {
+        NavigationStack {
             ZStack(alignment: .bottom) {
                 MapView(center: center, distance: mapKitVM.distance)
                     .edgesIgnoringSafeArea(.bottom)
                 if let snapshot = mapKitVM.lookAroundSnapshot {
-                    Button(
-                        action: {
-                            #warning(
-                                "Why do we lose the zoom level when this is tapped?"
-                            )
-                            mapKitVM.shouldUpdateCamera = true
-                            mapKitVM.isShowingLookAround = true
-                        },
-                        label: {
-                            Image(uiImage: snapshot)
-                        }
-                    )
+                    snapshotLink(snapshot)
+                }
+            }
+            .navigationDestination(
+                for: String.self,
+                destination: { _ in
+                    if let scene = mapKitVM.lookAroundScene {
+                        LookAround(scene: scene)
+                    } else {
+                        EmptyView()
+                    }
+                }
+            )
+        }
+    }
+
+    private func snapshotLink(_ snapshot: UIImage) -> some View {
+        NavigationLink(
+            value: "look around",
+            label: {
+                Image(uiImage: snapshot)
                     .overlay(alignment: .bottomTrailing) {
                         Image(systemName: "binoculars.fill")
                             .renderingMode(.template)
@@ -114,8 +115,7 @@ struct ContentView: View {
                             .padding(15)
                     }
                     .padding()
-                }
             }
-        }
+        )
     }
 }
