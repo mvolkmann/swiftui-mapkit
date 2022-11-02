@@ -36,28 +36,7 @@ struct ContentView: View {
 
                 // If we have a location to show on the map ...
                 if let center = mapKitVM.center {
-                    if appVM.isShowingLookAround,
-                       let scene = mapKitVM.lookAroundScene {
-                        LookAround(scene: scene)
-                    } else {
-                        // ZStack(alignment: .bottomLeading) {
-                        ZStack {
-                            // This approach uses UIKit in order to
-                            // utilize some cool MapKit features.
-                            MapView(center: center, distance: mapKitVM.distance)
-                                .edgesIgnoringSafeArea(.bottom)
-                            if let image = mapKitVM.lookAroundImage {
-                                Button(
-                                    action: {
-                                        appVM.isShowingLookAround = true
-                                    },
-                                    label: {
-                                        Image(uiImage: image)
-                                    }
-                                )
-                            }
-                        }
-                    }
+                    map(center: center)
                 } else {
                     loading
                 }
@@ -97,6 +76,41 @@ struct ContentView: View {
             }
             .sheet(isPresented: $appVM.isSearching) {
                 SearchSheet()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func map(center: CLLocationCoordinate2D) -> some View {
+        if appVM.isShowingLookAround,
+           let scene = mapKitVM.lookAroundScene {
+            LookAround(scene: scene)
+                .overlay(alignment: .topTrailing) {
+                    CloseButton {
+                        appVM.isShowingLookAround = false
+                    }
+                }
+        } else {
+            ZStack(alignment: .bottom) {
+                MapView(center: center, distance: mapKitVM.distance)
+                    .edgesIgnoringSafeArea(.bottom)
+                if let image = mapKitVM.lookAroundImage {
+                    Button(
+                        action: {
+                            appVM.isShowingLookAround = true
+                        },
+                        label: {
+                            Image(uiImage: image)
+                        }
+                    )
+                    .overlay(alignment: .bottomTrailing) {
+                        Image(systemName: "binoculars.fill")
+                            .renderingMode(.template)
+                            .foregroundColor(.white)
+                            .padding(15)
+                    }
+                    .padding()
+                }
             }
         }
     }

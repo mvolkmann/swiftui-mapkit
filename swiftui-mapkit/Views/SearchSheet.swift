@@ -374,6 +374,8 @@ struct SearchSheet: View {
         mapKitVM.distance = attraction.distance
         mapKitVM.heading = attraction.heading
         mapKitVM.pitch = attraction.pitch
+
+        appVM.isShowingLookAround = false
         mapKitVM.lookAroundImage = nil
 
         Task {
