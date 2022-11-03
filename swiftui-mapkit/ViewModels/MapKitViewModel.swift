@@ -30,6 +30,7 @@ final class MapKitViewModel: NSObject, ObservableObject {
     @Published var selectedPlace: Place?
     @Published var selectedPlacemark: CLPlacemark?
     @Published var shouldUpdateCamera = true
+    @Published var transportType: MKDirectionsTransportType = .automobile
 
     @State private var annotations: [MKAnnotation] = []
 
@@ -103,6 +104,12 @@ final class MapKitViewModel: NSObject, ObservableObject {
     }
 
     func loadRouteSteps(place: Place) async throws {
+        Task {
+            await MainActor.run {
+                message = nil
+            }
+        }
+
         guard let mapView else { return }
         let appVM = AppViewModel.shared
         guard let attraction = appVM.selectedAttraction else { return }
@@ -126,12 +133,14 @@ final class MapKitViewModel: NSObject, ObservableObject {
             MKMapItem(placemark: MKPlacemark(placemark: startPlacemark))
         request.destination =
             MKMapItem(placemark: MKPlacemark(placemark: endPlacemark))
-        // TODO: Allow user to select this.
-        request.transportType = .automobile
+        request.transportType = transportType
 
         let directions = MKDirections(request: request)
 
+        print("MapKitViewModel.loadRouteSteps: getting directions")
         let response = try await directions.calculate()
+        print("MapKitViewModel.loadRouteSteps: got directions")
+
         if let route = response.routes.first {
             // Remove all current overlays.
             for overlay in await mapView.overlays {

@@ -24,6 +24,8 @@
 		1AB2A96F2912C5A900A20F79 /* LookAround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB2A96E2912C5A900A20F79 /* LookAround.swift */; };
 		1AB2A9752913057F00A20F79 /* MyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB2A9742913057F00A20F79 /* MyTextField.swift */; };
 		1AB2A97729140B2000A20F79 /* Directions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB2A97629140B2000A20F79 /* Directions.swift */; };
+		1AB2A979291450B900A20F79 /* MKDirectionsTransportTypeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB2A978291450B900A20F79 /* MKDirectionsTransportTypeExtension.swift */; };
+		1AB2A97B2914555700A20F79 /* utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB2A97A2914555700A20F79 /* utilities.swift */; };
 		1AB9F3BD29034168002DF760 /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3BC29034168002DF760 /* BundleExtension.swift */; };
 		1AB9F3BF29034AAC002DF760 /* attractions.json in Resources */ = {isa = PBXBuildFile; fileRef = 1AB9F3BB29033DA4002DF760 /* attractions.json */; };
 		1AB9F3CB2906C927002DF760 /* SaveAttraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB9F3CA2906C927002DF760 /* SaveAttraction.swift */; };
@@ -76,6 +78,8 @@
 		1AB2A96E2912C5A900A20F79 /* LookAround.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookAround.swift; sourceTree = "<group>"; };
 		1AB2A9742913057F00A20F79 /* MyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTextField.swift; sourceTree = "<group>"; };
 		1AB2A97629140B2000A20F79 /* Directions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Directions.swift; sourceTree = "<group>"; };
+		1AB2A978291450B900A20F79 /* MKDirectionsTransportTypeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKDirectionsTransportTypeExtension.swift; sourceTree = "<group>"; };
+		1AB2A97A2914555700A20F79 /* utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utilities.swift; sourceTree = "<group>"; };
 		1AB9F3BB29033DA4002DF760 /* attractions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = attractions.json; path = "swiftui-mapkit/attractions.json"; sourceTree = SOURCE_ROOT; };
 		1AB9F3BC29034168002DF760 /* BundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtension.swift; sourceTree = "<group>"; };
 		1AB9F3CA2906C927002DF760 /* SaveAttraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveAttraction.swift; sourceTree = "<group>"; };
@@ -175,6 +179,7 @@
 				1AB9F3BB29033DA4002DF760 /* attractions.json */,
 				1A3A6DBC2909C02700183860 /* CloudKit.swift */,
 				1A3A6DBA2909BFE100183860 /* Log.swift */,
+				1AB2A97A2914555700A20F79 /* utilities.swift */,
 				1AE3A1752901886600FB6501 /* Extensions */,
 				1AE3A1822902DE9A00FB6501 /* Models */,
 				1AE3A1722901883700FB6501 /* Services */,
@@ -217,6 +222,7 @@
 				1A8E283D2908752B0064955F /* CLPlacemarkExtension.swift */,
 				1AB9F3CC2906C947002DF760 /* DoubleExtension.swift */,
 				1AB9F3CE2906C962002DF760 /* MKCoordinateRegionExtension.swift */,
+				1AB2A978291450B900A20F79 /* MKDirectionsTransportTypeExtension.swift */,
 				1AE3A1762901887200FB6501 /* StringExtension.swift */,
 				1AE3A1782901897700FB6501 /* ViewExtension.swift */,
 				1A76511329115CC60071D081 /* TextExtension.swift */,
@@ -345,6 +351,7 @@
 				1A3A6DB92909BF1C00183860 /* CloudKitViewModel.swift in Sources */,
 				1A76511429115CC60071D081 /* TextExtension.swift in Sources */,
 				1AE3A17B2901899C00FB6501 /* SearchSheet.swift in Sources */,
+				1AB2A97B2914555700A20F79 /* utilities.swift in Sources */,
 				1A33435228268119006730C2 /* Place.swift in Sources */,
 				1A0D5ABF29006E34007AA0F7 /* AppViewModel.swift in Sources */,
 				1A82824E282A34D100380E9D /* SafariView.swift in Sources */,
@@ -356,6 +363,7 @@
 				1AB9F3D12906FD96002DF760 /* CLLocationCoordinate2DExtension.swift in Sources */,
 				1A3A6DBB2909BFE100183860 /* Log.swift in Sources */,
 				1A8E283E2908752B0064955F /* CLPlacemarkExtension.swift in Sources */,
+				1AB2A979291450B900A20F79 /* MKDirectionsTransportTypeExtension.swift in Sources */,
 				1AB9F3BD29034168002DF760 /* BundleExtension.swift in Sources */,
 				1AE3A17D290189A800FB6501 /* SettingsSheet.swift in Sources */,
 				1AB2A96F2912C5A900A20F79 /* LookAround.swift in Sources */,

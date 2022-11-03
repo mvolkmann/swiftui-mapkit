@@ -2,13 +2,12 @@ import MapKit
 import SwiftUI
 
 struct PlaceDetail: View {
-    @State var isBrowsingWebsite = false
-
+    @State private var isBrowsingWebsite = false
     @State private var loadingDirections = false
 
     // This is changed later to the URL of a placemark,
     // but we need to initialize it to some valid URL.
-    @State var url: URL = .temporaryDirectory
+    @State private var url: URL = .temporaryDirectory
 
     @StateObject private var appVM = AppViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
@@ -21,7 +20,6 @@ struct PlaceDetail: View {
                 do {
                     loadingDirections = true
                     try await mapKitVM.loadRouteSteps(place: place)
-                    loadingDirections = false
                 } catch let error as MKError {
                     switch error.code {
                     case .directionsNotFound:
@@ -44,10 +42,25 @@ struct PlaceDetail: View {
                     Log.error("error getting directions: \(error)")
                 }
 
+                loadingDirections = false
                 appVM.isShowingDirections = true
             }
         }
         .buttonStyle(.bordered)
+    }
+
+    private var transportTypePicker: some View {
+        Picker(
+            "Transport Type",
+            selection: $mapKitVM.transportType
+        ) {
+            Text("Car")
+                .tag(MKDirectionsTransportType.automobile)
+            Text("Walk")
+                .tag(MKDirectionsTransportType.walking)
+            Text("Transit")
+                .tag(MKDirectionsTransportType.transit)
+        }
     }
 
     var body: some View {
@@ -71,6 +84,7 @@ struct PlaceDetail: View {
                         if loadingDirections {
                             ProgressView()
                         } else {
+                            transportTypePicker
                             directionsButton
                         }
                     }

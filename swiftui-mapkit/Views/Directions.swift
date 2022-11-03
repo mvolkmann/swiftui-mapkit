@@ -22,6 +22,7 @@ struct Directions: View {
 
             Spacer()
         }
+        .frame(maxWidth: .infinity)
         .overlay(alignment: .topTrailing) {
             CloseButton {
                 appVM.isShowingDirections = false
