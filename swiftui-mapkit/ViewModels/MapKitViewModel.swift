@@ -17,6 +17,7 @@ final class MapKitViewModel: NSObject, ObservableObject {
     @Published var pitch = 0.0 // in degrees
 
     @Published var currentPlacemark: CLPlacemark?
+    @Published var directions: [String] = []
     @Published var isShowingLookAround = false
     @Published var likedLocations: [String] = []
     @Published var lookAroundScene: MKLookAroundScene?

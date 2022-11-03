@@ -4,17 +4,98 @@ import SwiftUI
 // For now we have to wrap an MKMapView in a UIViewRepresenatable
 // in order to use the iOS 16 MapKit features in SwiftUI.
 struct MapView: UIViewRepresentable {
-    var center: CLLocationCoordinate2D // holds lat/lng angles in degrees
-    var distance: Double // in meters
-
     typealias ElevationStyle = MKMapConfiguration.ElevationStyle
     typealias EmphasisStyle = MKStandardMapConfiguration.EmphasisStyle
+    typealias UIViewType = MKMapView
+
+    var center: CLLocationCoordinate2D // holds lat/lng angles in degrees
+    var distance: Double // in meters
 
     @StateObject private var appVM = AppViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
     @State private var annotations: [MKPointAnnotation] = []
     @State private var titleToPlaceMap: [String: Place] = [:]
+
+    private func addRoute(mapView: UIViewType) {
+        // Buckingham Palace
+        let c1 = CLLocation(
+            latitude: 51.501462594284234,
+            longitude: 0.1415123063211647
+        )
+
+        // London Eye
+        let c2 = CLLocation(
+            latitude: 51.50304872426844,
+            longitude: 0.11713996153537878
+        )
+
+        /*
+         let p1 = MKPlacemark(coordinate: c1)
+         p1.title = "Buckingham Palace"
+
+         let p2 = MKPlacemark(coordinate: c2)
+         p2.title = "London Eye"
+         */
+
+        Task {
+            do {
+                let p1 = try await CoreLocationService.getPlacemark(from: c1)
+                let p2 = try await CoreLocationService.getPlacemark(from: c2)
+                guard let p1, let p2 else { return }
+
+                let request = MKDirections.Request()
+                request.source =
+                    MKMapItem(placemark: MKPlacemark(placemark: p1))
+                request.destination =
+                    MKMapItem(placemark: MKPlacemark(placemark: p2))
+                request.transportType = .automobile
+                let directions = MKDirections(request: request)
+
+                let response = try await directions.calculate()
+                if let route = response.routes.first {
+                    print("route =", route)
+
+                    let a1 = MKPointAnnotation()
+                    a1.title = "Buckingham Palace"
+                    a1.coordinate = CLLocationCoordinate2D(
+                        latitude: c1.coordinate.latitude,
+                        longitude: c1.coordinate.longitude
+                    )
+
+                    let a2 = MKPointAnnotation()
+                    a2.title = "London Eye"
+                    a2.coordinate = CLLocationCoordinate2D(
+                        latitude: c2.coordinate.latitude,
+                        longitude: c2.coordinate.longitude
+                    )
+
+                    mapView.addAnnotations([a1, a2])
+
+                    mapView.addOverlay(route.polyline)
+
+                    let insets = UIEdgeInsets(
+                        top: 20, left: 20, bottom: 20, right: 20
+                    )
+                    mapView.setVisibleMapRect(
+                        route.polyline.boundingMapRect,
+                        edgePadding: insets,
+                        animated: true
+                    )
+
+                    mapKitVM.directions = route.steps
+                        .compactMap { step in
+                            let instructions = step.instructions
+                            return instructions
+                                .isEmpty ? nil : instructions
+                        }
+                    print("directions =", mapKitVM.directions)
+                }
+            } catch {
+                Log.error("error getting route: \(error)")
+            }
+        }
+    }
 
     private func elevationStyle() -> ElevationStyle {
         appVM.mapElevation == "realistic" ?
@@ -87,8 +168,8 @@ struct MapView: UIViewRepresentable {
     }
 
     // This is required to conform to UIViewRepresentable.
-    func makeUIView(context: Context) -> MKMapView {
-        let mapView = MKMapView()
+    func makeUIView(context: Context) -> UIViewType {
+        let mapView = UIViewType()
         mapView.delegate = context.coordinator
 
         // This adds a blue circle over the current user location.
@@ -100,6 +181,8 @@ struct MapView: UIViewRepresentable {
             pitch: 0.0,
             heading: 0.0
         )
+
+        // addRoute(mapView: mapView)
 
         // Save a reference to the MKMapView
         // so SaveSheet can obtain the current center coordinate.
@@ -114,7 +197,7 @@ struct MapView: UIViewRepresentable {
     }
 
     @MainActor
-    func updateUIView(_ mapView: MKMapView, context _: Context) {
+    func updateUIView(_ mapView: UIViewType, context _: Context) {
         // I was getting the error "The following Metal object is being
         // destroyed while still required to be alive by the command buffer".
         // This thread provided a solution:
@@ -141,12 +224,17 @@ struct MapView: UIViewRepresentable {
                 let isClose = center.isCloseTo(currentCenter)
                 mapView.setCamera(newCamera, animated: isClose)
                 mapKitVM.shouldUpdateCamera = false
+
+                // Add a circle annotation with a 30 meter radius
+                // at the center location.
+                let overlay = MKCircle(center: center, radius: 30.0)
+                mapView.addOverlay(overlay)
             }
         }
     }
 
     // This adds annotations for places like parks and restaurants.
-    private func updateAnnotations(_ mapView: MKMapView) {
+    private func updateAnnotations(_ mapView: UIViewType) {
         Task {
             await MainActor.run {
                 let newAnnotations = mapKitVM.places.map { place in
@@ -175,7 +263,7 @@ struct MapView: UIViewRepresentable {
         // It allows displaying the name, phone number, address, and website
         // of the place associated with the annotation.
         @MainActor
-        func mapView(_: MKMapView, didSelect annotation: MKAnnotation) {
+        func mapView(_: UIViewType, didSelect annotation: MKAnnotation) {
             // annotation.title has the following optional-optional type:
             // type optional var title: String? { get }
             if let optionalTitle = annotation.title,
@@ -185,7 +273,7 @@ struct MapView: UIViewRepresentable {
             }
         }
 
-        func mapView(_: MKMapView, regionDidChangeAnimated _: Bool) {
+        func mapView(_: UIViewType, regionDidChangeAnimated _: Bool) {
             Task {
                 do {
                     try await parent.mapKitVM.lookAroundUpdate()
@@ -193,6 +281,41 @@ struct MapView: UIViewRepresentable {
                     Log.error("error updating look around: \(error)")
                 }
             }
+        }
+
+        /// This returns a renderer for a given overlay.
+        func mapView(
+            _: UIViewType,
+            rendererFor overlay: MKOverlay
+        ) -> MKOverlayRenderer {
+            // Provided subclasses of MKOverlayRenderer include
+            // - MKCircleRenderer - fills and strokes a circle
+            // - MKPolylineRenderer - like MKPolygonRender but
+            //   doesn't fill because the shape isn't necessarily closed
+            // - MKPolygonRenderer - fills and strokes
+            // - MKOverlayPathRenderer - renders shape defined by a CGPath
+            // - MKTileOverlayRenderer for bitmap images
+            // - MKGradientPolygonRenderer - like MKPolylineRenderer
+            //   but uses gradient color
+            // - MKMultiPolygonRenderer - renders multiple polygons
+            // - MKMultiPolylineRenderer - renders multiple polylines
+            if let overlay = overlay as? MKCircle {
+                let renderer = MKCircleRenderer(overlay: overlay)
+                renderer.fillColor = .red
+                renderer.alpha = 0.2
+                return renderer
+            }
+
+            if let overlay = overlay as? MKPolyline {
+                let renderer = MKPolylineRenderer(overlay: overlay)
+                renderer.strokeColor = .blue
+                renderer.lineWidth = 5
+                return renderer
+            }
+
+            // This is used when we get an overlay type
+            // that isn't handled above.
+            return MKOverlayRenderer(overlay: overlay)
         }
     }
 }
