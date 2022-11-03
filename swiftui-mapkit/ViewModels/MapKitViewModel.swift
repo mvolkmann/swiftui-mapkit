@@ -104,19 +104,28 @@ final class MapKitViewModel: NSObject, ObservableObject {
 
     func loadRouteSteps(place: Place) async throws {
         guard let mapView else { return }
+        let appVM = AppViewModel.shared
+        guard let attraction = appVM.selectedAttraction else { return }
 
-        let destinationPlacemark = try await CoreLocationService
+        let endPlacemark = try await CoreLocationService
             .getPlacemark(from: place.coordinate)
-        guard let currentPlacemark, let destinationPlacemark else {
-            Log.error("failed to get placemarks")
+        guard let endPlacemark else {
+            Log.error("failed to get destination placemark")
             return
         }
 
+        let startPlacemark = MKPlacemark(
+            coordinate: CLLocationCoordinate2D(
+                latitude: attraction.latitude,
+                longitude: attraction.longitude
+            )
+        )
+
         let request = MKDirections.Request()
         request.source =
-            MKMapItem(placemark: MKPlacemark(placemark: currentPlacemark))
+            MKMapItem(placemark: MKPlacemark(placemark: startPlacemark))
         request.destination =
-            MKMapItem(placemark: MKPlacemark(placemark: destinationPlacemark))
+            MKMapItem(placemark: MKPlacemark(placemark: endPlacemark))
         // TODO: Allow user to select this.
         request.transportType = .automobile
 
@@ -124,20 +133,6 @@ final class MapKitViewModel: NSObject, ObservableObject {
 
         let response = try await directions.calculate()
         if let route = response.routes.first {
-            /*
-              let a1 = MKPointAnnotation()
-              a1.title = currentPlacemark.name
-              a1.coordinate = currentPlacemark.location!.coordinate
-
-              let a2 = MKPointAnnotation()
-              a2.title = destinationPlacemark.name
-              a2.coordinate = destinationPlacemark.location!.coordinate
-
-               await mapView.removeAnnotations(annotations)
-               annotations = [a1, a2]
-               await mapView.addAnnotations(annotations)
-             */
-
             // Remove all current overlays.
             for overlay in await mapView.overlays {
                 await mapView.removeOverlay(overlay)

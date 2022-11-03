@@ -18,18 +18,29 @@ struct PlaceDetail: View {
             Task {
                 do {
                     try await mapKitVM.loadRouteSteps(place: place)
-                    appVM.isShowingDirections = true
                 } catch let error as MKError {
-                    Log.error("error getting directions: \(error)")
-                    if error.errorCode == 2 {
+                    switch error.code {
+                    case .directionsNotFound:
+                        mapKitVM.message = "Directions were not found."
+                    case .unknown:
+                        mapKitVM.message = "The destination is unknown."
+                    case .serverFailure:
                         mapKitVM.message =
-                            error.userInfo["content"] as? String ?? "no content"
-                    } else {
-                        Log.error("error getting directions: \(error)")
+                            "Server failure prevented getting directions."
+                    case .loadingThrottled:
+                        mapKitVM.message = "Getting directions was throttled."
+                    case .placemarkNotFound:
+                        mapKitVM.message = "The destination was not found."
+                    case .decodingFailed:
+                        mapKitVM.message = "Direction decoding failed."
+                    @unknown default:
+                        mapKitVM.message = error.localizedDescription
                     }
                 } catch {
                     Log.error("error getting directions: \(error)")
                 }
+
+                appVM.isShowingDirections = true
             }
         }
         .buttonStyle(.bordered)

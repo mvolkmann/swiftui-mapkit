@@ -17,7 +17,7 @@ final class AppViewModel: ObservableObject {
     @Published var isShowingDirections = false
     @Published var mapElevation = "realistic" // other is "flat"
     @Published var mapEmphasis = "default" // other is "muted"
-    @Published var mapType = "image" // other are "standard" and "hybrid"
+    @Published var mapType = "hybrid" // other are "standard" and "image"
     @Published var searchBy: String = "attraction"
 
     // These are here instead of being @State properties in SearchSheet.swift
