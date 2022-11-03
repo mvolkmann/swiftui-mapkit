@@ -32,8 +32,6 @@ final class MapKitViewModel: NSObject, ObservableObject {
     @Published var shouldUpdateCamera = true
     @Published var transportType: MKDirectionsTransportType = .automobile
 
-    @State private var annotations: [MKAnnotation] = []
-
     static var shared = MapKitViewModel()
 
     // MARK: - Initializer

@@ -25,7 +25,6 @@ struct SearchSheet: View {
     @State private var editingArea: Area?
     @State private var editingAttraction: Attraction?
     @State private var isConfirmingDelete = false
-    @State private var kind = ""
     @State private var message = ""
 
     // MARK: - Constants
@@ -150,18 +149,18 @@ struct SearchSheet: View {
 
     private var searchByKind: some View {
         HStack {
-            MyTextField("place kind like pizza or park", text: $kind)
+            MyTextField("place kind like pizza or park", text: $appVM.placeKind)
                 .textFieldStyle(.roundedBorder)
                 .focused($focusName, equals: FocusName.kind)
 
             Button("Search") {
                 Task(priority: .background) {
                     mapKitVM.places =
-                        await mapKitVM.search(text: kind)
+                        await mapKitVM.search(text: appVM.placeKind)
                     appVM.isSearching = false
                 }
             }
-            .disabled(kind.isEmpty)
+            .disabled(appVM.placeKind.isEmpty)
         }
         .onAppear { focusName = .kind }
     }
@@ -349,6 +348,9 @@ struct SearchSheet: View {
 
     private func showAttraction(_ attraction: Attraction?) {
         guard let attraction else { return }
+
+        appVM.placeKind = ""
+        mapKitVM.places = []
 
         mapKitVM.center = CLLocationCoordinate2D(
             latitude: attraction.latitude,

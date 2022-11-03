@@ -24,7 +24,9 @@ struct ContentView: View {
     }
 
     private var title: String {
-        appVM.selectedAttraction?.name ?? "Map Explorer"
+        if !appVM.placeKind.isEmpty { return appVM.placeKind }
+        let name = appVM.selectedAttraction?.name
+        return name ?? "Map Explorer"
     }
 
     var body: some View {
