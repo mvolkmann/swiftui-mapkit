@@ -2,6 +2,16 @@ import CoreLocation
 import SwiftUI
 
 struct CoreLocationService {
+    static func getPlacemark(
+        from location2D: CLLocationCoordinate2D
+    ) async throws -> CLPlacemark? {
+        let location = CLLocation(
+            latitude: location2D.latitude,
+            longitude: location2D.longitude
+        )
+        return try await Self.getPlacemark(from: location)
+    }
+
     static func getPlacemark(from location: CLLocation) async throws
         -> CLPlacemark? {
         // Cannot call this more than 50 times per second.

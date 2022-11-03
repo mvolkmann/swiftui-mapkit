@@ -17,18 +17,21 @@ final class MapKitViewModel: NSObject, ObservableObject {
     @Published var pitch = 0.0 // in degrees
 
     @Published var currentPlacemark: CLPlacemark?
-    @Published var directions: [String] = []
     @Published var isShowingLookAround = false
     @Published var likedLocations: [String] = []
     @Published var lookAroundScene: MKLookAroundScene?
     @Published var lookAroundSnapshot: UIImage?
     @Published var mapView: MKMapView?
+    @Published var message: String?
     @Published var places: [Place] = []
+    @Published var routeSteps: [String] = []
     @Published var searchLocations: [String] = []
     @Published var searchQuery = ""
     @Published var selectedPlace: Place?
     @Published var selectedPlacemark: CLPlacemark?
     @Published var shouldUpdateCamera = true
+
+    @State private var annotations: [MKAnnotation] = []
 
     static var shared = MapKitViewModel()
 
@@ -97,6 +100,71 @@ final class MapKitViewModel: NSObject, ObservableObject {
     func likeLocation(_ location: String) {
         likedLocations.append(location)
         likedLocations.sort()
+    }
+
+    func loadRouteSteps(place: Place) async throws {
+        guard let mapView else { return }
+
+        let destinationPlacemark = try await CoreLocationService
+            .getPlacemark(from: place.coordinate)
+        guard let currentPlacemark, let destinationPlacemark else {
+            Log.error("failed to get placemarks")
+            return
+        }
+
+        let request = MKDirections.Request()
+        request.source =
+            MKMapItem(placemark: MKPlacemark(placemark: currentPlacemark))
+        request.destination =
+            MKMapItem(placemark: MKPlacemark(placemark: destinationPlacemark))
+        // TODO: Allow user to select this.
+        request.transportType = .automobile
+
+        let directions = MKDirections(request: request)
+
+        let response = try await directions.calculate()
+        if let route = response.routes.first {
+            /*
+              let a1 = MKPointAnnotation()
+              a1.title = currentPlacemark.name
+              a1.coordinate = currentPlacemark.location!.coordinate
+
+              let a2 = MKPointAnnotation()
+              a2.title = destinationPlacemark.name
+              a2.coordinate = destinationPlacemark.location!.coordinate
+
+               await mapView.removeAnnotations(annotations)
+               annotations = [a1, a2]
+               await mapView.addAnnotations(annotations)
+             */
+
+            // Remove all current overlays.
+            for overlay in await mapView.overlays {
+                await mapView.removeOverlay(overlay)
+            }
+
+            // Add a new overlay.
+            await mapView.addOverlay(route.polyline)
+
+            let insets = UIEdgeInsets(
+                top: 20, left: 20, bottom: 20, right: 20
+            )
+            await mapView.setVisibleMapRect(
+                route.polyline.boundingMapRect,
+                edgePadding: insets,
+                animated: true
+            )
+
+            Task {
+                await MainActor.run {
+                    routeSteps = route.steps
+                        .compactMap { step in
+                            let instructions = step.instructions
+                            return instructions.isEmpty ? nil : instructions
+                        }
+                }
+            }
+        }
     }
 
     @MainActor

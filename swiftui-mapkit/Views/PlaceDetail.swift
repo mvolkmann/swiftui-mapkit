@@ -1,3 +1,4 @@
+import MapKit
 import SwiftUI
 
 struct PlaceDetail: View {
@@ -7,7 +8,32 @@ struct PlaceDetail: View {
     // but we need to initialize it to some valid URL.
     @State var url: URL = .temporaryDirectory
 
+    @StateObject private var appVM = AppViewModel.shared
+    @StateObject private var mapKitVM = MapKitViewModel.shared
+
     let place: Place
+
+    private var directionsButton: some View {
+        Button("Directions") {
+            Task {
+                do {
+                    try await mapKitVM.loadRouteSteps(place: place)
+                    appVM.isShowingDirections = true
+                } catch let error as MKError {
+                    Log.error("error getting directions: \(error)")
+                    if error.errorCode == 2 {
+                        mapKitVM.message =
+                            error.userInfo["content"] as? String ?? "no content"
+                    } else {
+                        Log.error("error getting directions: \(error)")
+                    }
+                } catch {
+                    Log.error("error getting directions: \(error)")
+                }
+            }
+        }
+        .buttonStyle(.bordered)
+    }
 
     var body: some View {
         VStack {
@@ -22,27 +48,14 @@ struct PlaceDetail: View {
                             Text(address)
                         }
                     }
-                    Spacer()
-                    if let itemURL = item.url {
-                        /*
-                         // This opens the website of the selected place
-                         // in Safari.
-                         Link("Website", destination: itemURL)
-                         */
 
-                        // This opens the website of the selected place
-                        // in a sheet within this app.
-                        Button("Website") {
-                            url = itemURL
-                            isBrowsingWebsite = true
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .padding(.top, 40) // leaves room from CloseButton
-                    } else {
-                        Text("No website found")
-                            .fontWeight(.bold)
-                            .padding(.leading)
+                    Spacer()
+
+                    VStack {
+                        websiteButton(item: item)
+                        directionsButton
                     }
+                    .padding(.top, 40) // leaves room from CloseButton
                 }
             } else {
                 Text(place.displayName).fontWeight(.bold)
@@ -53,11 +66,37 @@ struct PlaceDetail: View {
         .padding()
         .overlay(alignment: .topTrailing) {
             CloseButton {
-                MapKitViewModel.shared.selectedPlace = nil
+                mapKitVM.selectedPlace = nil
             }
         }
         .sheet(isPresented: $isBrowsingWebsite) {
             SafariView(url: $url)
+        }
+        .sheet(isPresented: $appVM.isShowingDirections) {
+            Directions()
+        }
+    }
+
+    @ViewBuilder
+    private func websiteButton(item: MKMapItem) -> some View {
+        if let itemURL = item.url {
+            /*
+             // This opens the website of the selected place
+             // in Safari.
+             Link("Website", destination: itemURL)
+             */
+
+            // This opens the website of the selected place
+            // in a sheet within this app.
+            Button("Website") {
+                url = itemURL
+                isBrowsingWebsite = true
+            }
+            .buttonStyle(.bordered)
+        } else {
+            Text("No website found")
+                .fontWeight(.bold)
+                .padding(.leading)
         }
     }
 }
