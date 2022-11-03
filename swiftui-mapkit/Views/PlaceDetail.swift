@@ -4,6 +4,8 @@ import SwiftUI
 struct PlaceDetail: View {
     @State var isBrowsingWebsite = false
 
+    @State private var loadingDirections = false
+
     // This is changed later to the URL of a placemark,
     // but we need to initialize it to some valid URL.
     @State var url: URL = .temporaryDirectory
@@ -17,7 +19,9 @@ struct PlaceDetail: View {
         Button("Directions") {
             Task {
                 do {
+                    loadingDirections = true
                     try await mapKitVM.loadRouteSteps(place: place)
+                    loadingDirections = false
                 } catch let error as MKError {
                     switch error.code {
                     case .directionsNotFound:
@@ -64,7 +68,11 @@ struct PlaceDetail: View {
 
                     VStack {
                         websiteButton(item: item)
-                        directionsButton
+                        if loadingDirections {
+                            ProgressView()
+                        } else {
+                            directionsButton
+                        }
                     }
                     .padding(.top, 40) // leaves room from CloseButton
                 }
