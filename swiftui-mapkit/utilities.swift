@@ -1,9 +1,9 @@
 import Foundation
 
-/*
- func runOnMain(closure: () -> Void) -> Task<Void> {
-     Task {
-         await MainActor.run(closure)
-     }
- }
- */
+func mainQ(closure: @escaping () -> Void) {
+    Task<Sendable, Error> {
+        await MainActor.run {
+            closure()
+        }
+    }
+}

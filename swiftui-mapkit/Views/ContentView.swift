@@ -108,6 +108,7 @@ struct ContentView: View {
             value: "look around",
             label: {
                 Image(uiImage: snapshot)
+                    .border(.red, width: 3)
                     .overlay(alignment: .bottomTrailing) {
                         Image(systemName: "binoculars.fill")
                             .renderingMode(.template)

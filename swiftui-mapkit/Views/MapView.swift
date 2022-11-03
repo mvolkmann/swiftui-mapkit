@@ -107,11 +107,7 @@ struct MapView: UIViewRepresentable {
         // Save a reference to the MKMapView
         // so SaveSheet can obtain the current center coordinate.
         // This must be done on the main queue.
-        Task {
-            await MainActor.run {
-                mapKitVM.mapView = mapView
-            }
-        }
+        mainQ { mapKitVM.mapView = mapView }
 
         return mapView
     }
@@ -155,20 +151,18 @@ struct MapView: UIViewRepresentable {
 
     // This adds annotations for places like parks and restaurants.
     private func updateAnnotations(_ mapView: UIViewType) {
-        Task {
-            await MainActor.run {
-                let newAnnotations = mapKitVM.places.map { place in
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = place.coordinate
-                    annotation.title = place.displayName
-                    titleToPlaceMap[annotation.title!] = place
-                    return annotation
-                }
-
-                mapView.removeAnnotations(annotations) // previous ones
-                mapView.addAnnotations(newAnnotations)
-                annotations = newAnnotations
+        mainQ {
+            let newAnnotations = mapKitVM.places.map { place in
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = place.coordinate
+                annotation.title = place.displayName
+                titleToPlaceMap[annotation.title!] = place
+                return annotation
             }
+
+            mapView.removeAnnotations(annotations) // previous ones
+            mapView.addAnnotations(newAnnotations)
+            annotations = newAnnotations
         }
     }
 

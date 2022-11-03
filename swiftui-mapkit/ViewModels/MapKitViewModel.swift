@@ -104,11 +104,7 @@ final class MapKitViewModel: NSObject, ObservableObject {
     }
 
     func loadRouteSteps(place: Place) async throws {
-        Task {
-            await MainActor.run {
-                message = nil
-            }
-        }
+        mainQ { self.message = nil }
 
         guard let mapView else { return }
         let appVM = AppViewModel.shared
@@ -159,14 +155,12 @@ final class MapKitViewModel: NSObject, ObservableObject {
                 animated: true
             )
 
-            Task {
-                await MainActor.run {
-                    routeSteps = route.steps
-                        .compactMap { step in
-                            let instructions = step.instructions
-                            return instructions.isEmpty ? nil : instructions
-                        }
-                }
+            mainQ {
+                self.routeSteps = route.steps
+                    .compactMap { step in
+                        let instructions = step.instructions
+                        return instructions.isEmpty ? nil : instructions
+                    }
             }
         }
     }
