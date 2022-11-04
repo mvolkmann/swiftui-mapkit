@@ -208,7 +208,7 @@ final class MapKitViewModel: NSObject, ObservableObject {
         return try await snapshotter.snapshot.image
     }
 
-    // This searches for points of interest near the current location.
+    // This searches for points of interest near the current map location.
     // Examples include "pizza" and "park".
     @MainActor
     func search(
