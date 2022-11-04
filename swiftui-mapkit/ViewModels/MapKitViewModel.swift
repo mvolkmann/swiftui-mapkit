@@ -210,6 +210,8 @@ final class MapKitViewModel: NSObject, ObservableObject {
 
     // This searches for points of interest near the current map location.
     // Examples include "pizza" and "park".
+    // However, driving directions are from the selected attraction
+    // or the current user location.
     @MainActor
     func search(
         text: String,
