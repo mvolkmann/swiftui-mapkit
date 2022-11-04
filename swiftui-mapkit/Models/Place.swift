@@ -1,6 +1,7 @@
+import Contacts // for CNPostalAddressFormatter
 import MapKit
 
-struct Place: Identifiable {
+struct Place: Equatable, Identifiable {
     let id = UUID()
     var selected = false
     var name: String?
@@ -17,11 +18,9 @@ struct Place: Identifiable {
         self.coordinate = coordinate
     }
 
-    var address: String {
-        var result = ""
-        if !street.isEmpty { result += street + "\n" }
-        result += "\(city), \(state)\n\(postalCode)"
-        return result
+    var address: String? {
+        guard let address = item?.placemark.postalAddress else { return nil }
+        return CNPostalAddressFormatter().string(from: address)
     }
 
     var city: String {

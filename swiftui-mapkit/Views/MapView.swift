@@ -102,8 +102,6 @@ struct MapView: UIViewRepresentable {
             heading: 0.0
         )
 
-        // addRoute(mapView: mapView)
-
         // Save a reference to the MKMapView
         // so SaveSheet can obtain the current center coordinate.
         // This must be done on the main queue.
@@ -156,7 +154,17 @@ struct MapView: UIViewRepresentable {
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = place.coordinate
                 annotation.title = place.displayName
+
+                /*
+                 if place == mapKitVM.selectedPlace {
+                     // Why doesn't calling this update mapView.selectedAnnotations!
+                     mapView.selectAnnotation(annotation, animated: true)
+                     print("selected", place)
+                 }
+                 */
+
                 titleToPlaceMap[annotation.title!] = place
+
                 return annotation
             }
 
@@ -177,13 +185,17 @@ struct MapView: UIViewRepresentable {
         // It allows displaying the name, phone number, address, and website
         // of the place associated with the annotation.
         @MainActor
-        func mapView(_: UIViewType, didSelect annotation: MKAnnotation) {
+        func mapView(
+            _ mapView: UIViewType,
+            didSelect annotation: MKAnnotation
+        ) {
             // annotation.title has the following optional-optional type:
             // type optional var title: String? { get }
             if let optionalTitle = annotation.title,
                let title = optionalTitle,
                let place = parent.titleToPlaceMap[title] {
                 parent.mapKitVM.selectedPlace = place
+                mapView.selectAnnotation(annotation, animated: true)
             }
         }
 
@@ -230,6 +242,41 @@ struct MapView: UIViewRepresentable {
             // This is used when we get an overlay type
             // that isn't handled above.
             return MKOverlayRenderer(overlay: overlay)
+        }
+
+        func mapView(
+            _ mapView: MKMapView,
+            viewFor annotation: MKAnnotation
+        ) -> MKAnnotationView? {
+            // Do not show the user location annotation.
+            if annotation is MKUserLocation { return nil }
+
+            // Create an annotation view or reuse an existing one.
+            var view: MKMarkerAnnotationView
+            let identifier = "place-annotation"
+            if let dequeuedView = mapView.dequeueReusableAnnotationView(
+                withIdentifier: identifier
+            ) as? MKMarkerAnnotationView {
+                view = dequeuedView
+                view.annotation = annotation
+            } else {
+                view = MKMarkerAnnotationView(
+                    annotation: annotation,
+                    reuseIdentifier: identifier
+                )
+            }
+
+            // view.glyphTintColor = .red
+            // view.markerTintColor = .yellow
+
+            // This is not updated when mapView.selectAnnotation is called!
+            // print("selectedAnnotations =", mapView.selectedAnnotations)
+
+            let selectedPlace = parent.mapKitVM.selectedPlace
+            let isSelected = selectedPlace?.coordinate == annotation.coordinate
+            view.setSelected(isSelected, animated: true)
+
+            return view
         }
     }
 }

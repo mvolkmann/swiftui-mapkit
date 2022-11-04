@@ -34,6 +34,8 @@ final class MapKitViewModel: NSObject, ObservableObject {
     @Published var selectedPlacemark: CLPlacemark?
     @Published var shouldUpdateCamera = true
     @Published var transportType: MKDirectionsTransportType = .automobile
+    @Published var travelDistance: CLLocationDistance = 0.0 // meters
+    @Published var travelTime: TimeInterval = 0.0 // seconds
 
     static var shared = MapKitViewModel()
 
@@ -158,6 +160,8 @@ final class MapKitViewModel: NSObject, ObservableObject {
             )
 
             mainQ {
+                self.travelDistance = route.distance
+                self.travelTime = route.expectedTravelTime
                 self.routeSteps = route.steps
                     .compactMap { step in
                         let instructions = step.instructions

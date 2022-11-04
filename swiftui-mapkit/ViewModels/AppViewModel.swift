@@ -19,6 +19,7 @@ final class AppViewModel: ObservableObject {
     @Published var mapEmphasis = "default" // other is "muted"
     @Published var mapType = "hybrid" // other are "standard" and "image"
     @Published var placeKind = ""
+    @Published var preferMetric = false
     @Published var searchBy: String = "attraction"
 
     // These are here instead of being @State properties in SearchSheet.swift
