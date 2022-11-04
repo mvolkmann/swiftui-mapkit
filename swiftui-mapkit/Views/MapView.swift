@@ -15,8 +15,7 @@ struct MapView: UIViewRepresentable {
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
     @State private var annotations: [MKPointAnnotation] = []
-    @State private var annotationToIdMap: [MKPointAnnotation: UUID] = [:]
-    @State private var idToPlaceMap: [UUID: Place] = [:]
+    @State private var annotationToPlaceMap: [MKPointAnnotation: Place] = [:]
 
     private func elevationStyle() -> ElevationStyle {
         appVM.mapElevation == "realistic" ?
@@ -164,8 +163,7 @@ struct MapView: UIViewRepresentable {
                  }
                  */
 
-                idToPlaceMap[place.id] = place
-                annotationToIdMap[annotation] = place.id
+                annotationToPlaceMap[annotation] = place
 
                 return annotation
             }
@@ -191,14 +189,10 @@ struct MapView: UIViewRepresentable {
             _: UIViewType,
             didSelect annotation: MKAnnotation
         ) {
-            var placeId: UUID?
-            if annotation is MKPointAnnotation {
-                placeId = parent
-                    .annotationToIdMap[annotation as! MKPointAnnotation]
-            }
+            guard annotation is MKPointAnnotation else { return }
 
-            if let placeId,
-               let place = parent.idToPlaceMap[placeId] {
+            if let place = parent
+                .annotationToPlaceMap[annotation as! MKPointAnnotation] {
                 parent.mapKitVM.selectedPlace = place
 
                 // This doesn't seem to provide any benefit.
