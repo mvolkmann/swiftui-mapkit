@@ -23,7 +23,10 @@ final class MapKitViewModel: NSObject, ObservableObject {
     @Published var lookAroundSnapshot: UIImage?
     @Published var mapView: MKMapView?
     @Published var message: String?
-    @Published var places: [Place] = []
+    @Published var places: [Place] = [] {
+        didSet { showPlaces() }
+    }
+
     @Published var routeSteps: [String] = []
     @Published var searchLocations: [String] = []
     @Published var searchQuery = ""
@@ -144,13 +147,9 @@ final class MapKitViewModel: NSObject, ObservableObject {
             // Add a new overlay.
             await mapView.addOverlay(route.polyline)
 
-            let insets = UIEdgeInsets(
-                top: 20, left: 20, bottom: 20, right: 20
-            )
-            await mapView.setVisibleMapRect(
+            await setVisibleRect(
                 route.polyline.boundingMapRect,
-                edgePadding: insets,
-                animated: true
+                inset: 20.0
             )
 
             mainQ {
@@ -245,6 +244,68 @@ final class MapKitViewModel: NSObject, ObservableObject {
         if let location = placemark.location {
             center = location.coordinate
             distance = Self.defaultDistance
+        }
+    }
+
+    private func setVisibleRect(_ rect: MKMapRect, inset: Double) async {
+        guard let mapView else { return }
+
+        // Remove the heading and pitch from the camera
+        // because ...
+        /*
+         await MainActor.run {
+             mapView.camera = MKMapCamera(
+                 lookingAtCenter: mapView.camera.centerCoordinate,
+                 fromDistance: mapView.camera.centerCoordinateDistance,
+                 pitch: 0.0,
+                 heading: 0.0
+             )
+         }
+         */
+        let insets = UIEdgeInsets(
+            top: inset, left: inset, bottom: inset, right: inset
+        )
+        // This removes the heading and pitch from the camera.
+        await mapView.setVisibleMapRect(
+            rect,
+            edgePadding: insets,
+            animated: true
+        )
+    }
+
+    private func showPlaces() {
+        guard !places.isEmpty else { return }
+
+        let firstPlace = places.first!
+        var minLat = firstPlace.coordinate.latitude
+        var minLng = firstPlace.coordinate.longitude
+        var maxLat = minLat
+        var maxLng = minLng
+
+        // for place in places.removeFirst() {
+        for place in places.dropFirst() {
+            let lat = place.coordinate.latitude
+            let lng = place.coordinate.longitude
+            minLat = min(lat, minLat)
+            maxLat = max(lat, maxLat)
+            minLng = min(lng, minLng)
+            maxLng = max(lng, maxLng)
+        }
+
+        let upperLeft = MKMapPoint(
+            CLLocationCoordinate2D(latitude: maxLat, longitude: minLng)
+        )
+        let lowerRight = MKMapPoint(
+            CLLocationCoordinate2D(latitude: minLat, longitude: maxLng)
+        )
+        let rect = MKMapRect(
+            x: upperLeft.x,
+            y: upperLeft.y,
+            width: lowerRight.x - upperLeft.x,
+            height: lowerRight.y - upperLeft.y
+        )
+        Task {
+            await setVisibleRect(rect, inset: 50.0)
         }
     }
 
