@@ -16,6 +16,7 @@ struct MapView: UIViewRepresentable {
 
     @State private var annotations: [MKPointAnnotation] = []
     @State private var annotationToPlaceMap: [MKPointAnnotation: Place] = [:]
+    @State private var mapCenterOverlays: [MKOverlay] = []
 
     private func elevationStyle() -> ElevationStyle {
         appVM.mapElevation == "realistic" ?
@@ -110,6 +111,53 @@ struct MapView: UIViewRepresentable {
         return mapView
     }
 
+    private func showCenter(mapView: MKMapView) {
+        let center = mapView.camera.centerCoordinate
+        let lat = center.latitude
+        let lng = center.longitude
+        let delta = mapView.region.span.longitudeDelta / 20.0
+
+        let bottom = CLLocationCoordinate2D(
+            latitude: lat - delta,
+            longitude: lng
+        )
+        let top = CLLocationCoordinate2D(
+            latitude: lat + delta,
+            longitude: lng
+        )
+        let left = CLLocationCoordinate2D(
+            latitude: lat,
+            longitude: lng - delta
+        )
+        let right = CLLocationCoordinate2D(
+            latitude: lat,
+            longitude: lng + delta
+        )
+
+        let rect = mapView.visibleMapRect
+        let eastPoint = MKMapPoint(x: rect.minX, y: rect.midY)
+        let westPoint = MKMapPoint(x: rect.maxX, y: rect.midY)
+        let radius = westPoint.distance(to: eastPoint) / 20.0
+
+        let circleOverlay = MyCircle(center: center, radius: radius)
+        circleOverlay.alpha = 1.0
+        // circleOverlay.fillColor = .blue
+        circleOverlay.lineWidth = 2
+        circleOverlay.strokeColor = .red
+
+        let line1Overlay = MyPolyline(coordinates: [left, right], count: 2)
+        line1Overlay.color = .red
+        line1Overlay.lineWidth = 2
+
+        let line2Overlay = MyPolyline(coordinates: [bottom, top], count: 2)
+        line2Overlay.color = .red
+        line2Overlay.lineWidth = 2
+
+        mapView.removeOverlays(mapCenterOverlays)
+        mapCenterOverlays = [circleOverlay, line1Overlay, line2Overlay]
+        mapView.addOverlays(mapCenterOverlays)
+    }
+
     @MainActor
     func updateUIView(_ mapView: UIViewType, context _: Context) {
         // I was getting the error "The following Metal object is being
@@ -126,9 +174,10 @@ struct MapView: UIViewRepresentable {
             // Update annotations for places like parks and restaurants.
             updateAnnotations(mapView)
 
+            let currentCenter = mapView.camera.centerCoordinate
+
             if mapKitVM.shouldUpdateCamera, let center = mapKitVM.center {
                 mapView.preferredConfiguration = getConfig()
-                let currentCenter = mapView.camera.centerCoordinate
                 let newCamera = MKMapCamera(
                     lookingAtCenter: center,
                     fromDistance: mapKitVM.distance,
@@ -139,11 +188,15 @@ struct MapView: UIViewRepresentable {
                 mapView.setCamera(newCamera, animated: isClose)
                 mapKitVM.shouldUpdateCamera = false
 
-                // Add a circle annotation with a 30 meter radius
-                // at the center location.
-                let overlay = MKCircle(center: center, radius: 30.0)
-                mapView.addOverlay(overlay)
+                /*
+                 // Add a circle annotation with a 30 meter radius
+                 // at the camera center location.
+                 let cameraOverlay = MKCircle(center: center, radius: 30.0)
+                 mapView.addOverlay(cameraOverlay)
+                 */
             }
+
+            showCenter(mapView: mapView)
         }
     }
 
@@ -216,28 +269,27 @@ struct MapView: UIViewRepresentable {
             _: UIViewType,
             rendererFor overlay: MKOverlay
         ) -> MKOverlayRenderer {
-            // Provided subclasses of MKOverlayRenderer include
-            // - MKCircleRenderer - fills and strokes a circle
-            // - MKPolylineRenderer - like MKPolygonRender but
-            //   doesn't fill because the shape isn't necessarily closed
-            // - MKPolygonRenderer - fills and strokes
-            // - MKOverlayPathRenderer - renders shape defined by a CGPath
-            // - MKTileOverlayRenderer for bitmap images
-            // - MKGradientPolygonRenderer - like MKPolylineRenderer
-            //   but uses gradient color
-            // - MKMultiPolygonRenderer - renders multiple polygons
-            // - MKMultiPolylineRenderer - renders multiple polylines
             if let overlay = overlay as? MKCircle {
                 let renderer = MKCircleRenderer(overlay: overlay)
-                renderer.fillColor = .red
-                renderer.alpha = 0.2
+                if let overlay = overlay as? MyCircle {
+                    renderer.alpha = overlay.alpha
+                    renderer.fillColor = overlay.fillColor
+                    renderer.strokeColor = overlay.strokeColor
+                    renderer.lineWidth = overlay.lineWidth
+                }
                 return renderer
             }
 
             if let overlay = overlay as? MKPolyline {
                 let renderer = MKPolylineRenderer(overlay: overlay)
-                renderer.strokeColor = .blue
-                renderer.lineWidth = 5
+                if let overlay = overlay as? MyPolyline {
+                    renderer.strokeColor = overlay.color
+                    renderer.lineWidth = overlay.lineWidth
+                } else {
+                    // These are for route lines.
+                    renderer.strokeColor = .blue
+                    renderer.lineWidth = 3
+                }
                 return renderer
             }
 

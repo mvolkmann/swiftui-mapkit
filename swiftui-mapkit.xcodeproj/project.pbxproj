@@ -17,6 +17,8 @@
 		1A76511429115CC60071D081 /* TextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A76511329115CC60071D081 /* TextExtension.swift */; };
 		1A82824E282A34D100380E9D /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A82824D282A34D100380E9D /* SafariView.swift */; };
 		1A8E283E2908752B0064955F /* CLPlacemarkExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8E283D2908752B0064955F /* CLPlacemarkExtension.swift */; };
+		1AA35F812915ADB40080003F /* MyCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA35F802915ADB40080003F /* MyCircle.swift */; };
+		1AA35F832915B3F70080003F /* MyPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA35F822915B3F70080003F /* MyPolyline.swift */; };
 		1AAB0CFE2826436600544A8F /* MapExplorerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0CFD2826436600544A8F /* MapExplorerApp.swift */; };
 		1AAB0D002826436600544A8F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0CFF2826436600544A8F /* ContentView.swift */; };
 		1AAB0D022826436700544A8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAB0D012826436700544A8F /* Assets.xcassets */; };
@@ -70,6 +72,8 @@
 		1A76511329115CC60071D081 /* TextExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextExtension.swift; sourceTree = "<group>"; };
 		1A82824D282A34D100380E9D /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		1A8E283D2908752B0064955F /* CLPlacemarkExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLPlacemarkExtension.swift; sourceTree = "<group>"; };
+		1AA35F802915ADB40080003F /* MyCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCircle.swift; sourceTree = "<group>"; };
+		1AA35F822915B3F70080003F /* MyPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPolyline.swift; sourceTree = "<group>"; };
 		1AAB0CFA2826436600544A8F /* swiftui-mapkit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "swiftui-mapkit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AAB0CFD2826436600544A8F /* MapExplorerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapExplorerApp.swift; sourceTree = "<group>"; };
 		1AAB0CFF2826436600544A8F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -238,6 +242,8 @@
 				1AE3A1832902DEBC00FB6501 /* Area.swift */,
 				1AF027BD290C76CE00AF1ADB /* JSONFile.swift */,
 				1A33435128268119006730C2 /* Place.swift */,
+				1AA35F802915ADB40080003F /* MyCircle.swift */,
+				1AA35F822915B3F70080003F /* MyPolyline.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -349,6 +355,7 @@
 				1AE3A1862902DF0A00FB6501 /* Attraction.swift in Sources */,
 				1AF027C0290F26BA00AF1ADB /* PlaceDetail.swift in Sources */,
 				1A3A6DB92909BF1C00183860 /* CloudKitViewModel.swift in Sources */,
+				1AA35F832915B3F70080003F /* MyPolyline.swift in Sources */,
 				1A76511429115CC60071D081 /* TextExtension.swift in Sources */,
 				1AE3A17B2901899C00FB6501 /* SearchSheet.swift in Sources */,
 				1AB2A97B2914555700A20F79 /* utilities.swift in Sources */,
@@ -360,6 +367,7 @@
 				1AE3A1842902DEBC00FB6501 /* Area.swift in Sources */,
 				1AE3A1792901897700FB6501 /* ViewExtension.swift in Sources */,
 				1AF027BC290C731B00AF1ADB /* AttractionDecodable.swift in Sources */,
+				1AA35F812915ADB40080003F /* MyCircle.swift in Sources */,
 				1AB9F3D12906FD96002DF760 /* CLLocationCoordinate2DExtension.swift in Sources */,
 				1A3A6DBB2909BFE100183860 /* Log.swift in Sources */,
 				1A8E283E2908752B0064955F /* CLPlacemarkExtension.swift in Sources */,
