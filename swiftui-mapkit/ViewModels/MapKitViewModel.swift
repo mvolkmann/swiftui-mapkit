@@ -108,8 +108,6 @@ final class MapKitViewModel: NSObject, ObservableObject {
         mainQ { self.message = nil }
 
         guard let mapView else { return }
-        let appVM = AppViewModel.shared
-        guard let attraction = appVM.selectedAttraction else { return }
 
         let endPlacemark = try await CoreLocationService
             .getPlacemark(from: place.coordinate)
@@ -118,12 +116,21 @@ final class MapKitViewModel: NSObject, ObservableObject {
             return
         }
 
-        let startPlacemark = MKPlacemark(
-            coordinate: CLLocationCoordinate2D(
-                latitude: attraction.latitude,
-                longitude: attraction.longitude
+        var startPlacemark: MKPlacemark
+        // If an attraction is selected, use that as the starting point.
+        if let attraction = AppViewModel.shared.selectedAttraction {
+            startPlacemark = MKPlacemark(
+                coordinate: CLLocationCoordinate2D(
+                    latitude: attraction.latitude,
+                    longitude: attraction.longitude
+                )
             )
-        )
+        } else {
+            // Otherwise use the current user location as the starting point.
+            startPlacemark = MKPlacemark(
+                coordinate: await mapView.camera.centerCoordinate
+            )
+        }
 
         let request = MKDirections.Request()
         request.source =
@@ -134,9 +141,7 @@ final class MapKitViewModel: NSObject, ObservableObject {
 
         let directions = MKDirections(request: request)
 
-        print("MapKitViewModel.loadRouteSteps: getting directions")
         let response = try await directions.calculate()
-        print("MapKitViewModel.loadRouteSteps: got directions")
 
         if let route = response.routes.first {
             // Remove all current overlays.

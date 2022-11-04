@@ -8,12 +8,13 @@ struct Directions: View {
         let name = mapKitVM.selectedPlace?.displayName ?? "unknown"
         VStack {
             Text("Directions to\n\(name)")
-                .font(.largeTitle)
+                .font(.title)
                 .multilineTextAlignment(.center)
                 .padding(.top)
 
             if let message = mapKitVM.message {
                 Text(message)
+                    .padding(.top)
             } else {
                 List(mapKitVM.routeSteps, id: \.self) { step in
                     Text(step)
