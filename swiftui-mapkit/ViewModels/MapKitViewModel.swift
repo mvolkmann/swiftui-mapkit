@@ -165,13 +165,8 @@ final class MapKitViewModel: NSObject, ObservableObject {
          }
          */
 
-        // Find the shortest route.
-        var shortestRoute: MKRoute?
-        for route in response.routes {
-            if shortestRoute == nil ||
-                route.distance < shortestRoute!.distance {
-                shortestRoute = route
-            }
+        let shortestRoute = response.routes.min { r1, r2 in
+            r1.distance < r2.distance
         }
 
         if let route = shortestRoute {
