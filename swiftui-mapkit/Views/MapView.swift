@@ -15,7 +15,8 @@ struct MapView: UIViewRepresentable {
     @StateObject private var mapKitVM = MapKitViewModel.shared
 
     @State private var annotations: [MKPointAnnotation] = []
-    @State private var titleToPlaceMap: [String: Place] = [:]
+    @State private var annotationToIdMap: [MKPointAnnotation: UUID] = [:]
+    @State private var idToPlaceMap: [UUID: Place] = [:]
 
     private func elevationStyle() -> ElevationStyle {
         appVM.mapElevation == "realistic" ?
@@ -163,7 +164,8 @@ struct MapView: UIViewRepresentable {
                  }
                  */
 
-                titleToPlaceMap[annotation.title!] = place
+                idToPlaceMap[place.id] = place
+                annotationToIdMap[annotation] = place.id
 
                 return annotation
             }
@@ -186,16 +188,22 @@ struct MapView: UIViewRepresentable {
         // of the place associated with the annotation.
         @MainActor
         func mapView(
-            _ mapView: UIViewType,
+            _: UIViewType,
             didSelect annotation: MKAnnotation
         ) {
-            // annotation.title has the following optional-optional type:
-            // type optional var title: String? { get }
-            if let optionalTitle = annotation.title,
-               let title = optionalTitle,
-               let place = parent.titleToPlaceMap[title] {
+            var placeId: UUID?
+            if annotation is MKPointAnnotation {
+                placeId = parent
+                    .annotationToIdMap[annotation as! MKPointAnnotation]
+            }
+
+            if let placeId,
+               let place = parent.idToPlaceMap[placeId] {
                 parent.mapKitVM.selectedPlace = place
-                mapView.selectAnnotation(annotation, animated: true)
+
+                // This doesn't seem to provide any benefit.
+                // The view.setSelected call below takes care of this.
+                // mapView.selectAnnotation(annotation, animated: true)
             }
         }
 
@@ -269,8 +277,8 @@ struct MapView: UIViewRepresentable {
             // view.glyphTintColor = .red
             // view.markerTintColor = .yellow
 
-            // This is not updated when mapView.selectAnnotation is called!
-            // print("selectedAnnotations =", mapView.selectedAnnotations)
+            // mapView.selectedAnnotations is not updated
+            // when mapView.selectAnnotation is called!
 
             let selectedPlace = parent.mapKitVM.selectedPlace
             let isSelected = selectedPlace?.coordinate == annotation.coordinate
