@@ -250,18 +250,6 @@ final class MapKitViewModel: NSObject, ObservableObject {
     private func setVisibleRect(_ rect: MKMapRect, inset: Double) async {
         guard let mapView else { return }
 
-        // Remove the heading and pitch from the camera
-        // because ...
-        /*
-         await MainActor.run {
-             mapView.camera = MKMapCamera(
-                 lookingAtCenter: mapView.camera.centerCoordinate,
-                 fromDistance: mapView.camera.centerCoordinateDistance,
-                 pitch: 0.0,
-                 heading: 0.0
-             )
-         }
-         */
         let insets = UIEdgeInsets(
             top: inset, left: inset, bottom: inset, right: inset
         )
