@@ -66,9 +66,9 @@ struct PlaceDetail: View {
     var body: some View {
         VStack {
             if let item = place.item {
-                HStack {
+                HStack(alignment: .top) {
                     VStack(alignment: .leading) {
-                        Text(place.displayName).fontWeight(.bold)
+                        websiteButton(item: item)
                         if let phone = item.phoneNumber {
                             Text(phone)
                         }
@@ -79,16 +79,15 @@ struct PlaceDetail: View {
 
                     Spacer()
 
-                    VStack {
-                        websiteButton(item: item)
+                    VStack(alignment: .trailing) {
+                        transportTypePicker
                         if loadingDirections {
                             ProgressView()
                         } else {
-                            transportTypePicker
                             directionsButton
                         }
                     }
-                    .padding(.top, 40) // leaves room from CloseButton
+                    .padding(.top, 30) // leaves room from CloseButton
                 }
             } else {
                 Text(place.displayName).fontWeight(.bold)
@@ -121,7 +120,7 @@ struct PlaceDetail: View {
 
             // This opens the website of the selected place
             // in a sheet within this app.
-            Button("Website") {
+            Button(item.name ?? "Website") {
                 url = itemURL
                 isBrowsingWebsite = true
             }
