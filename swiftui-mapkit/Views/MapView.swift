@@ -185,7 +185,10 @@ struct MapView: UIViewRepresentable {
         // It allows displaying the name, phone number, address, and website
         // of the place associated with the annotation.
         @MainActor
-        func mapView(_: UIViewType, didSelect annotation: MKAnnotation) {
+        func mapView(
+            _ mapView: UIViewType,
+            didSelect annotation: MKAnnotation
+        ) {
             if let annotation = annotation as? MKPointAnnotation,
                let place = parent.annotationToPlaceMap[annotation] {
                 parent.mapKitVM.selectedPlace = place
@@ -193,6 +196,9 @@ struct MapView: UIViewRepresentable {
                 // This doesn't seem to provide any benefit.
                 // The view.setSelected call below takes care of this.
                 // mapView.selectAnnotation(annotation, animated: true)
+
+                // Remove any route displays.
+                mapView.removeOverlays(mapView.overlays)
             }
         }
 

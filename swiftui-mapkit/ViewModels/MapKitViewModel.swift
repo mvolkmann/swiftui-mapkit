@@ -145,6 +145,10 @@ final class MapKitViewModel: NSObject, ObservableObject {
 
         let response = try await directions.calculate()
 
+        for route in response.routes {
+            print("route distance =", route.distance)
+        }
+
         if let route = response.routes.first {
             // Remove all current overlays.
             for overlay in await mapView.overlays {
