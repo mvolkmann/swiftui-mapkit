@@ -185,14 +185,9 @@ struct MapView: UIViewRepresentable {
         // It allows displaying the name, phone number, address, and website
         // of the place associated with the annotation.
         @MainActor
-        func mapView(
-            _: UIViewType,
-            didSelect annotation: MKAnnotation
-        ) {
-            guard annotation is MKPointAnnotation else { return }
-
-            if let place = parent
-                .annotationToPlaceMap[annotation as! MKPointAnnotation] {
+        func mapView(_: UIViewType, didSelect annotation: MKAnnotation) {
+            if let annotation = annotation as? MKPointAnnotation,
+               let place = parent.annotationToPlaceMap[annotation] {
                 parent.mapKitVM.selectedPlace = place
 
                 // This doesn't seem to provide any benefit.
@@ -268,8 +263,8 @@ struct MapView: UIViewRepresentable {
                 )
             }
 
-            // view.glyphTintColor = .red
-            // view.markerTintColor = .yellow
+            view.markerTintColor = .yellow // bubble color
+            // view.glyphTintColor = .red // pin color
 
             // mapView.selectedAnnotations is not updated
             // when mapView.selectAnnotation is called!

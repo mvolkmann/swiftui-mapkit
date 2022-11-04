@@ -28,7 +28,7 @@ struct Directions: View {
 
     var body: some View {
         VStack {
-            Text("Directions to\n\(name)")
+            Text("\(name)\nDirections")
                 .font(.title)
                 .multilineTextAlignment(.center)
                 .padding(.top)
