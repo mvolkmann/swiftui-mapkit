@@ -127,11 +127,13 @@ final class MapKitViewModel: NSObject, ObservableObject {
                     longitude: attraction.longitude
                 )
             )
-        } else {
+        } else if let coordinate = currentPlacemark?.location?.coordinate {
             // Otherwise use the current user location as the starting point.
-            startPlacemark = MKPlacemark(
-                coordinate: await mapView.camera.centerCoordinate
-            )
+            startPlacemark = MKPlacemark(coordinate: coordinate)
+            // We cold use this to get directions the current map center.
+            // coordinate = await mapView.camera.centerCoordinate
+        } else {
+            return // could not determine starting coordinate
         }
 
         let request = MKDirections.Request()
@@ -141,6 +143,10 @@ final class MapKitViewModel: NSObject, ObservableObject {
             MKMapItem(placemark: MKPlacemark(placemark: endPlacemark))
         request.transportType = transportType
 
+        // Get multiple options so we can choose the shortest route.
+        // It seems when only one is returned it isn't always the shortest.
+        request.requestsAlternateRoutes = true
+
         let directions = MKDirections(request: request)
 
         let response = try await directions.calculate()
@@ -149,13 +155,26 @@ final class MapKitViewModel: NSObject, ObservableObject {
             print("route distance =", route.distance)
         }
 
-        if let route = response.routes.first {
-            // Remove all current overlays.
-            for overlay in await mapView.overlays {
-                await mapView.removeOverlay(overlay)
-            }
+        // Remove all the currently displayed routes.
+        await mapView.removeOverlays(mapView.overlays)
 
-            // Add a new overlay.
+        /*
+         // Display all the suggested routes.
+         for route in response.routes {
+             await mapView.addOverlay(route.polyline)
+         }
+         */
+
+        // Find the shortest route.
+        var shortestRoute: MKRoute?
+        for route in response.routes {
+            if shortestRoute == nil ||
+                route.distance < shortestRoute!.distance {
+                shortestRoute = route
+            }
+        }
+
+        if let route = shortestRoute {
             await mapView.addOverlay(route.polyline)
 
             await setVisibleRect(

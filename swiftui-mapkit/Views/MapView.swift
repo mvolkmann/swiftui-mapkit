@@ -159,7 +159,6 @@ struct MapView: UIViewRepresentable {
                  if place == mapKitVM.selectedPlace {
                      // Why doesn't calling this update mapView.selectedAnnotations!
                      mapView.selectAnnotation(annotation, animated: true)
-                     print("selected", place)
                  }
                  */
 
