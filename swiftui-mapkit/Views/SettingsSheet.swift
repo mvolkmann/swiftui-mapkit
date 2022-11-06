@@ -6,6 +6,7 @@ struct SettingsSheet: View {
     // MARK: - State
 
     @StateObject private var appVM = AppViewModel.shared
+    @StateObject private var mapKitVM = MapKitViewModel.shared
     @StateObject private var cloudKitVM = CloudKitViewModel.shared
 
     @State private var isExporting = false
@@ -36,6 +37,11 @@ struct SettingsSheet: View {
                 Text("Realistic").tag("realistic")
             }
             .pickerStyle(.segmented)
+            .onChange(of: appVM.mapElevation) { elevation in
+                if elevation == "flat" {
+                    mapKitVM.pitch = 0.0
+                }
+            }
 
             Picker("Emphasis", selection: $appVM.mapEmphasis) {
                 Text("Default").tag("default")

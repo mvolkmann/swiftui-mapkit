@@ -141,6 +141,8 @@ struct MapView: UIViewRepresentable {
     }
 
     private func showCenter(mapView: MKMapView) {
+        guard appVM.mapElevation == "flat" else { return }
+
         let screenWidthPercent = 0.05 // 5%
 
         let rect = mapView.visibleMapRect
@@ -155,6 +157,8 @@ struct MapView: UIViewRepresentable {
         // Get the longitude angle that represents screenWidthPercent
         // across the width of the screen at the current zoom level.
         let lngAngle = mapView.region.span.longitudeDelta * screenWidthPercent
+
+        // Get the distance of this longitude angle in meters.
         let lngMeters = longitudeMeters(
             latitude: lat,
             longitudeAngle: lngAngle
