@@ -141,28 +141,30 @@ struct MapView: UIViewRepresentable {
     }
 
     private func showCenter(mapView: MKMapView) {
+        let screenWidthPercent = 0.05 // 5%
+
         let rect = mapView.visibleMapRect
         let eastPoint = MKMapPoint(x: rect.minX, y: rect.midY)
         let westPoint = MKMapPoint(x: rect.maxX, y: rect.midY)
-        let radius = westPoint.distance(to: eastPoint) / 20.0
+        let radius = westPoint.distance(to: eastPoint) * screenWidthPercent
 
         let center = mapView.camera.centerCoordinate
         let lat = center.latitude
         let lng = center.longitude
 
-        // Get the longitude angle that represents 5% across
-        // the width of the screen at the current zoom level.
-        let lngAngle = mapView.region.span.longitudeDelta / 20.0
+        // Get the longitude angle that represents screenWidthPercent
+        // across the width of the screen at the current zoom level.
+        let lngAngle = mapView.region.span.longitudeDelta * screenWidthPercent
         let lngMeters = longitudeMeters(
             latitude: lat,
             longitudeAngle: lngAngle
         )
-        let latAngle = latitudeAngle(
-            latitudeMeters: lngMeters
-        )
 
         // Get the latitude angle that has the
         // same distance as the longitude angle.
+        let latAngle = latitudeAngle(
+            latitudeMeters: lngMeters
+        )
 
         let bottom = CLLocationCoordinate2D(
             latitude: lat - latAngle,
@@ -181,22 +183,25 @@ struct MapView: UIViewRepresentable {
             longitude: lng + lngAngle
         )
 
-        let circleOverlay = MyCircle(center: center, radius: radius)
-        circleOverlay.alpha = 1.0
-        // circleOverlay.fillColor = .blue
-        circleOverlay.lineWidth = 2
-        circleOverlay.strokeColor = .red
+        let color: UIColor = .red
+        let lineWidth = 2.0
 
-        let line1Overlay = MyPolyline(coordinates: [left, right], count: 2)
-        line1Overlay.color = .red
-        line1Overlay.lineWidth = 2
+        let circle = MyCircle(center: center, radius: radius)
+        circle.alpha = 1.0
+        // circle.fillColor = .blue
+        circle.lineWidth = lineWidth
+        circle.strokeColor = color
 
-        let line2Overlay = MyPolyline(coordinates: [bottom, top], count: 2)
-        line2Overlay.color = .red
-        line2Overlay.lineWidth = 2
+        let line1 = MyPolyline(coordinates: [left, right], count: 2)
+        line1.color = color
+        line1.lineWidth = lineWidth
+
+        let line2 = MyPolyline(coordinates: [bottom, top], count: 2)
+        line2.color = color
+        line2.lineWidth = lineWidth
 
         mapView.removeOverlays(mapCenterOverlays)
-        mapCenterOverlays = [circleOverlay, line1Overlay, line2Overlay]
+        mapCenterOverlays = [circle, line1, line2]
         mapView.addOverlays(mapCenterOverlays)
     }
 
