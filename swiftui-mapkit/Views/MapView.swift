@@ -83,6 +83,35 @@ struct MapView: UIViewRepresentable {
         return config
     }
 
+    /// Computes a latitude angle from a latitude distance.
+    /// - Parameters:
+    ///   - latitude: span in meters
+    /// - Returns: the latitude span angle in degrees
+    private func latitudeAngle(
+        latitudeMeters: Double
+    ) -> Double {
+        let earthCircumferenceThroughPoles = 40_007_863.0 // meters
+        let metersPerDegree = earthCircumferenceThroughPoles / 360.0
+        return latitudeMeters / metersPerDegree
+    }
+
+    /// Computes a longitude distance in meters.
+    /// - Parameters:
+    ///   - latitude: angle in degrees
+    ///   - longitudeAngle: longitude span angle in degrees
+    /// - Returns: the longitude span distance in meters
+    private func longitudeMeters(
+        latitude: Double,
+        longitudeAngle: Double
+    ) -> Double {
+        let radiansPerDegree = Double.pi / 180.0
+        let latRadians = latitude * radiansPerDegree
+        let lngRadians = longitudeAngle * radiansPerDegree
+        let earthRadius = 6_371_000.0 // average
+        let earthDiameter = earthRadius * 2
+        return earthDiameter * asin(cos(latRadians) * sin(lngRadians / 2))
+    }
+
     // This is required to conform to UIViewRepresentable.
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -111,83 +140,26 @@ struct MapView: UIViewRepresentable {
         return mapView
     }
 
-    /// Computes a latitude angle.
-    /// - Parameters:
-    ///   - latitude: span in meters
-    /// - Returns: the latitude span angle in degrees
-    private func latitudeAngle(
-        latitudeMeters: Double
-    ) -> Double {
-        let earthCircumferenceThroughPoles = 40_007_863.0 // meters
-        let metersPerDegree = earthCircumferenceThroughPoles / 360.0
-        return latitudeMeters / metersPerDegree
-    }
-
-    /// Computes a longitude span angle.
-    /// - Parameters:
-    ///   - latitude: angle in degrees
-    ///   - longitudeMeters: longitude span in meters
-    /// - Returns: the longitude span angle in degrees
-    private func longitudeAngle(
-        latitude: Double,
-        longitudeMeters: Double
-    ) -> Double {
-        let earthRadius = 6_371_000.0
-        let radiansPerDegree = Double.pi / 180.0
-        print("longitudeMeters =", longitudeMeters)
-        let angle1 = (longitudeMeters / (2.0 * earthRadius)) * radiansPerDegree
-        print("angle1 =", angle1)
-        return 2.0 * asin(sin(angle1) / cos(latitude * radiansPerDegree))
-    }
-
-    /// Computes longitude distance in meters.
-    /// - Parameters:
-    ///   - latitude: angle in degrees
-    ///   - longitudeAngle: longitude span angle in degrees
-    /// - Returns: the longitude span distance in meters
-    private func longitudeMeters(
-        latitude: Double,
-        longitudeAngle: Double
-    ) -> Double {
-        let earthRadius = 6_371_000.0
-        /*
-         let oneDegreeLongitudeDistance =
-             cos(latitude * Double.pi / 180.0) * earthRadius / 360.0
-         return oneDegreeLongitudeDistance * longitudeAngle
-         */
-        let radiansPerDegree = Double.pi / 180.0
-        let latRadians = latitude * radiansPerDegree
-        let lngRadians = longitudeAngle * radiansPerDegree
-        let temp = pow(cos(latRadians), 2) * pow(sin(lngRadians / 2), 2)
-        return 2.0 * earthRadius * asin(sqrt(temp))
-    }
-
     private func showCenter(mapView: MKMapView) {
         let rect = mapView.visibleMapRect
         let eastPoint = MKMapPoint(x: rect.minX, y: rect.midY)
         let westPoint = MKMapPoint(x: rect.maxX, y: rect.midY)
         let radius = westPoint.distance(to: eastPoint) / 20.0
-        print("radius =", radius)
 
         let center = mapView.camera.centerCoordinate
         let lat = center.latitude
-        print("lat =", lat)
         let lng = center.longitude
 
         // Get the longitude angle that represents 5% across
         // the width of the screen at the current zoom level.
         let lngAngle = mapView.region.span.longitudeDelta / 20.0
-        // let lngAngle = longitudeAngle(latitude: lat, longitudeMeters: radius)
-        print("lngAngle =", lngAngle)
         let lngMeters = longitudeMeters(
             latitude: lat,
             longitudeAngle: lngAngle
         )
-        print("lngMeters =", lngMeters)
         let latAngle = latitudeAngle(
             latitudeMeters: lngMeters
         )
-        print("latAngle =", latAngle)
 
         // Get the latitude angle that has the
         // same distance as the longitude angle.
