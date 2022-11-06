@@ -151,40 +151,41 @@ final class MapKitViewModel: NSObject, ObservableObject {
 
         let response = try await directions.calculate()
 
-        for route in response.routes {
-            print("route distance =", route.distance)
-        }
-
         // Remove all the currently displayed routes.
         await mapView.removeOverlays(mapView.overlays)
-
-        /*
-         // Display all the suggested routes.
-         for route in response.routes {
-             await mapView.addOverlay(route.polyline)
-         }
-         */
 
         let shortestRoute = response.routes.min { r1, r2 in
             r1.distance < r2.distance
         }
 
-        if let route = shortestRoute {
-            await mapView.addOverlay(route.polyline)
+        // Display all the suggested routes.
+        for route in response.routes {
+            let polyline = route.polyline
+            let points = polyline.points()
+            let count = polyline.pointCount
+            let myPolyline = MyPolyline(points: points, count: count)
+            let isShortest = route == shortestRoute
 
-            await setVisibleRect(
-                route.polyline.boundingMapRect,
-                inset: 20.0
-            )
+            let color: UIColor = isShortest ? .green : .blue
+            myPolyline.color = color.withAlphaComponent(0.5)
+            myPolyline.lineWidth = route == shortestRoute ? 5 : 3
+            await mapView.addOverlay(myPolyline)
 
-            mainQ {
-                self.travelDistance = route.distance
-                self.travelTime = route.expectedTravelTime
-                self.routeSteps = route.steps
-                    .compactMap { step in
-                        let instructions = step.instructions
-                        return instructions.isEmpty ? nil : instructions
-                    }
+            if isShortest {
+                await setVisibleRect(
+                    route.polyline.boundingMapRect,
+                    inset: 20.0
+                )
+
+                mainQ {
+                    self.travelDistance = route.distance
+                    self.travelTime = route.expectedTravelTime
+                    self.routeSteps = route.steps
+                        .compactMap { step in
+                            let instructions = step.instructions
+                            return instructions.isEmpty ? nil : instructions
+                        }
+                }
             }
         }
     }
