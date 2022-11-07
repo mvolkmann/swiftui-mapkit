@@ -35,7 +35,7 @@ final class MapKitViewModel: NSObject, ObservableObject {
     @Published var shouldUpdateCamera = true
     @Published var transportType: MKDirectionsTransportType = .automobile
     @Published var travelDistance: CLLocationDistance = 0.0 // meters
-    @Published var travelTime: TimeInterval = 0.0 // seconds
+    @Published var travelSeconds: TimeInterval = 0.0
 
     static var shared = MapKitViewModel()
 
@@ -179,7 +179,7 @@ final class MapKitViewModel: NSObject, ObservableObject {
 
                 mainQ {
                     self.travelDistance = route.distance
-                    self.travelTime = route.expectedTravelTime
+                    self.travelSeconds = route.expectedTravelTime
                     self.routeSteps = route.steps
                         .compactMap { step in
                             let instructions = step.instructions
@@ -187,6 +187,18 @@ final class MapKitViewModel: NSObject, ObservableObject {
                         }
                 }
             }
+
+            /*
+             let annotation = MKPointAnnotation()
+             annotation.coordinate = polyline.coordinate
+             annotation.title = "My Title"
+             annotation.subtitle = "My Subtitle"
+             await mapView.addAnnotation(annotation)
+             */
+
+            let annotation = RouteAnnotation()
+            await mapView.addAnnotation(annotation)
+            print("MapKitViewModel: added a RouteAnnotation")
         }
     }
 

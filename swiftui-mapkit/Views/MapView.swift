@@ -349,6 +349,7 @@ struct MapView: UIViewRepresentable {
             return MKOverlayRenderer(overlay: overlay)
         }
 
+        /// This returns a view for a given annotation.
         func mapView(
             _ mapView: MKMapView,
             viewFor annotation: MKAnnotation
@@ -356,30 +357,44 @@ struct MapView: UIViewRepresentable {
             // Do not show the user location annotation.
             if annotation is MKUserLocation { return nil }
 
-            // Create an annotation view or reuse an existing one.
-            var view: MKMarkerAnnotationView
-            let identifier = "place-annotation"
-            if let dequeuedView = mapView.dequeueReusableAnnotationView(
-                withIdentifier: identifier
-            ) as? MKMarkerAnnotationView {
-                view = dequeuedView
+            var view: MKAnnotationView
+
+            if annotation is MKPointAnnotation {
+                // Create an annotation view or reuse an existing one.
+                let identifier = "place-annotation"
+                if let dequeuedView = mapView.dequeueReusableAnnotationView(
+                    withIdentifier: identifier
+                ) as? MKMarkerAnnotationView {
+                    view = dequeuedView
+                    view.annotation = annotation
+                } else {
+                    view = MKMarkerAnnotationView(
+                        annotation: annotation,
+                        reuseIdentifier: identifier
+                    )
+                }
+
+                if let view = view as? MKMarkerAnnotationView {
+                    view.markerTintColor = UIColor.yellow // bubble color
+                    // view.glyphTintColor = .red // pin color
+                }
+
+                // mapView.selectedAnnotations is not updated
+                // when mapView.selectAnnotation is called!
+
+                let selectedPlace = parent.mapKitVM.selectedPlace
+                let isSelected = selectedPlace?.coordinate == annotation
+                    .coordinate
+                view.setSelected(isSelected, animated: true)
+            } else if annotation is RouteAnnotation {
+                print("MapView: using a RouteAnnotation")
+                view = MKAnnotationView()
                 view.annotation = annotation
             } else {
-                view = MKMarkerAnnotationView(
-                    annotation: annotation,
-                    reuseIdentifier: identifier
+                fatalError(
+                    "Unsupported annotation type: \(type(of: annotation))"
                 )
             }
-
-            view.markerTintColor = .yellow // bubble color
-            // view.glyphTintColor = .red // pin color
-
-            // mapView.selectedAnnotations is not updated
-            // when mapView.selectAnnotation is called!
-
-            let selectedPlace = parent.mapKitVM.selectedPlace
-            let isSelected = selectedPlace?.coordinate == annotation.coordinate
-            view.setSelected(isSelected, animated: true)
 
             return view
         }

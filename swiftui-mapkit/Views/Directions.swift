@@ -48,7 +48,9 @@ struct Directions: View {
             }
             .padding(.horizontal)
 
-            Text("Time: \(mapKitVM.travelTime.secondsToHMS)")
+            Text("Time: \(mapKitVM.travelSeconds.secondsToHMS)")
+            let seconds = mapKitVM.travelSeconds.int
+            Text("ETA: \(Date.hoursAndMinutesFromNow(seconds: seconds))")
 
             if let message = mapKitVM.message {
                 Text(message)

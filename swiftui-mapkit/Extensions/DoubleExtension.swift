@@ -3,6 +3,10 @@ import Foundation
 extension Double {
     var degreesToRadians: Self { self * .pi / 180.0 }
 
+    var int: Int {
+        Int(rounded())
+    }
+
     var metersToKilometers: Double {
         self / 1000
     }
@@ -18,7 +22,7 @@ extension Double {
     var radiansToDegrees: Self { self * 180.0 / .pi }
 
     var secondsToHMS: String {
-        var seconds = Int(rounded())
+        var seconds = int
         var minutes = seconds / 60
         let hours = minutes / 60
         seconds %= 60
