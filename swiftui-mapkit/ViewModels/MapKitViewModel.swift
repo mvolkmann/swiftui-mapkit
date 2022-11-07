@@ -27,11 +27,13 @@ final class MapKitViewModel: NSObject, ObservableObject {
         didSet { showPlaces() }
     }
 
+    @Published var preferMetric = false
     @Published var routeSteps: [String] = []
     @Published var searchLocations: [String] = []
     @Published var searchQuery = ""
     @Published var selectedPlace: Place?
     @Published var selectedPlacemark: CLPlacemark?
+    @Published var selectedRoute: MKRoute?
     @Published var shouldUpdateCamera = true
     @Published var transportType: MKDirectionsTransportType = .automobile
     @Published var travelDistance: CLLocationDistance = 0.0 // meters
@@ -180,11 +182,8 @@ final class MapKitViewModel: NSObject, ObservableObject {
                 mainQ {
                     self.travelDistance = route.distance
                     self.travelSeconds = route.expectedTravelTime
-                    self.routeSteps = route.steps
-                        .compactMap { step in
-                            let instructions = step.instructions
-                            return instructions.isEmpty ? nil : instructions
-                        }
+                    self.selectedRoute = route
+                    self.updateRouteSteps(route: route)
                 }
             }
 
@@ -347,6 +346,23 @@ final class MapKitViewModel: NSObject, ObservableObject {
 
     func unlikeLocation(_ location: String) {
         likedLocations.removeAll(where: { $0 == location })
+    }
+
+    func updateRouteSteps(route: MKRoute?) {
+        guard let route else { return }
+
+        let unit = preferMetric ? "km" : "miles"
+        routeSteps = route.steps
+            .compactMap { step in
+                guard !step.instructions.isEmpty else { return nil }
+                let meters = step.distance
+                let distance = self.preferMetric ?
+                    meters / 1000.0 : meters.metersToMiles
+                let formattedDistance = distance.places(1)
+                return formattedDistance == "0.0" ?
+                    "\(step.instructions)." :
+                    "In \(formattedDistance) \(unit) \(step.instructions.firstLower)."
+            }
     }
 }
 

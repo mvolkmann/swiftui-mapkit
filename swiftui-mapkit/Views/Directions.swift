@@ -14,7 +14,7 @@ struct Directions: View {
 
     private var distance: String {
         var d = mapKitVM.travelDistance
-        d = appVM.preferMetric ? d.metersToKilometers : d.metersToMiles
+        d = mapKitVM.preferMetric ? d.metersToKilometers : d.metersToMiles
         return d.places(1)
     }
 
@@ -39,12 +39,15 @@ struct Directions: View {
 
             HStack {
                 Text(distance)
-                Picker("Distance Unit", selection: $appVM.preferMetric) {
+                Picker("Distance Unit", selection: $mapKitVM.preferMetric) {
                     Text("Miles").tag(false)
                     Text("KM").tag(true)
                 }
                 .frame(width: 135)
                 .pickerStyle(.segmented)
+                .onChange(of: mapKitVM.preferMetric) { _ in
+                    mapKitVM.updateRouteSteps(route: mapKitVM.selectedRoute)
+                }
             }
             .padding(.horizontal)
 
