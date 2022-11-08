@@ -307,6 +307,9 @@ struct MapView: UIViewRepresentable {
 
                 // Remove any route displays.
                 mapView.removeOverlays(mapView.overlays)
+            } else if let annotation = annotation as? RouteAnnotation {
+                print("got route tap")
+                parent.mapKitVM.selectedRoute = annotation.route
             }
         }
 
@@ -397,13 +400,13 @@ struct MapView: UIViewRepresentable {
                 ) as? MKMarkerAnnotationView {
                     view = dequeuedView
                     view.annotation = annotation
+                    view.canShowCallout = false // need this?
                 } else {
                     view = RouteAnnotationView(
                         annotation: annotation,
                         reuseIdentifier: RouteAnnotation.identifier
                     )
                 }
-                view.canShowCallout = true
             } else {
                 fatalError(
                     "Unsupported annotation type: \(type(of: annotation))"

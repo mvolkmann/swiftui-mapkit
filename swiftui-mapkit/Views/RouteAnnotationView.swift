@@ -10,7 +10,7 @@ class RouteAnnotationView: MKAnnotationView {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
 
         if let annotation = annotation as? RouteAnnotation {
-            canShowCallout = true
+            canShowCallout = false // need this?
 
             let bounds = CGRect(x: 0, y: 0, width: 105.0, height: 42.0)
             let textView = UITextView(frame: bounds)
@@ -22,24 +22,18 @@ class RouteAnnotationView: MKAnnotationView {
             textView.backgroundColor =
                 annotation.backgroundColor.withAlphaComponent(0.5)
 
+            // If the route for this annotation is selected, add a border.
+            if annotation.route == MapKitViewModel.shared.selectedRoute {
+                textView.layer.borderWidth = 2
+                textView.layer.borderColor = UIColor.black.cgColor
+            }
+
             let seconds = annotation.route.expectedTravelTime
             let time = seconds.secondsToHMS
             let eta = Date.hoursAndMinutesFromNow(seconds: seconds.int)
             textView.text = "Duration: \(time)\nArrival: \(eta)"
 
-            #warning("Why doesn't this detect taps?")
-            let recognizer = UITapGestureRecognizer(
-                target: textView,
-                action: #selector(didTapView(_:))
-            )
-            addGestureRecognizer(recognizer)
-
             addSubview(textView)
         }
-    }
-
-    @objc
-    func didTapView(_: UITapGestureRecognizer) {
-        print("got tap")
     }
 }
