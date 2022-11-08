@@ -1,21 +1,5 @@
 import MapKit
-import SwiftUI
-// See https://developer.apple.com/forums/thread/663631.
 import UIKit
-
-class RouteAnnotation: NSObject, MKAnnotation {
-    static let identifier = "route-annotation"
-
-    let coordinate: CLLocationCoordinate2D
-    let title: String?
-    let route: MKRoute
-
-    init(route: MKRoute) {
-        self.route = route
-        coordinate = route.polyline.coordinate
-        title = route.name
-    }
-}
 
 class RouteAnnotationView: MKAnnotationView {
     required init?(coder aDecoder: NSCoder) {
@@ -29,10 +13,10 @@ class RouteAnnotationView: MKAnnotationView {
             canShowCallout = true
 
             let bounds = CGRect(x: 0, y: 0, width: 105.0, height: 42.0)
-            let center = CGPoint(x: 0, y: -frame.size.height / 2)
             let textView = UITextView(frame: bounds)
+
             textView.contentInsetAdjustmentBehavior = .automatic
-            textView.center = center
+            textView.center = CGPoint(x: 0, y: -frame.size.height / 2)
             textView.textAlignment = NSTextAlignment.justified
             textView.textColor = .black
             textView.backgroundColor = .white.withAlphaComponent(0.6)

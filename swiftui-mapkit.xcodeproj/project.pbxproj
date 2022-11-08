@@ -19,6 +19,7 @@
 		1A8E283E2908752B0064955F /* CLPlacemarkExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8E283D2908752B0064955F /* CLPlacemarkExtension.swift */; };
 		1A94BF6E291868BB00001352 /* RouteAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A94BF6D291868BB00001352 /* RouteAnnotation.swift */; };
 		1A94BF7029194D5300001352 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A94BF6F29194D5300001352 /* DateExtension.swift */; };
+		1A94BF74291ABCEC00001352 /* RouteAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A94BF73291ABCEC00001352 /* RouteAnnotationView.swift */; };
 		1AA35F812915ADB40080003F /* MyCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA35F802915ADB40080003F /* MyCircle.swift */; };
 		1AA35F832915B3F70080003F /* MyPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA35F822915B3F70080003F /* MyPolyline.swift */; };
 		1AAB0CFE2826436600544A8F /* MapExplorerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0CFD2826436600544A8F /* MapExplorerApp.swift */; };
@@ -76,6 +77,7 @@
 		1A8E283D2908752B0064955F /* CLPlacemarkExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLPlacemarkExtension.swift; sourceTree = "<group>"; };
 		1A94BF6D291868BB00001352 /* RouteAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteAnnotation.swift; sourceTree = "<group>"; };
 		1A94BF6F29194D5300001352 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		1A94BF73291ABCEC00001352 /* RouteAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteAnnotationView.swift; sourceTree = "<group>"; };
 		1AA35F802915ADB40080003F /* MyCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCircle.swift; sourceTree = "<group>"; };
 		1AA35F822915B3F70080003F /* MyPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPolyline.swift; sourceTree = "<group>"; };
 		1AAB0CFA2826436600544A8F /* swiftui-mapkit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "swiftui-mapkit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -140,7 +142,7 @@
 				1A67891B28FF15EF00F3DFD8 /* Marker.swift */,
 				1AB2A9742913057F00A20F79 /* MyTextField.swift */,
 				1AF027BF290F26BA00AF1ADB /* PlaceDetail.swift */,
-				1A94BF6D291868BB00001352 /* RouteAnnotation.swift */,
+				1A94BF73291ABCEC00001352 /* RouteAnnotationView.swift */,
 				1A82824D282A34D100380E9D /* SafariView.swift */,
 				1AB9F3CA2906C927002DF760 /* SaveAttraction.swift */,
 				1AE3A17A2901899C00FB6501 /* SearchSheet.swift */,
@@ -250,6 +252,7 @@
 				1A33435128268119006730C2 /* Place.swift */,
 				1AA35F802915ADB40080003F /* MyCircle.swift */,
 				1AA35F822915B3F70080003F /* MyPolyline.swift */,
+				1A94BF6D291868BB00001352 /* RouteAnnotation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -359,6 +362,7 @@
 				1AE3A17F29018A9800FB6501 /* CloseButton.swift in Sources */,
 				1A0D5ABD29006DDB007AA0F7 /* MapView.swift in Sources */,
 				1AE3A1862902DF0A00FB6501 /* Attraction.swift in Sources */,
+				1A94BF74291ABCEC00001352 /* RouteAnnotationView.swift in Sources */,
 				1AF027C0290F26BA00AF1ADB /* PlaceDetail.swift in Sources */,
 				1A94BF7029194D5300001352 /* DateExtension.swift in Sources */,
 				1A3A6DB92909BF1C00183860 /* CloudKitViewModel.swift in Sources */,
