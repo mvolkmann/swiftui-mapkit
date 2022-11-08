@@ -6,7 +6,11 @@ import SwiftUI
 // Privacy - Location When In Use Usage Description
 // Privacy - Location Always and When In Use Usage Description
 final class MapKitViewModel: NSObject, ObservableObject {
-    static let defaultDistance = 1000.0 // in meters
+    // MARK: - Constants
+
+    private static let defaultDistance = 1000.0 // in meters
+    private static let routeColors: [UIColor] =
+        [.green, .blue, .red, .purple, .yellow, .orange]
 
     // MARK: - State
 
@@ -156,29 +160,30 @@ final class MapKitViewModel: NSObject, ObservableObject {
         // Remove all the currently displayed routes.
         await mapView.removeOverlays(mapView.overlays)
 
-        let shortestRoute = response.routes.min { r1, r2 in
-            r1.distance < r2.distance
-        }
+        // Sort the routes from shortest to longest.
+        var routes = response.routes
+        routes.sort { $0.distance < $1.distance }
 
         // Display all the suggested routes.
-        for route in response.routes {
+        for (index, route) in routes.enumerated() {
             let polyline = route.polyline
             let points = polyline.points()
             let count = polyline.pointCount
             let myPolyline = MyPolyline(points: points, count: count)
-            let isShortest = route == shortestRoute
 
-            let color: UIColor = isShortest ? .green : .blue
-            myPolyline.color = color.withAlphaComponent(0.5)
-            myPolyline.lineWidth = route == shortestRoute ? 5 : 3
+            myPolyline.color = Self.routeColors[index].withAlphaComponent(0.5)
+            let isShortest = index == 0
+            myPolyline.lineWidth = isShortest ? 5 : 3 // shortest is wider
             await mapView.addOverlay(myPolyline)
 
             if isShortest {
+                // Show the entire shortest route
                 await setVisibleRect(
                     route.polyline.boundingMapRect,
                     inset: 20.0
                 )
 
+                // Report on only the shortest route.
                 mainQ {
                     self.travelDistance = route.distance
                     self.travelSeconds = route.expectedTravelTime
