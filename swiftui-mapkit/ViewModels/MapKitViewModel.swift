@@ -162,12 +162,13 @@ final class MapKitViewModel: NSObject, ObservableObject {
         // Remove all the currently displayed routes.
         await mapView.removeOverlays(mapView.overlays)
 
-        // Sort the routes from shortest to longest.
+        // Sort the routes from shortest to longest travel time.
         var routes = response.routes
-        routes.sort { $0.distance < $1.distance }
+        routes.sort { $0.expectedTravelTime < $1.expectedTravelTime }
 
         // Display all the suggested routes.
         for (index, route) in routes.enumerated() {
+            print("index: \(index), distance: \(route.distance)")
             let polyline = route.polyline
             let points = polyline.points()
             let count = polyline.pointCount
