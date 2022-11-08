@@ -10,8 +10,6 @@ class RouteAnnotationView: MKAnnotationView {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
 
         if let annotation = annotation as? RouteAnnotation {
-            canShowCallout = false // need this?
-
             let bounds = CGRect(x: 0, y: 0, width: 105.0, height: 42.0)
             let textView = UITextView(frame: bounds)
 

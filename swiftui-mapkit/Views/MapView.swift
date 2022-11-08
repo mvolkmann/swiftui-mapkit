@@ -400,7 +400,6 @@ struct MapView: UIViewRepresentable {
                 ) as? MKMarkerAnnotationView {
                     view = dequeuedView
                     view.annotation = annotation
-                    view.canShowCallout = false // need this?
                 } else {
                     view = RouteAnnotationView(
                         annotation: annotation,
