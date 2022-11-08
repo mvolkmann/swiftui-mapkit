@@ -392,8 +392,6 @@ struct MapView: UIViewRepresentable {
                     .coordinate
                 view.setSelected(isSelected, animated: true)
             } else if annotation is RouteAnnotation {
-                print("MapView: using a RouteAnnotation")
-
                 if let dequeuedView = mapView.dequeueReusableAnnotationView(
                     withIdentifier: RouteAnnotation.identifier
                 ) as? MKMarkerAnnotationView {

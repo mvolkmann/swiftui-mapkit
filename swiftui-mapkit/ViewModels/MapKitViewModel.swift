@@ -9,7 +9,9 @@ final class MapKitViewModel: NSObject, ObservableObject {
     // MARK: - Constants
 
     private static let defaultDistance = 1000.0 // in meters
-    private static let routeColors: [UIColor] =
+    private static let routeBackgroundColors: [UIColor] =
+        [.black, .white, .white, .white, .black, .black]
+    private static let routeForegroundColors: [UIColor] =
         [.green, .blue, .red, .purple, .yellow, .orange]
 
     // MARK: - State
@@ -171,7 +173,8 @@ final class MapKitViewModel: NSObject, ObservableObject {
             let count = polyline.pointCount
             let myPolyline = MyPolyline(points: points, count: count)
 
-            myPolyline.color = Self.routeColors[index].withAlphaComponent(0.5)
+            let color = Self.routeForegroundColors[index]
+            myPolyline.color = color.withAlphaComponent(0.5)
             let isShortest = index == 0
             myPolyline.lineWidth = isShortest ? 5 : 3 // shortest is wider
             await mapView.addOverlay(myPolyline)
@@ -192,7 +195,11 @@ final class MapKitViewModel: NSObject, ObservableObject {
                 }
             }
 
-            let annotation = RouteAnnotation(route: route)
+            let annotation = RouteAnnotation(
+                route: route,
+                foregroundColor: color,
+                backgroundColor: Self.routeBackgroundColors[index]
+            )
             await mapView.addAnnotation(annotation)
         }
     }

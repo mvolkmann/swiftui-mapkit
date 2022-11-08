@@ -18,8 +18,9 @@ class RouteAnnotationView: MKAnnotationView {
             textView.contentInsetAdjustmentBehavior = .automatic
             textView.center = CGPoint(x: 0, y: -frame.size.height / 2)
             textView.textAlignment = NSTextAlignment.justified
-            textView.textColor = .black
-            textView.backgroundColor = .white.withAlphaComponent(0.6)
+            textView.textColor = annotation.foregroundColor
+            textView.backgroundColor =
+                annotation.backgroundColor.withAlphaComponent(0.5)
 
             let seconds = annotation.route.expectedTravelTime
             let time = seconds.secondsToHMS

@@ -3,12 +3,16 @@ import MapKit
 class RouteAnnotation: NSObject, MKAnnotation {
     static let identifier = "route-annotation"
 
+    let backgroundColor: UIColor
     let coordinate: CLLocationCoordinate2D
-    let title: String?
+    let foregroundColor: UIColor
     let route: MKRoute
+    let title: String?
 
-    init(route: MKRoute) {
+    init(route: MKRoute, foregroundColor: UIColor, backgroundColor: UIColor) {
         self.route = route
+        self.foregroundColor = foregroundColor
+        self.backgroundColor = backgroundColor
         title = route.name
 
         let polyline = route.polyline
