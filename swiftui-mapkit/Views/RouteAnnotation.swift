@@ -8,12 +8,12 @@ class RouteAnnotation: NSObject, MKAnnotation {
 
     let coordinate: CLLocationCoordinate2D
     let title: String?
-    let subtitle: String?
+    let route: MKRoute
 
     init(route: MKRoute) {
+        self.route = route
         coordinate = route.polyline.coordinate
         title = route.name
-        subtitle = route.description
     }
 }
 
@@ -28,15 +28,19 @@ class RouteAnnotationView: MKAnnotationView {
         if let annotation = annotation as? RouteAnnotation {
             canShowCallout = true
 
-            let bounds = CGRect(x: 0, y: 0, width: 70.0, height: 30.0)
+            let bounds = CGRect(x: 0, y: 0, width: 105.0, height: 42.0)
             let center = CGPoint(x: 0, y: -frame.size.height / 2)
             let textView = UITextView(frame: bounds)
             textView.contentInsetAdjustmentBehavior = .automatic
             textView.center = center
             textView.textAlignment = NSTextAlignment.justified
             textView.textColor = .black
-            textView.backgroundColor = .yellow.withAlphaComponent(0.5)
-            textView.text = annotation.title
+            textView.backgroundColor = .white.withAlphaComponent(0.6)
+
+            let seconds = annotation.route.expectedTravelTime
+            let time = seconds.secondsToHMS
+            let eta = Date.hoursAndMinutesFromNow(seconds: seconds.int)
+            textView.text = "Duration: \(time)\nArrival: \(eta)"
 
             addSubview(textView)
         }
