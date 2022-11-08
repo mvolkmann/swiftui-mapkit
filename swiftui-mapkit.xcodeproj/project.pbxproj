@@ -140,6 +140,7 @@
 				1A67891B28FF15EF00F3DFD8 /* Marker.swift */,
 				1AB2A9742913057F00A20F79 /* MyTextField.swift */,
 				1AF027BF290F26BA00AF1ADB /* PlaceDetail.swift */,
+				1A94BF6D291868BB00001352 /* RouteAnnotation.swift */,
 				1A82824D282A34D100380E9D /* SafariView.swift */,
 				1AB9F3CA2906C927002DF760 /* SaveAttraction.swift */,
 				1AE3A17A2901899C00FB6501 /* SearchSheet.swift */,
@@ -249,7 +250,6 @@
 				1A33435128268119006730C2 /* Place.swift */,
 				1AA35F802915ADB40080003F /* MyCircle.swift */,
 				1AA35F822915B3F70080003F /* MyPolyline.swift */,
-				1A94BF6D291868BB00001352 /* RouteAnnotation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";

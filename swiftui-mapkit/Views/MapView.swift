@@ -137,6 +137,11 @@ struct MapView: UIViewRepresentable {
         // This must be done on the main queue.
         mainQ { mapKitVM.mapView = mapView }
 
+        mapView.register(
+            RouteAnnotationView.self,
+            forAnnotationViewWithReuseIdentifier: RouteAnnotation.identifier
+        )
+
         return mapView
     }
 
@@ -388,8 +393,19 @@ struct MapView: UIViewRepresentable {
                 view.setSelected(isSelected, animated: true)
             } else if annotation is RouteAnnotation {
                 print("MapView: using a RouteAnnotation")
-                view = MKAnnotationView()
-                view.annotation = annotation
+
+                if let dequeuedView = mapView.dequeueReusableAnnotationView(
+                    withIdentifier: RouteAnnotation.identifier
+                ) as? MKMarkerAnnotationView {
+                    view = dequeuedView
+                    view.annotation = annotation
+                } else {
+                    view = RouteAnnotationView(
+                        annotation: annotation,
+                        reuseIdentifier: RouteAnnotation.identifier
+                    )
+                }
+                view.canShowCallout = true
             } else {
                 fatalError(
                     "Unsupported annotation type: \(type(of: annotation))"

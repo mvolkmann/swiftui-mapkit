@@ -187,17 +187,8 @@ final class MapKitViewModel: NSObject, ObservableObject {
                 }
             }
 
-            /*
-             let annotation = MKPointAnnotation()
-             annotation.coordinate = polyline.coordinate
-             annotation.title = "My Title"
-             annotation.subtitle = "My Subtitle"
-             await mapView.addAnnotation(annotation)
-             */
-
-            let annotation = RouteAnnotation()
+            let annotation = RouteAnnotation(route: route)
             await mapView.addAnnotation(annotation)
-            print("MapKitViewModel: added a RouteAnnotation")
         }
     }
 
