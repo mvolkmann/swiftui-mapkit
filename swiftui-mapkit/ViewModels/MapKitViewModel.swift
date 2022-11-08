@@ -168,7 +168,6 @@ final class MapKitViewModel: NSObject, ObservableObject {
 
         // Display all the suggested routes.
         for (index, route) in routes.enumerated() {
-            print("index: \(index), distance: \(route.distance)")
             let polyline = route.polyline
             let points = polyline.points()
             let count = polyline.pointCount

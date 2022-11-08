@@ -27,7 +27,19 @@ class RouteAnnotationView: MKAnnotationView {
             let eta = Date.hoursAndMinutesFromNow(seconds: seconds.int)
             textView.text = "Duration: \(time)\nArrival: \(eta)"
 
+            #warning("Why doesn't this detect taps?")
+            let recognizer = UITapGestureRecognizer(
+                target: textView,
+                action: #selector(didTapView(_:))
+            )
+            addGestureRecognizer(recognizer)
+
             addSubview(textView)
         }
+    }
+
+    @objc
+    func didTapView(_: UITapGestureRecognizer) {
+        print("got tap")
     }
 }
