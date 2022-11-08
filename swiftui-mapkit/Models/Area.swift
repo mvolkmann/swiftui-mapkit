@@ -26,6 +26,7 @@ final class Area: CloudKitable, Hashable, Identifiable {
         lhs.name == rhs.name
     }
 
+    // This is used by the Hashable protocol.
     func hash(into hasher: inout Hasher) {
         hasher.combine(name)
     }

@@ -19,10 +19,12 @@ final class Attraction: CloudKitable, Hashable, Identifiable {
     var name: String { record["name"] as? String ?? "" }
     var pitch: Double { record["pitch"] as? Double ?? 0.0 }
 
+    // This is required by the Equatable protocol.
     static func == (lhs: Attraction, rhs: Attraction) -> Bool {
         lhs.name == rhs.name
     }
 
+    // This is used by the Hashable protocol.
     func hash(into hasher: inout Hasher) {
         hasher.combine(name)
     }
