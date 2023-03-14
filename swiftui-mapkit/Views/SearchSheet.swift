@@ -3,16 +3,18 @@ import MapKit // for MKCoordinateRegionMakeWithDistance
 import SwiftUI
 
 struct SearchSheet: View {
-    // MARK: - State
-
-    @Environment(\.editMode) private var editMode
-
     enum FocusName: Hashable {
         case address
         case areaName
         case attractionName
         case kind
     }
+
+    // MARK: - State
+
+    @Environment(\.editMode) private var editMode
+
+    @EnvironmentObject private var errorVM: ErrorViewModel
 
     @FocusState private var focusName: FocusName?
 
@@ -281,7 +283,10 @@ struct SearchSheet: View {
                     offsets: offsets
                 )
             } catch {
-                Log.error(error)
+                errorVM.alert(
+                    error: error,
+                    message: "Failed to delete attraction."
+                )
             }
         }
     }
@@ -294,7 +299,10 @@ struct SearchSheet: View {
                 try await cloudKitVM.deleteArea(area)
                 appVM.selectedArea = nil
             } catch {
-                Log.error(error)
+                errorVM.alert(
+                    error: error,
+                    message: "Failed to delete area."
+                )
             }
         }
     }
@@ -324,7 +332,10 @@ struct SearchSheet: View {
 
                 editingArea = nil
             } catch {
-                Log.error("error renaming area: \(error)")
+                errorVM.alert(
+                    error: error,
+                    message: "Failed to rename area."
+                )
             }
         }
     }

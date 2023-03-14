@@ -20,6 +20,7 @@
 		1A94BF6E291868BB00001352 /* RouteAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A94BF6D291868BB00001352 /* RouteAnnotation.swift */; };
 		1A94BF7029194D5300001352 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A94BF6F29194D5300001352 /* DateExtension.swift */; };
 		1A94BF74291ABCEC00001352 /* RouteAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A94BF73291ABCEC00001352 /* RouteAnnotationView.swift */; };
+		1A95EFCD29C0FDCF00282232 /* ErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A95EFCC29C0FDCF00282232 /* ErrorViewModel.swift */; };
 		1AA35F812915ADB40080003F /* MyCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA35F802915ADB40080003F /* MyCircle.swift */; };
 		1AA35F832915B3F70080003F /* MyPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA35F822915B3F70080003F /* MyPolyline.swift */; };
 		1AAB0CFE2826436600544A8F /* MapExplorerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB0CFD2826436600544A8F /* MapExplorerApp.swift */; };
@@ -78,6 +79,7 @@
 		1A94BF6D291868BB00001352 /* RouteAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteAnnotation.swift; sourceTree = "<group>"; };
 		1A94BF6F29194D5300001352 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		1A94BF73291ABCEC00001352 /* RouteAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteAnnotationView.swift; sourceTree = "<group>"; };
+		1A95EFCC29C0FDCF00282232 /* ErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewModel.swift; sourceTree = "<group>"; };
 		1AA35F802915ADB40080003F /* MyCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCircle.swift; sourceTree = "<group>"; };
 		1AA35F822915B3F70080003F /* MyPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPolyline.swift; sourceTree = "<group>"; };
 		1AAB0CFA2826436600544A8F /* swiftui-mapkit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "swiftui-mapkit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -156,6 +158,7 @@
 			children = (
 				1A0D5ABE29006E34007AA0F7 /* AppViewModel.swift */,
 				1A3A6DB82909BF1C00183860 /* CloudKitViewModel.swift */,
+				1A95EFCC29C0FDCF00282232 /* ErrorViewModel.swift */,
 				1AE3A1702901876E00FB6501 /* MapKitViewModel.swift */,
 			);
 			path = ViewModels;
@@ -189,7 +192,6 @@
 				1AAB0D012826436700544A8F /* Assets.xcassets */,
 				1AB9F3BB29033DA4002DF760 /* attractions.json */,
 				1A3A6DBC2909C02700183860 /* CloudKit.swift */,
-				1A3A6DBA2909BFE100183860 /* Log.swift */,
 				1AB2A97A2914555700A20F79 /* utilities.swift */,
 				1AE3A1752901886600FB6501 /* Extensions */,
 				1AE3A1822902DE9A00FB6501 /* Models */,
@@ -221,6 +223,7 @@
 			isa = PBXGroup;
 			children = (
 				1AE3A1732901884200FB6501 /* CoreLocationService.swift */,
+				1A3A6DBA2909BFE100183860 /* Log.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -387,6 +390,7 @@
 				1AB9F3BD29034168002DF760 /* BundleExtension.swift in Sources */,
 				1AE3A17D290189A800FB6501 /* SettingsSheet.swift in Sources */,
 				1AB2A96F2912C5A900A20F79 /* LookAround.swift in Sources */,
+				1A95EFCD29C0FDCF00282232 /* ErrorViewModel.swift in Sources */,
 				1AAB0D002826436600544A8F /* ContentView.swift in Sources */,
 				1A3A6DBD2909C02700183860 /* CloudKit.swift in Sources */,
 				1AAB0CFE2826436600544A8F /* MapExplorerApp.swift in Sources */,

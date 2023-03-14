@@ -1,7 +1,16 @@
 import SwiftUI
 
 struct SaveAttraction: View {
+    enum FocusName: Hashable {
+        case areaTextField
+        case attractionTextField
+    }
+
     // MARK: - State
+
+    @EnvironmentObject private var errorVM: ErrorViewModel
+
+    @FocusState var focusName: FocusName?
 
     @StateObject private var appVM = AppViewModel.shared
     @StateObject private var cloudKitVM = CloudKitViewModel.shared
@@ -12,13 +21,6 @@ struct SaveAttraction: View {
     @State private var isInvalidAttraction = false
     @State private var newArea = ""
     @State private var newAttraction = ""
-
-    enum FocusName: Hashable {
-        case areaTextField
-        case attractionTextField
-    }
-
-    @FocusState var focusName: FocusName?
 
     // MARK: - Properties
 
@@ -166,7 +168,10 @@ struct SaveAttraction: View {
                 appVM.selectedArea =
                     try await cloudKitVM.createArea(name: newArea)
             } catch {
-                Log.error("error adding area: \(error)")
+                errorVM.alert(
+                    error: error,
+                    message: "Failed to add area."
+                )
             }
             stopAddingArea()
         }
@@ -198,7 +203,10 @@ struct SaveAttraction: View {
 
                 appVM.isSaving = false // closes sheet
             } catch {
-                Log.error("error adding attraction: \(error)")
+                errorVM.alert(
+                    error: error,
+                    message: "Failed to add attraction."
+                )
             }
         }
     }

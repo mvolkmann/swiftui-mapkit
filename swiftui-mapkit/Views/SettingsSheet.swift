@@ -5,12 +5,14 @@ import UniformTypeIdentifiers
 struct SettingsSheet: View {
     // MARK: - State
 
-    @StateObject private var appVM = AppViewModel.shared
-    @StateObject private var mapKitVM = MapKitViewModel.shared
-    @StateObject private var cloudKitVM = CloudKitViewModel.shared
+    @EnvironmentObject private var errorVM: ErrorViewModel
 
     @State private var isExporting = false
     @State private var isImporting = false
+
+    @StateObject private var appVM = AppViewModel.shared
+    @StateObject private var mapKitVM = MapKitViewModel.shared
+    @StateObject private var cloudKitVM = CloudKitViewModel.shared
 
     // MARK: - Properties
 
@@ -155,7 +157,10 @@ struct SettingsSheet: View {
                 }
             }
         } catch {
-            Log.error("SettingsSheet.importJSON error: \(error)")
+            errorVM.alert(
+                error: error,
+                message: "Failed to import JSON for attractions."
+            )
         }
     }
 }

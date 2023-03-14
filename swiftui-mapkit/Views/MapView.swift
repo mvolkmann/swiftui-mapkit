@@ -8,8 +8,7 @@ struct MapView: UIViewRepresentable {
     typealias EmphasisStyle = MKStandardMapConfiguration.EmphasisStyle
     typealias UIViewType = MKMapView
 
-    var center: CLLocationCoordinate2D // holds lat/lng angles in degrees
-    var distance: Double // in meters
+    @EnvironmentObject private var errorVM: ErrorViewModel
 
     @StateObject private var appVM = AppViewModel.shared
     @StateObject private var mapKitVM = MapKitViewModel.shared
@@ -17,6 +16,9 @@ struct MapView: UIViewRepresentable {
     @State private var annotations: [MKPointAnnotation] = []
     @State private var annotationToPlaceMap: [MKPointAnnotation: Place] = [:]
     @State private var mapCenterOverlays: [MKOverlay] = []
+
+    var center: CLLocationCoordinate2D // holds lat/lng angles in degrees
+    var distance: Double // in meters
 
     private func elevationStyle() -> ElevationStyle {
         appVM.mapElevation == "realistic" ?
@@ -318,7 +320,14 @@ struct MapView: UIViewRepresentable {
                 do {
                     try await parent.mapKitVM.lookAroundUpdate()
                 } catch {
-                    Log.error("error updating look around: \(error)")
+                    // We cannot use errorVM here.
+                    /*
+                     errorVM.alert(
+                         error: error,
+                         message: "Failed to update Look Around."
+                     )
+                     */
+                    Log.error("Failed to update Look Around: \(error)")
                 }
             }
         }

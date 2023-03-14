@@ -2,19 +2,20 @@ import CloudKit
 import SwiftUI
 
 final class CloudKitViewModel: ObservableObject {
-    // MARK: - State
-
-    @Published var areas: [Area] = []
-
     private static let containerId =
         "iCloud.r.mark.volkmann.gmail.com.swiftui-mapkit"
+
+    // MARK: - State
+
+    @EnvironmentObject private var errorVM: ErrorViewModel
+
+    @Published var areas: [Area] = []
 
     // MARK: - Initializer
 
     // This class is a singleton.
     private init() {
         cloudKit = CloudKit(containerId: Self.containerId)
-
         Task {
             await load()
         }
@@ -50,6 +51,7 @@ final class CloudKitViewModel: ObservableObject {
         return area
     }
 
+    @MainActor
     func createArea(name: String) async throws -> Area {
         let record = CKRecord(recordType: "Areas")
         record.setValue(
@@ -60,14 +62,13 @@ final class CloudKitViewModel: ObservableObject {
         let area = Area(record: record)
         try await cloudKit.create(item: area)
 
-        DispatchQueue.main.sync {
-            self.areas.append(area)
-            self.areas.sort { $0.name < $1.name }
-        }
+        areas.append(area)
+        areas.sort { $0.name < $1.name }
 
         return area
     }
 
+    @MainActor
     func createAttraction(
         area: String,
         name: String,
@@ -90,19 +91,19 @@ final class CloudKitViewModel: ObservableObject {
         let attraction = Attraction(record: record)
         try await cloudKit.create(item: attraction)
 
-        _ = DispatchQueue.main.sync {
-            Task {
-                do {
-                    if let area = try await addAttractionToArea(attraction) {
-                        area.sortAttractions()
-                    }
-                } catch {
-                    Log.error("error creating attraction: \(error)")
-                }
+        do {
+            if let area = try await addAttractionToArea(attraction) {
+                area.sortAttractions()
             }
+        } catch {
+            errorVM.alert(
+                error: error,
+                message: "Failed to create attraction."
+            )
         }
     }
 
+    @MainActor
     func deleteArea(_ area: Area) async throws {
         // Delete all the attractions associated with the area.
         for attraction in area.attractions {
@@ -111,9 +112,7 @@ final class CloudKitViewModel: ObservableObject {
 
         // Delete the area.
         try await cloudKit.delete(item: area)
-        DispatchQueue.main.async {
-            self.areas.removeAll(where: { $0 == area })
-        }
+        areas.removeAll(where: { $0 == area })
     }
 
     private func deleteAttraction(
@@ -126,14 +125,13 @@ final class CloudKitViewModel: ObservableObject {
         )
     }
 
+    @MainActor
     private func deleteAttraction(
         area: Area,
         attraction: Attraction
     ) async throws {
         try await cloudKit.delete(item: attraction)
-        DispatchQueue.main.async {
-            area.attractions.removeAll(where: { $0.name == attraction.name })
-        }
+        area.attractions.removeAll(where: { $0.name == attraction.name })
     }
 
     func deleteAttractions(area: Area, offsets: IndexSet) async throws {
@@ -171,19 +169,24 @@ final class CloudKitViewModel: ObservableObject {
                 }
             }
         } catch {
-            Log.error(error)
+            errorVM.alert(
+                error: error,
+                message: "Failed to load attractions."
+            )
         }
     }
 
-    func retrieveAreas() async throws {
+    @MainActor
+    private func retrieveAreas() async throws {
         let areas = try await cloudKit.retrieve(
             recordType: "Areas",
             sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)]
         ) as [Area]
-        DispatchQueue.main.sync { self.areas = areas }
+        self.areas = areas
     }
 
-    func retrieveAttractions() async throws -> [Attraction] {
+    @MainActor
+    private func retrieveAttractions() async throws -> [Attraction] {
         try await cloudKit.retrieve(
             recordType: "Attractions",
             sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)]

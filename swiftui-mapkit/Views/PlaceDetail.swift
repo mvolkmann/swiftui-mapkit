@@ -2,6 +2,8 @@ import MapKit
 import SwiftUI
 
 struct PlaceDetail: View {
+    @EnvironmentObject private var errorVM: ErrorViewModel
+
     @State private var isBrowsingWebsite = false
     @State private var loadingDirections = false
 
@@ -39,7 +41,10 @@ struct PlaceDetail: View {
                         mapKitVM.message = error.localizedDescription
                     }
                 } catch {
-                    Log.error("error getting directions: \(error)")
+                    errorVM.alert(
+                        error: error,
+                        message: "Failed to get directions."
+                    )
                 }
 
                 loadingDirections = false
